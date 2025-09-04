@@ -1,0 +1,161 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Updated to brand colors: Strawberry (#ED1233), Navy (#0F0040), Cream (#F7F0EA) */
+  --background: #f7f0ea; /* Cream background */
+  --foreground: #0f0040; /* Navy text */
+  --card: #ffffff; /* White cards for contrast on cream */
+  --card-foreground: #0f0040; /* Navy text on cards */
+  --popover: #ffffff; /* White popovers */
+  --popover-foreground: #0f0040; /* Navy text */
+  --primary: #ed1233; /* Strawberry for primary actions */
+  --primary-foreground: #ffffff; /* White text on strawberry */
+  --secondary: #0f0040; /* Navy for secondary elements */
+  --secondary-foreground: #ffffff; /* White text on navy */
+  --muted: #f0e8dc; /* Slightly darker cream for muted areas */
+  --muted-foreground: #6b6b6b; /* Muted navy for less important text */
+  --accent: #ed1233; /* Strawberry accents */
+  --accent-foreground: #ffffff; /* White text on strawberry */
+  --destructive: #dc2626; /* Red for destructive actions */
+  --destructive-foreground: #ffffff; /* White text */
+  --border: #e5ddd1; /* Subtle border on cream background */
+  --input: #ffffff; /* White input backgrounds */
+  --ring: #ed1233; /* Strawberry focus rings */
+  --chart-1: #ed1233; /* Strawberry */
+  --chart-2: #0f0040; /* Navy */
+  --chart-3: #f7f0ea; /* Cream */
+  --chart-4: #b91c1c; /* Darker red variant */
+  --chart-5: #1e1b4b; /* Lighter navy variant */
+  --radius: 0.5rem;
+  --sidebar: #ffffff; /* White sidebar */
+  --sidebar-foreground: #0f0040; /* Navy text */
+  --sidebar-primary: #ed1233; /* Strawberry primary */
+  --sidebar-primary-foreground: #ffffff; /* White text */
+  --sidebar-accent: #f7f0ea; /* Cream accent */
+  --sidebar-accent-foreground: #0f0040; /* Navy text */
+  --sidebar-border: #e5ddd1; /* Subtle borders */
+  --sidebar-ring: #ed1233; /* Strawberry focus */
+}
+
+.dark {
+  /* Dark mode using inverted brand colors */
+  --background: #0f0040; /* Navy background in dark mode */
+  --foreground: #f7f0ea; /* Cream text in dark mode */
+  --card: #1a1a2e; /* Darker navy for cards */
+  --card-foreground: #f7f0ea; /* Cream text */
+  --popover: #1a1a2e; /* Darker navy */
+  --popover-foreground: #f7f0ea; /* Cream text */
+  --primary: #ed1233; /* Keep strawberry primary */
+  --primary-foreground: #ffffff; /* White text */
+  --secondary: #2d2d5f; /* Lighter navy for secondary */
+  --secondary-foreground: #f7f0ea; /* Cream text */
+  --muted: #1a1a2e; /* Darker navy for muted */
+  --muted-foreground: #a0a0a0; /* Muted cream */
+  --accent: #ed1233; /* Keep strawberry accent */
+  --accent-foreground: #ffffff; /* White text */
+  --destructive: #dc2626; /* Keep red destructive */
+  --destructive-foreground: #ffffff; /* White text */
+  --border: #2d2d5f; /* Lighter navy borders */
+  --input: #1a1a2e; /* Darker navy inputs */
+  --ring: #ed1233; /* Strawberry focus */
+  --chart-1: #ed1233;
+  --chart-2: #f7f0ea;
+  --chart-3: #2d2d5f;
+  --chart-4: #b91c1c;
+  --chart-5: #a0a0a0;
+  --sidebar: #1a1a2e;
+  --sidebar-foreground: #f7f0ea;
+  --sidebar-primary: #ed1233;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #2d2d5f;
+  --sidebar-accent-foreground: #f7f0ea;
+  --sidebar-border: #2d2d5f;
+  --sidebar-ring: #ed1233;
+}
+
+/* TODO: Add custom font variables when Futura Condensed ExtraBold and Helvetica are available */
+@theme inline {
+  --font-sans: var(--font-geist-sans); /* TODO: Replace with Helvetica */
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-geist-sans); /* TODO: Replace with Futura Condensed ExtraBold */
+
+  /* Updated color mappings to use new brand colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  /* Added heading styles for brand typography */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading; /* TODO: Will use Futura Condensed ExtraBold when available */
+  }
+
+  /* Added utility classes for brand colors */
+  .text-strawberry {
+    color: #ed1233;
+  }
+  .bg-strawberry {
+    background-color: #ed1233;
+  }
+  .text-navy {
+    color: #0f0040;
+  }
+  .bg-navy {
+    background-color: #0f0040;
+  }
+  .text-cream {
+    color: #f7f0ea;
+  }
+  .bg-cream {
+    background-color: #f7f0ea;
+  }
+}
