@@ -7,69 +7,61 @@ import { getSupabaseClient } from "@/lib/supabase/client"
 import { useEffect, useState } from "react"
 import type { User } from "@supabase/supabase-js"
 import Image from "next/image"
+import { Menu, X } from "lucide-react"
 
 export function Navigation() {
   const pathname = usePathname()
   const [user, setUser] = useState<User | null>(null)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const supabase = getSupabaseClient()
 
     // Get initial user
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    supabase.auth.getUser().then(({ data: { user } }: any) => {
       setUser(user)
     })
 
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    } = supabase.auth.onAuthStateChange((event: any, session: any) => {
       setUser(session?.user ?? null)
     })
 
     return () => subscription.unsubscribe()
   }, [])
 
+  const handleSignOut = async () => {
+    const supabase = getSupabaseClient()
+    await supabase.auth.signOut()
+    setIsMobileMenuOpen(false)
+  }
+
   return (
-    <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="w-full border-b bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
+          {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <Image src="/logo.svg" alt="Lacrosse Lab" width={120} height={16} className="h-6 w-auto" />
             </Link>
           </div>
 
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              <Link
-                href="/"
-                className={`px-3 py-2 text-sm font-medium transition-colors hover:text-primary ${
-                  pathname === "/" ? "text-primary" : "text-muted-foreground"
-                }`}
-              >
-                Home
-              </Link>
-              <Link
-                href="/pricing"
-                className={`px-3 py-2 text-sm font-medium transition-colors hover:text-primary ${
-                  pathname === "/pricing" ? "text-primary" : "text-muted-foreground"
-                }`}
-              >
-                Pricing
-              </Link>
-              <Link
-                href="/about"
-                className={`px-3 py-2 text-sm font-medium transition-colors hover:text-primary ${
-                  pathname === "/about" ? "text-primary" : "text-muted-foreground"
-                }`}
-              >
-                About
-              </Link>
-            </div>
-          </div>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-4">
+            {/* Available Sessions - always shown */}
+            <Link
+              href="/pricing"
+              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-primary ${
+                pathname === "/pricing" ? "text-primary" : "text-muted-foreground"
+              }`}
+            >
+              Available Sessions
+            </Link>
 
-          <div className="flex items-center space-x-4">
+            {/* Conditional items based on auth status */}
             {user ? (
               <>
                 <Link href="/member/dashboard">
@@ -80,29 +72,103 @@ export function Navigation() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={async () => {
-                    const supabase = getSupabaseClient()
-                    await supabase.auth.signOut()
-                  }}
+                  onClick={handleSignOut}
                 >
                   Sign Out
                 </Button>
               </>
             ) : (
-              <>
-                <Link href="/login">
-                  <Button variant="ghost" size="sm">
-                    Sign In
-                  </Button>
-                </Link>
-                <Link href="/signup">
-                  <Button size="sm">Get Started</Button>
-                </Link>
-              </>
+              <Link href="/login">
+                <Button variant="ghost" size="sm">
+                  Sign In
+                </Button>
+              </Link>
             )}
           </div>
+
+          {/* Mobile menu button */}
+          <button
+            className="md:hidden p-2 rounded-md transition-all duration-200 hover:bg-red-600 hover:text-white"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle mobile menu"
+          >
+            {isMobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
         </div>
       </div>
+
+      {/* Mobile menu overlay - full screen takeover */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-[1] md:hidden">
+          {/* Backdrop - covers entire screen */}
+          <div 
+            className="absolute inset-0 backdrop-blur-sm bg-cream"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          
+          {/* Menu panel - full screen overlay */}
+          <div className="absolute inset-0 bg-background">
+            <div className="px-6 py-3 h-full flex flex-col">
+              {/* Header with logo and close button */}
+              <div className="flex items-center justify-between mb-12">
+                <Link href="/" className="flex items-center" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Image src="/logo.svg" alt="Lacrosse Lab" width={120} height={16} className="h-6 w-auto" />
+                </Link>
+                <button
+                  className="p-2 rounded-md transition-all duration-200 hover:bg-red-600 hover:text-white"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  aria-label="Close mobile menu"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              {/* Navigation links */}
+              <nav className="space-y-8 flex-1">
+                <Link
+                  href="/pricing"
+                  className={`block text-3xl font-semibold transition-colors ${
+                    pathname === "/pricing" ? "text-primary" : "text-foreground hover:text-primary"
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Available Sessions
+                </Link>
+              </nav>
+
+              {/* User actions */}
+              <div className="pt-8 border-t border-border space-y-6">
+                {user ? (
+                  <>
+                    <Link href="/member/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                      <Button variant="outline" className="w-full text-lg py-6 h-auto">
+                        Dashboard
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="ghost"
+                      className="w-full text-lg py-6 h-auto hover:bg-red-50 hover:text-red-600"
+                      onClick={handleSignOut}
+                    >
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="default" className="w-full text-lg py-6 h-auto">
+                      Sign In
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   )
 }

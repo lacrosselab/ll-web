@@ -2,7 +2,6 @@
 
 import type React from "react"
 
-import { MemberNavigation } from "@/components/member-navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,8 +9,7 @@ import { Label } from "@/components/ui/label"
 import { getSupabaseClient } from "@/lib/supabase/client"
 import { useEffect, useState } from "react"
 import type { User } from "@supabase/supabase-js"
-import { UserIcon, Shield, Bell } from "lucide-react"
-import { Switch } from "@/components/ui/switch"
+import { UserIcon, Shield } from "lucide-react"
 
 export default function MemberSettings() {
   const [user, setUser] = useState<User | null>(null)
@@ -71,9 +69,7 @@ export default function MemberSettings() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <MemberNavigation />
-
+    <div className="bg-background">
       <div className="py-8 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-4xl">
           {/* Header */}
@@ -107,7 +103,7 @@ export default function MemberSettings() {
                     <div className="space-y-2">
                       <Label htmlFor="email">Email Address</Label>
                       <Input id="email" value={email} disabled placeholder="Email cannot be changed here" />
-                      <p className="text-xs text-muted-foreground">Contact support to change your email address.</p>
+                      <p className="text-xs text-muted-foreground">Contact <a href="mailto:hello@lacrosselab.com" className="text-primary hover:underline">support</a> to change your email address.</p>
                     </div>
                     {error && <p className="text-sm text-destructive">{error}</p>}
                     {success && <p className="text-sm text-green-600">{success}</p>}
@@ -115,39 +111,6 @@ export default function MemberSettings() {
                       {loading ? "Updating..." : "Update Profile"}
                     </Button>
                   </form>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Bell className="h-5 w-5" />
-                    Notification Preferences
-                  </CardTitle>
-                  <CardDescription>Choose what notifications you want to receive.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">Email notifications</p>
-                      <p className="text-sm text-muted-foreground">Receive updates via email</p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">Marketing emails</p>
-                      <p className="text-sm text-muted-foreground">Receive promotional content</p>
-                    </div>
-                    <Switch />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">Security alerts</p>
-                      <p className="text-sm text-muted-foreground">Important security notifications</p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
                 </CardContent>
               </Card>
 
@@ -167,15 +130,6 @@ export default function MemberSettings() {
                     </div>
                     <Button variant="outline" size="sm">
                       Change
-                    </Button>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">Two-Factor Authentication</p>
-                      <p className="text-sm text-muted-foreground">Add an extra layer of security</p>
-                    </div>
-                    <Button variant="outline" size="sm">
-                      Enable
                     </Button>
                   </div>
                 </CardContent>
@@ -212,17 +166,6 @@ export default function MemberSettings() {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Danger Zone</CardTitle>
-                  <CardDescription>Irreversible actions for your account.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button variant="destructive" size="sm" className="w-full">
-                    Delete Account
-                  </Button>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>

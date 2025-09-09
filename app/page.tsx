@@ -1,39 +1,39 @@
-import { Navigation } from "@/components/navigation"
 import { Button } from "@/components/ui/button"
+import { AnimatedSection } from "@/components/animated-section"
 import Link from "next/link"
 import Image from "next/image"
 
 export default function HomePage() {
-  const currentYear = new Date().getFullYear()
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-
-      <section className="py-32 px-4 sm:px-6 lg:px-8">
+    <div className="flex-col bg-cover bg-bottom bg-no-repeat overflow-hidden" style={{backgroundImage: 'url(/web-bg.png)'}}>
+      {/* Main content area - takes up remaining space */}
+      <main className="flex-1 min-h-[80vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 min-h-0 bg-black/25 backdrop-blur-xs">
         <div className="container mx-auto text-center max-w-4xl">
-          <div className="mb-2 flex justify-center">
-            <Image src="/logo.svg" alt="Word Lab" width={400} height={52} className="h-12 sm:h-16 w-auto" priority />
-          </div>
-          <p className="text-xl sm:text-2xl text-brand-navy/80 text-pretty mb-12 max-w-3xl mx-auto leading-relaxed tracking-tight font-semibold">
-            Open To All, Earned By Few. 
-          </p>
-          <Link href="/pricing">
-            <Button variant="primary"
-              size="lg"
-              className="text-lg px-12 py-4 bg-brand-strawberry hover:bg-brand-strawberry/90 text-white font-semibold bg-[rgba(238,18,51,1)]"
-            >
-              Join Today
-            </Button>
-          </Link>
+          <AnimatedSection animation="fadeIn" delay={0.2}>
+            <div className="mb-2 flex justify-center">
+              <Image src="/logo.svg" alt="Word Lab" width={400} height={52} className="h-12 sm:h-16 w-auto" priority />
+            </div>
+          </AnimatedSection>
+          
+          <AnimatedSection animation="fadeIn" delay={0.4}>
+            <p className="text-xl sm:text-2xl text-cream text-pretty mb-12 max-w-3xl mx-auto leading-relaxed tracking-tight font-semibold">
+              Open To All, Earned By Few. 
+            </p>
+          </AnimatedSection>
+          
+          <AnimatedSection animation="slideIn" direction="up" delay={0.6}>
+            <Link href="/pricing">
+              <Button 
+                size="lg"
+                className="text-lg px-12 py-4 bg-primary hover:bg-primary/90 text-cream font-semibold"
+              >
+                Join Here
+              </Button>
+            </Link>
+          </AnimatedSection>
         </div>
-      </section>
-
-      <footer className="py-12 px-4 sm:px-6 lg:px-8 border-t border-brand-navy/10">
-        <div className="container mx-auto text-center">
-          <p className="text-brand-navy/60">&copy; {currentYear} Lacrosse Lab. All rights reserved.</p>
-        </div>
-      </footer>
+      </main>
     </div>
   )
 }

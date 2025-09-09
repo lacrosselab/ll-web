@@ -1,10 +1,8 @@
 "use client"
 
-import { MemberNavigation } from "@/components/member-navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { useSubscription } from "@/hooks/use-subscription"
 import { getSupabaseClient } from "@/lib/supabase/client"
 import { useEffect, useState } from "react"
 import type { User } from "@supabase/supabase-js"
@@ -13,7 +11,6 @@ import Link from "next/link"
 
 export default function MemberContent() {
   const [user, setUser] = useState<User | null>(null)
-  const { hasActiveSubscription, loading } = useSubscription(user)
 
   useEffect(() => {
     const supabase = getSupabaseClient()
@@ -94,7 +91,6 @@ export default function MemberContent() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <MemberNavigation />
         <div className="py-8 px-4 sm:px-6 lg:px-8">
           <div className="container mx-auto">
             <div className="flex items-center justify-center h-64">
@@ -108,8 +104,6 @@ export default function MemberContent() {
 
   return (
     <div className="min-h-screen bg-background">
-      <MemberNavigation />
-
       <div className="py-8 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto">
           {/* Header */}

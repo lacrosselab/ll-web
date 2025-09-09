@@ -119,11 +119,19 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Brand color utilities */
+  --color-strawberry: #ed1233;
+  --color-navy: #0f0040;
+  --color-cream: #f7f0ea;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
   }
   body {
     @apply bg-background text-foreground font-sans;
@@ -139,23 +147,38 @@
     @apply font-heading; /* TODO: Will use Futura Condensed ExtraBold when available */
   }
 
-  /* Added utility classes for brand colors */
+  /* Subtle button animations */
+  button, .btn {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  button:hover, .btn:hover {
+    transform: translateY(-1px);
+  }
+  
+  button:active, .btn:active {
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  /* Brand color utilities */
   .text-strawberry {
-    color: #ed1233;
+    color: var(--color-strawberry);
   }
   .bg-strawberry {
-    background-color: #ed1233;
+    background-color: var(--color-strawberry);
   }
   .text-navy {
-    color: #0f0040;
+    color: var(--color-navy);
   }
   .bg-navy {
-    background-color: #0f0040;
+    background-color: var(--color-navy);
   }
   .text-cream {
-    color: #f7f0ea;
+    color: var(--color-cream);
   }
   .bg-cream {
-    background-color: #f7f0ea;
+    background-color: var(--color-cream);
   }
 }

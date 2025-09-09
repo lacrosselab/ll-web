@@ -4,7 +4,8 @@ import { getSupabaseServer } from "@/lib/supabase/server"
 
 export async function POST(request: NextRequest) {
   try {
-    const { priceInterval }: { priceInterval: PriceInterval } = await request.json()
+    const body = await request.json()
+    const { priceInterval, priceId }: { priceInterval?: PriceInterval; priceId?: string } = body
 
     // Get authenticated user
     const supabase = await getSupabaseServer()
@@ -20,11 +21,11 @@ export async function POST(request: NextRequest) {
     // Get or create Stripe customer
     let customerId: string
 
-    // Check if user already has a Stripe customer ID
+    // Check if user already has a Stripe customer ID in the users table
     const { data: existingUser } = await supabase
-      .from("subscriptions")
+      .from("users")
       .select("stripe_customer_id")
-      .eq("user_id", user.id)
+      .eq("id", user.id)
       .single()
 
     if (existingUser?.stripe_customer_id) {
@@ -38,21 +39,42 @@ export async function POST(request: NextRequest) {
         },
       })
       customerId = customer.id
+
+      // Store the customer ID in the users table
+      await supabase
+        .from("users")
+        .upsert({
+          id: user.id,
+          email: user.email!,
+          stripe_customer_id: customerId,
+        })
     }
 
-    const priceConfig = PRICE_CONFIG[priceInterval]
+    // Determine which price to use
+    let finalPriceId: string
 
-    // Create checkout session
+    if (priceId) {
+      // Use the specific price ID from the dynamic product
+      finalPriceId = priceId
+    } else if (priceInterval) {
+      // Fallback to the legacy price interval system
+      const priceConfig = PRICE_CONFIG[priceInterval]
+      finalPriceId = priceConfig.priceId
+    } else {
+      return NextResponse.json({ error: "No price specified" }, { status: 400 })
+    }
+
+    // Create checkout session for one-time payment
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       payment_method_types: ["card"],
       line_items: [
         {
-          price: priceConfig.priceId,
+          price: finalPriceId,
           quantity: 1,
         },
       ],
-      mode: "subscription",
+      mode: "payment", // Changed from "subscription" to "payment"
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/member/dashboard?success=true`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/pricing?canceled=true`,
       metadata: {

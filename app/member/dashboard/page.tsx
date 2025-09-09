@@ -1,35 +1,72 @@
 "use client"
 
-import { MemberNavigation } from "@/components/member-navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { useSubscription } from "@/hooks/use-subscription"
 import { getSupabaseClient } from "@/lib/supabase/client"
 import { useEffect, useState } from "react"
 import type { User } from "@supabase/supabase-js"
-import { CreditCard, Settings, CheckCircle } from "lucide-react"
+import { CreditCard, Settings, Receipt, User } from "lucide-react"
 import Link from "next/link"
+
+interface Payment {
+  id: string
+  amount: number
+  currency: string
+  status: string
+  created_at: string
+}
 
 export default function MemberDashboard() {
   const [user, setUser] = useState<User | null>(null)
-  const { subscription, hasActiveSubscription, loading } = useSubscription(user)
+  const [recentPayments, setRecentPayments] = useState<Payment[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const supabase = getSupabaseClient()
 
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user)
+      if (user) {
+        fetchRecentPayments(user.id)
+      }
     })
 
     const {
       data: { subscription: authSubscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null)
+      if (session?.user) {
+        fetchRecentPayments(session.user.id)
+      }
     })
 
     return () => authSubscription.unsubscribe()
   }, [])
+
+  const fetchRecentPayments = async (userId: string) => {
+    try {
+      const supabase = getSupabaseClient()
+      const { data, error } = await supabase
+        .from("payments")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("status", "succeeded")
+        .order("created_at", { ascending: false })
+        .limit(3)
+
+      if (error) {
+        console.error("Error fetching payments:", error)
+        return
+      }
+
+      setRecentPayments(data || [])
+    } catch (error) {
+      console.error("Error fetching payments:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -39,52 +76,114 @@ export default function MemberDashboard() {
     })
   }
 
-  return (
-    <div className="min-h-screen bg-background">
-      <MemberNavigation />
+  const formatAmount = (amount: number, currency: string) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: currency.toUpperCase(),
+    }).format(amount / 100)
+  }
 
+  return (
+    <div className="bg-background">
       <div className="py-8 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto">
           {/* Welcome Section */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.user_metadata?.full_name || "Member"}!</h1>
-            <p className="text-muted-foreground">Manage your account settings and billing information.</p>
+            <p className="text-muted-foreground">Manage your account and view your session history.</p>
           </div>
 
-          {/* Subscription Status */}
-          <div className="grid lg:grid-cols-2 gap-6 mb-8">
+          {/* Quick Actions Grid */}
+          <div className="grid md:grid-cols-3 gap-4 mb-8">
+            <Link href="/member/settings">
+              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <User className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">Profile</h3>
+                      <p className="text-sm text-muted-foreground">Update your information</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/member/billing">
+              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <CreditCard className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">Billing</h3>
+                      <p className="text-sm text-muted-foreground">View payments & history</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/member/settings">
+              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Settings className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">Settings</h3>
+                      <p className="text-sm text-muted-foreground">Account preferences</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+
+          {/* Recent Activity */}
+          <div className="grid lg:grid-cols-2 gap-6">
             <Card className="lg:col-span-2">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <CreditCard className="h-5 w-5" />
-                  Subscription Status
+                  <Receipt className="h-5 w-5" />
+                  Recent Purchases
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {loading ? (
                   <div className="flex items-center gap-2">
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                    <span>Loading subscription...</span>
+                    <span>Loading purchases...</span>
                   </div>
-                ) : hasActiveSubscription ? (
+                ) : recentPayments.length > 0 ? (
                   <div className="space-y-4">
-                    <div className="flex items-center gap-2">
-                      <Badge variant="default" className="bg-green-100 text-green-800">
-                        <CheckCircle className="h-3 w-3 mr-1" />
-                        Active
-                      </Badge>
-                      <span className="text-sm text-muted-foreground">
-                        Renews on {formatDate(subscription!.current_period_end)}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">Premium Plan</p>
-                        <p className="text-sm text-muted-foreground">Full access to all features</p>
+                    {recentPayments.map((payment) => (
+                      <div key={payment.id} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-primary/10 rounded-lg">
+                            <CreditCard className="h-4 w-4 text-primary" />
+                          </div>
+                          <div>
+                            <p className="font-medium">Session Purchase</p>
+                            <p className="text-sm text-muted-foreground">{formatDate(payment.created_at)}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-medium">{formatAmount(payment.amount, payment.currency)}</p>
+                          <Badge variant="default" className="bg-green-100 text-green-800">
+                            Completed
+                          </Badge>
+                        </div>
                       </div>
+                    ))}
+                    <div className="pt-2">
                       <Link href="/member/billing">
                         <Button variant="outline" size="sm">
-                          Manage Billing
+                          View All Payments
                         </Button>
                       </Link>
                     </div>
@@ -92,75 +191,21 @@ export default function MemberDashboard() {
                 ) : (
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
-                      <Badge variant="secondary">Free Trial</Badge>
-                      <span className="text-sm text-muted-foreground">Upgrade to unlock all features</span>
+                      <Badge variant="secondary">No purchases yet</Badge>
+                      <span className="text-sm text-muted-foreground">Browse available sessions to get started</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-medium">Limited Access</p>
-                        <p className="text-sm text-muted-foreground">Upgrade to get full access</p>
+                        <p className="font-medium">Get Started</p>
+                        <p className="text-sm text-muted-foreground">Purchase your first session</p>
                       </div>
                       <Link href="/pricing">
-                        <Button size="sm">Upgrade Now</Button>
+                        <Button size="sm">Browse Sessions</Button>
                       </Link>
                     </div>
                   </div>
                 )}
               </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
-                  Account Settings
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <Link href="/member/settings">
-                    <Button variant="outline" className="w-full justify-start bg-transparent">
-                      Update Profile Information
-                    </Button>
-                  </Link>
-                  <Link href="/member/billing">
-                    <Button variant="outline" className="w-full justify-start bg-transparent">
-                      Manage Payment Methods
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Account Management Cards */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card className="hover:shadow-md transition-shadow cursor-pointer">
-              <Link href="/member/settings">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <Settings className="h-4 w-4 text-primary" />
-                    Account Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>Update your email, password, and personal information</CardDescription>
-                </CardContent>
-              </Link>
-            </Card>
-
-            <Card className="hover:shadow-md transition-shadow cursor-pointer">
-              <Link href="/member/billing">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <CreditCard className="h-4 w-4 text-primary" />
-                    Billing & Payments
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>View payment history and manage your payment methods</CardDescription>
-                </CardContent>
-              </Link>
             </Card>
           </div>
         </div>
