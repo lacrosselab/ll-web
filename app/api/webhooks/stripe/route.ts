@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe"
-import { getSupabaseServer } from "@/lib/supabase/server"
+import { getSupabaseService } from "@/lib/supabase/service"
 import type Stripe from "stripe"
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 
     console.log("[v0] Processing webhook event:", event.type)
 
-    const supabase = await getSupabaseServer()
+    const supabase = getSupabaseService()
 
     switch (event.type) {
       case "checkout.session.completed": {
