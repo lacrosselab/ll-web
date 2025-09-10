@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { stripe, PRICE_CONFIG, type PriceInterval } from "@/lib/stripe"
-import { getSupabaseServer } from "@/lib/supabase/server"
+import { getSupabaseService } from "@/lib/supabase/service"
 
 export async function POST(request: NextRequest) {
   try {
@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     const { priceInterval, priceId }: { priceInterval?: PriceInterval; priceId?: string } = body
 
     // Get authenticated user
-    const supabase = await getSupabaseServer()
+    const supabase = getSupabaseService()    
     const {
       data: { user },
       error: authError,

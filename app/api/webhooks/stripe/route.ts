@@ -40,12 +40,15 @@ export async function POST(request: NextRequest) {
         
         // For one-time payments, record the payment directly
         if (session.payment_status === 'paid') {
+          // Get the customer to access its metadata
+          const customer = await stripe.customers.retrieve(session.customer as string)
+          
           // Get the payment intent to get more details
           const paymentIntent = await stripe.paymentIntents.retrieve(session.payment_intent as string)
           
           // Record the payment
           await supabase.from("payments").insert({
-            user_id: session.metadata?.userId,
+            user_id: customer.metadata?.userId, // ← Changed from session.metadata?.userId
             stripe_payment_intent_id: paymentIntent.id,
             amount: paymentIntent.amount,
             currency: paymentIntent.currency,
