@@ -1,6 +1,8 @@
+"use client"
+
 import { PricingCard } from "@/components/pricing-card"
 import { createCheckoutSession } from "@/lib/checkout"
-import { metadata } from "../layout"
+import { useEffect, useState } from "react"
 
 // Types for our dynamic product data
 interface ProductPrice {
@@ -86,11 +88,10 @@ function getEndDateUrgency(endsOnString: string): 'normal' | 'ending-soon' | 'en
   return 'normal'
 }
 
-// Fetch products from our API
-async function getProducts(): Promise<Product[]> {
+// Client-side function to fetch products
+async function fetchProducts(): Promise<Product[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
-    const response = await fetch(`${baseUrl}/api/products`, {
+    const response = await fetch('/api/products', {
       cache: 'no-store' // Ensure fresh data on each request
     })
     
@@ -151,8 +152,28 @@ function getFeatures(product: Product): string[] {
   return []
 }
 
-export default async function PricingPage() {
-  const products = await getProducts()
+export default function PricingPage() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        const fetchedProducts = await fetchProducts()
+        setProducts(fetchedProducts)
+      } catch (err) {
+        console.error('Error loading products:', err)
+        setError('Failed to load products. Please try again later.')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadProducts()
+  }, [])
   
   return (
     <div className="min-h-screen bg-background">
@@ -163,11 +184,25 @@ export default async function PricingPage() {
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Our available sessions are listed below. If you don't see a session that works for you, please contact us
               at <a href="mailto:hello@lacrosselab.com" className="text-primary hover:underline">hello@lacrosselab.com</a>.
-          
             </p>
           </div>
 
-          {products.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent mx-auto mb-4" />
+              <p className="text-muted-foreground">Loading available sessions...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <p className="text-red-500 mb-4">{error}</p>
+              <button 
+                onClick={() => window.location.reload()} 
+                className="text-primary hover:underline"
+              >
+                Try again
+              </button>
+            </div>
+          ) : products.length > 0 ? (
             <div className={`grid gap-8 max-w-6xl mx-auto ${
               products.length === 1 ? 'grid-cols-1 max-w-md' :
               products.length === 2 ? 'md:grid-cols-2' :
