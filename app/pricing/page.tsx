@@ -4,7 +4,7 @@ import { PricingCard } from "@/components/pricing-card"
 import { createCheckoutSession } from "@/lib/checkout"
 import { useEffect, useState } from "react"
 
-// Types for our dynamic product data
+// Types for our database product data
 interface ProductPrice {
   id: string
   unit_amount: number | null
@@ -22,6 +22,10 @@ interface Product {
   images: string[]
   metadata: Record<string, string>
   prices: ProductPrice[]
+  // New fields from our database
+  session_date: string
+  stock_quantity: number
+  is_active: boolean
 }
 
 interface ProductsResponse {
@@ -29,62 +33,52 @@ interface ProductsResponse {
   count: number
 }
 
-// Date utility functions
-function parseEndDate(endsOnString: string): Date | null {
-  try {
-    // Parse MM/DD/YYYY format
-    const [month, day, year] = endsOnString.split('/').map(Number)
-    return new Date(year, month - 1, day) // month is 0-indexed in Date constructor
-  } catch {
-    return null
-  }
+// Date utility functions - simplified for database-first approach
+function isProductActive(product: Product): boolean {
+  // Check if product is active in database
+  if (!product.is_active) return false
+  
+  // Check if session date has passed
+  const sessionDate = new Date(product.session_date)
+  const now = new Date()
+  
+  // Set time to end of day for the session date to include the full day
+  sessionDate.setHours(23, 59, 59, 999)
+  
+  return now <= sessionDate
 }
 
-function isProductActive(endsOnString: string | undefined): boolean {
-  if (!endsOnString) return true // No end date means always active
-  
-  const endDate = parseEndDate(endsOnString)
-  if (!endDate) return true // Invalid date means always active
-  
-  const now = new Date()
-  // Set time to end of day for the end date to include the full day
-  endDate.setHours(23, 59, 59, 999)
-  
-  return now <= endDate
+function isProductInStock(product: Product): boolean {
+  return product.stock_quantity > 0
 }
 
-function getDaysUntilEnd(endsOnString: string): number {
-  const endDate = parseEndDate(endsOnString)
-  if (!endDate) return Infinity
-  
+function getDaysUntilSession(sessionDate: string): number {
+  const session = new Date(sessionDate)
   const now = new Date()
-  const diffTime = endDate.getTime() - now.getTime()
+  const diffTime = session.getTime() - now.getTime()
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 }
 
-function formatEndDate(endsOnString: string): string {
-  const endDate = parseEndDate(endsOnString)
-  if (!endDate) return ''
+function formatSessionDate(sessionDate: string): string {
+  const session = new Date(sessionDate)
+  const daysUntilSession = getDaysUntilSession(sessionDate)
   
-  const daysUntilEnd = getDaysUntilEnd(endsOnString)
+  if (daysUntilSession <= 0) return 'Session has passed'
+  if (daysUntilSession === 1) return 'Session tomorrow'
+  if (daysUntilSession <= 7) return `Session in ${daysUntilSession} days`
   
-  if (daysUntilEnd <= 0) return 'Ended'
-  if (daysUntilEnd === 1) return 'Ends tomorrow'
-  if (daysUntilEnd <= 7) return `Ends in ${daysUntilEnd} days`
-  
-  // Format as "Ends Dec 25, 2024"
-  return `Ends ${endDate.toLocaleDateString('en-US', { 
+  return `Session ${session.toLocaleDateString('en-US', { 
     month: 'short', 
     day: 'numeric', 
     year: 'numeric' 
   })}`
 }
 
-function getEndDateUrgency(endsOnString: string): 'normal' | 'ending-soon' | 'ending-very-soon' {
-  const daysUntilEnd = getDaysUntilEnd(endsOnString)
+function getSessionUrgency(sessionDate: string): 'normal' | 'ending-soon' | 'ending-very-soon' {
+  const daysUntilSession = getDaysUntilSession(sessionDate)
   
-  if (daysUntilEnd <= 2) return 'ending-very-soon'
-  if (daysUntilEnd <= 7) return 'ending-soon'
+  if (daysUntilSession <= 2) return 'ending-very-soon'
+  if (daysUntilSession <= 7) return 'ending-soon'
   return 'normal'
 }
 
@@ -101,9 +95,9 @@ async function fetchProducts(): Promise<Product[]> {
     
     const data: ProductsResponse = await response.json()
     
-    // Filter out products that have passed their end date
+    // Filter products based on new logic
     const activeProducts = data.products.filter(product => 
-      isProductActive(product.metadata['ends-on'])
+      isProductActive(product) && isProductInStock(product)
     )
     
     return activeProducts
@@ -141,14 +135,14 @@ function isPopular(product: Product): boolean {
   return product.metadata.popular === 'true'
 }
 
-// Get features from metadata only - no defaults
+// Get features from metadata - simplified
 function getFeatures(product: Product): string[] {
   const featuresString = product.metadata.features
   if (featuresString) {
     return featuresString.split(',').map(f => f.trim()).filter(f => f.length > 0)
   }
   
-  // Return empty array if no features defined in Stripe
+  // Return empty array if no features defined
   return []
 }
 
@@ -210,14 +204,12 @@ export default function PricingPage() {
               'md:grid-cols-2 lg:grid-cols-3'
             }`}>
               {products.map((product) => {
-                // For now, we'll show the first recurring price, or first price if no recurring
-                const recurringPrice = product.prices.find(p => p.type === 'recurring')
-                const displayPrice = recurringPrice || product.prices[0]
+                // Show the first (and likely only) price
+                const displayPrice = product.prices[0]
                 
                 if (!displayPrice) return null
                 
-                const endsOn = product.metadata['ends-on']
-                const endDateUrgency = endsOn ? getEndDateUrgency(endsOn) : 'normal'
+                const sessionUrgency = getSessionUrgency(product.session_date)
                 
                 return (
                   <PricingCard
@@ -232,15 +224,22 @@ export default function PricingPage() {
                     popular={isPopular(product)}
                     image={product.images[0]}
                     allPrices={product.prices}
-                    endsOn={endsOn}
-                    endDateUrgency={endDateUrgency}
+                    // Use session date for display
+                    endsOn={formatSessionDate(product.session_date)}
+                    endDateUrgency={sessionUrgency}
+                    // Add new props for stock and session info
+                    stockQuantity={product.stock_quantity}
+                    sessionDate={product.session_date}
                   />
                 )
               })}
             </div>
           ) : (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">No products available at the moment.</p>
+              <p className="text-muted-foreground">No sessions available at the moment.</p>
+              <p className="text-sm text-muted-foreground mt-2">
+                Check back soon for new training sessions!
+              </p>
             </div>
           )}
 

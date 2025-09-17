@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
 :root {
   /* Updated to brand colors: Strawberry (#ED1233), Navy (#0F0040), Cream (#F7F0EA) */
   --background: #f7f0ea; /* Cream background */
@@ -38,42 +36,6 @@
   --sidebar-accent-foreground: #0f0040; /* Navy text */
   --sidebar-border: #e5ddd1; /* Subtle borders */
   --sidebar-ring: #ed1233; /* Strawberry focus */
-}
-
-.dark {
-  /* Dark mode using inverted brand colors */
-  --background: #0f0040; /* Navy background in dark mode */
-  --foreground: #f7f0ea; /* Cream text in dark mode */
-  --card: #1a1a2e; /* Darker navy for cards */
-  --card-foreground: #f7f0ea; /* Cream text */
-  --popover: #1a1a2e; /* Darker navy */
-  --popover-foreground: #f7f0ea; /* Cream text */
-  --primary: #ed1233; /* Keep strawberry primary */
-  --primary-foreground: #ffffff; /* White text */
-  --secondary: #2d2d5f; /* Lighter navy for secondary */
-  --secondary-foreground: #f7f0ea; /* Cream text */
-  --muted: #1a1a2e; /* Darker navy for muted */
-  --muted-foreground: #a0a0a0; /* Muted cream */
-  --accent: #ed1233; /* Keep strawberry accent */
-  --accent-foreground: #ffffff; /* White text */
-  --destructive: #dc2626; /* Keep red destructive */
-  --destructive-foreground: #ffffff; /* White text */
-  --border: #2d2d5f; /* Lighter navy borders */
-  --input: #1a1a2e; /* Darker navy inputs */
-  --ring: #ed1233; /* Strawberry focus */
-  --chart-1: #ed1233;
-  --chart-2: #f7f0ea;
-  --chart-3: #2d2d5f;
-  --chart-4: #b91c1c;
-  --chart-5: #a0a0a0;
-  --sidebar: #1a1a2e;
-  --sidebar-foreground: #f7f0ea;
-  --sidebar-primary: #ed1233;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #2d2d5f;
-  --sidebar-accent-foreground: #f7f0ea;
-  --sidebar-border: #2d2d5f;
-  --sidebar-ring: #ed1233;
 }
 
 /* TODO: Add custom font variables when Futura Condensed ExtraBold and Helvetica are available */
@@ -124,6 +86,18 @@
   --color-strawberry: #ed1233;
   --color-navy: #0f0040;
   --color-cream: #f7f0ea;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add line-clamp utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 @layer base {

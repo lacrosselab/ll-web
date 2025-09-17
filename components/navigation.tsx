@@ -8,6 +8,7 @@ import { useEffect, useState } from "react"
 import type { User } from "@supabase/supabase-js"
 import Image from "next/image"
 import { Menu, X } from "lucide-react"
+import { CartIcon } from "@/components/cart-icon"
 
 export function Navigation() {
   const pathname = usePathname()
@@ -38,6 +39,9 @@ export function Navigation() {
     setIsMobileMenuOpen(false)
   }
 
+  // Check if user is admin
+  const isAdmin = user?.email?.endsWith('@thelacrosselab.com')
+
   return (
     <nav className="w-full border-b bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
       <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -48,29 +52,38 @@ export function Navigation() {
               <Image src="/logo.svg" alt="Lacrosse Lab" width={120} height={16} className="h-6 w-auto" />
             </Link>
           </div>
-
+          
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* Available Sessions - always shown */}
-            <Link
-              href="/pricing"
-              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-primary ${
-                pathname === "/pricing" ? "text-primary" : "text-muted-foreground"
-              }`}
-            >
-              Available Sessions
-            </Link>
-
+            {/* Cart Icon */}
+            <CartIcon />
             {/* Conditional items based on auth status */}
             {user ? (
               <>
+                {/* Admin Dashboard Button - only for admin users */}
+                {isAdmin && (
+                  <Link href="/admin/products">
+                    <Button variant="outline" size="sm" className="bg-primary border-red-200 text-cream hover:bg-cream hover:text-primary">
+                      Admin Dashboard
+                    </Button>
+                  </Link>
+                )}
+
+                 {/* Available Sessions - always shown */}
+          
+                 <Link href="/pricing">
+                  <Button variant="outline" size="sm">
+                    Available Sessions
+                  </Button>
+                </Link>
+            
                 <Link href="/member/dashboard">
                   <Button variant="outline" size="sm">
                     Dashboard
                   </Button>
                 </Link>
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   onClick={handleSignOut}
                 >
@@ -138,12 +151,31 @@ export function Navigation() {
                 >
                   Available Sessions
                 </Link>
+                
+                <Link
+                  href="/cart"
+                  className={`block text-3xl font-semibold transition-colors ${
+                    pathname === "/cart" ? "text-primary" : "text-foreground hover:text-primary"
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Cart
+                </Link>
               </nav>
 
               {/* User actions */}
-              <div className="pt-8 border-t border-border space-y-6">
+              <div className="pt-8 border-t border-border space-y-6 flex flex-col gap-4">
                 {user ? (
                   <>
+                    {/* Admin Dashboard Button - only for admin users */}
+                    {isAdmin && (
+                      <Link href="/admin/products" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Button variant="outline" className="w-full text-lg py-6 h-auto">
+                          Admin Dashboard
+                        </Button>
+                      </Link>
+                    )}
+                    
                     <Link href="/member/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
                       <Button variant="outline" className="w-full text-lg py-6 h-auto">
                         Dashboard

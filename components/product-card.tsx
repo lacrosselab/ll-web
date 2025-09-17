@@ -1,0 +1,550 @@
+"use client"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Check, Clock, Users, DollarSign, Calendar, Package, Edit, Trash2 } from "lucide-react"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { getSupabaseClient } from "@/lib/supabase/client"
+import Image from "next/image"
+import { useCart } from "@/contexts/cart-context"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { useToast } from '@/components/ui/toast'
+
+// Types for different card modes
+interface ProductPrice {
+  id: string
+  unit_amount: number | null
+  currency: string
+  interval: string | null
+  interval_count: number | null
+  type: string
+  metadata: Record<string, string>
+}
+
+interface AdminProduct {
+  id: string
+  name: string
+  description: string | null
+  price_cents: number
+  currency: string
+  session_date: string
+  stock_quantity: number
+  is_active: boolean
+  stripe_product_id: string
+  stripe_price_id: string
+  created_at: string
+  updated_at: string
+}
+
+// Base props that all cards need
+interface BaseProductCardProps {
+  title: string
+  description: string | null
+  price: string
+  sessionDate: string
+  stockQuantity: number
+  image?: string
+}
+
+// User-facing card props (pricing page)
+interface UserProductCardProps extends BaseProductCardProps {
+  mode: 'user'
+  productId: string
+  interval: string
+  intervalCount?: number | null
+  features: string[]
+  popular?: boolean
+  allPrices: ProductPrice[]
+  endDateUrgency?: 'normal' | 'ending-soon' | 'ending-very-soon'
+}
+
+// Admin card props
+interface AdminProductCardProps extends BaseProductCardProps {
+  mode: 'admin'
+  product: AdminProduct
+  onEdit: (product: AdminProduct) => void
+  onToggleStatus: (product: AdminProduct) => void
+  onDelete: (product: AdminProduct) => void
+}
+
+type ProductCardProps = UserProductCardProps | AdminProductCardProps
+
+export function ProductCard(props: ProductCardProps) {
+  const [loading, setLoading] = useState(false)
+  const [selectedPriceId, setSelectedPriceId] = useState<string | null>(null)
+  const [showAthleteSelection, setShowAthleteSelection] = useState(false)
+  const [showAthleteForm, setShowAthleteForm] = useState(false)
+  const [athletes, setAthletes] = useState<any[]>([])
+  const [newAthlete, setNewAthlete] = useState({
+    name: '',
+    age: '',
+    school: '',
+    position: ''
+  })
+  const router = useRouter()
+  const { addToCart } = useCart()
+  const { showToast } = useToast()
+
+  // Get interval display text
+  const getIntervalText = (interval: string, intervalCount?: number | null): string => {
+    if (interval === 'one-time') return ''
+    
+    if (intervalCount && intervalCount > 1) {
+      return `/${intervalCount} ${interval}s`
+    }
+    
+    return `/${interval}`
+  }
+
+  // Format session date display
+  const formatSessionDate = (sessionDateString: string): string => {
+    try {
+      const sessionDate = new Date(sessionDateString)
+      const now = new Date()
+      const diffTime = sessionDate.getTime() - now.getTime()
+      const daysUntilSession = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      
+      if (daysUntilSession <= 0) return 'Session has passed'
+      if (daysUntilSession === 1) return 'Session tomorrow'
+      if (daysUntilSession <= 7) return `Session in ${daysUntilSession} days`
+      
+      return `Session ${sessionDate.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric', 
+        year: 'numeric' 
+      })}`
+    } catch {
+      return ''
+    }
+  }
+
+  // Format date for admin view
+  const formatDate = (dateString: string): string => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    })
+  }
+
+  // Get card styling based on urgency (user mode only)
+  const getCardStyling = () => {
+    if (props.mode === 'admin') {
+      return {
+        cardClass: props.product.is_active ? '' : 'opacity-60',
+        badgeClass: props.product.is_active ? 'default' : 'secondary',
+        badgeText: props.product.is_active ? 'Active' : 'Inactive'
+      }
+    }
+
+    // User mode styling
+    switch (props.endDateUrgency) {
+      case 'ending-very-soon':
+        return {
+          cardClass: "relative border-red-500 shadow-lg",
+          badgeClass: "bg-primary text-primary-foreground",
+          badgeText: "Session Tomorrow"
+        }
+      case 'ending-soon':
+        return {
+          cardClass: "relative border-red-500 shadow-lg",
+          badgeClass: "bg-primary text-primary-foreground",
+          badgeText: "Session This Week"
+        }
+      default:
+        return {
+          cardClass: props.popular ? "relative border-primary shadow-lg" : "relative",
+          badgeClass: "bg-primary text-primary-foreground",
+          badgeText: "Most Popular"
+        }
+    }
+  }
+
+  const loadAthletes = async () => {
+    try {
+      const supabase = getSupabaseClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (!user) {
+        router.push('/login?redirect=/pricing')
+        return
+      }
+
+      const { data, error } = await supabase
+        .from('athletes')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+
+      if (error) throw error
+      setAthletes(data || [])
+    } catch (error) {
+      console.error('Error loading athletes:', error)
+    }
+  }
+
+  const handleAddToCart = async () => {
+    if (props.mode !== 'user') return
+
+    try {
+      setLoading(true)
+
+      // Check if user is authenticated
+      const supabase = getSupabaseClient()
+      const {
+        data: { user },
+      } = await supabase.auth.getUser() 
+
+      if (!user) {
+        router.push("/login?redirect=/pricing")
+        return
+      }
+
+      // Load athletes and show selection
+      await loadAthletes()
+      setShowAthleteSelection(true)
+    } catch (error) {
+      console.error("Error preparing cart:", error)
+      showToast("Failed to add to cart. Please try again.", 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleAthleteSelection = async (athleteId: string) => {
+    try {
+      setLoading(true)
+      await addToCart(props.productId, athleteId, 1)
+      setShowAthleteSelection(false)
+      showToast('Added to cart!', 'success')
+    } catch (error) {
+      console.error('Error adding to cart:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Failed to add to cart. Please try again.'
+      showToast(errorMessage, 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const createAthlete = async () => {
+    try {
+      setLoading(true)
+      const supabase = getSupabaseClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (!user) return
+
+      const { data, error } = await supabase
+        .from('athletes')
+        .insert({
+          user_id: user.id,
+          name: newAthlete.name,
+          age: newAthlete.age ? parseInt(newAthlete.age) : null,
+          school: newAthlete.school || null,
+          position: newAthlete.position || null
+        })
+        .select()
+        .single()
+
+      if (error) throw error
+
+      // Add the new athlete to the list
+      setAthletes([data, ...athletes])
+      
+      // Auto-select the new athlete and add to cart
+      await handleAthleteSelection(data.id)
+      
+      // Reset form and close modals
+      setNewAthlete({ name: '', age: '', school: '', position: '' })
+      setShowAthleteForm(false)
+      setShowAthleteSelection(false)
+    } catch (error) {
+      console.error('Error creating athlete:', error)
+      showToast('Failed to create athlete', 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const styling = getCardStyling()
+  const isOutOfStock = props.stockQuantity <= 0
+
+  return (
+    <>
+      <Card className={styling.cardClass + ' relative'}>
+        {/* Badge for popular/urgency (user) or status (admin) */}
+        {(props.mode === 'user' && (props.popular || props.endDateUrgency !== 'normal')) && (
+          <Badge className={`absolute -top-2 left-1/2 -translate-x-1/2 ${styling.badgeClass}`}>
+            {props.endDateUrgency !== 'normal' ? styling.badgeText : 'Most Popular'}
+          </Badge>
+        )}
+        
+        {props.image && (
+          <div className="relative h-32 w-full">
+            <Image
+              src={props.image}
+              alt={props.title}
+              fill
+              className="object-cover rounded-t-lg"
+            />
+          </div>
+        )}
+        
+        <CardHeader>
+          <CardTitle className={`${props.mode === 'user' ? 'text-2xl' : 'text-lg'} truncate`} title={props.title}>
+            {props.title}
+          </CardTitle>
+          {props.description && (
+            <CardDescription className="line-clamp-2">
+              {props.description}
+            </CardDescription>
+          )}
+          
+          {/* Price Display */}
+          <div className="flex items-baseline gap-1">
+            <span className={`${props.mode === 'user' ? 'text-3xl' : 'text-lg'} font-bold`}>{props.price}</span>
+            {props.mode === 'user' && (
+              <span className="text-muted-foreground">
+                {getIntervalText(props.interval, props.intervalCount)}
+              </span>
+            )}
+          </div>
+
+          {/* Session Date Display */}
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Clock className="h-4 w-4" />
+            <span>
+              {props.mode === 'user' 
+                ? formatSessionDate(props.sessionDate)
+                : formatDate(props.sessionDate)
+              }
+            </span>
+          </div>
+
+          {/* Stock Display */}
+          <div className="flex items-center gap-2 text-sm">
+            <Users className="h-4 w-4" />
+            <span className={isOutOfStock ? "text-red-500 font-medium" : "text-muted-foreground"}>
+              {isOutOfStock 
+                ? "Sold Out" 
+                : `${props.stockQuantity} ${props.stockQuantity === 1 ? 'spot' : 'spots'} available`
+              }
+            </span>
+          </div>
+
+          {/* Multiple Price Options (user mode only) */}
+          {props.mode === 'user' && props.allPrices.length > 1 && (
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">Billing options:</p>
+              <div className="flex flex-wrap gap-2">
+                {props.allPrices.map((priceOption) => (
+                  <Button
+                    key={priceOption.id}
+                    variant={selectedPriceId === priceOption.id ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSelectedPriceId(priceOption.id)}
+                    className="text-xs"
+                  >
+                    {priceOption.interval ? 
+                      `${priceOption.interval}${priceOption.interval_count && priceOption.interval_count > 1 ? ` (${priceOption.interval_count})` : ''}` : 
+                      'One-time'
+                    }
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+        </CardHeader>
+        
+        <CardContent>
+          {/* Features (user mode only) */}
+          {props.mode === 'user' && props.features.length > 0 && (
+            <ul className="space-y-3">
+              {props.features.map((feature, index) => (
+                <li key={index} className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-primary" />
+                  <span className="text-sm">{feature}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {/* Admin Actions */}
+          {props.mode === 'admin' && (
+            <div className="flex flex-col xl:flex-row gap-2 pt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => props.onEdit(props.product)}
+                className="flex-1 min-w-0"
+              >
+                <Edit className="h-4 w-4 mr-1" />
+                <span className="">Edit</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => props.onToggleStatus(props.product)}
+                className="flex-1 min-w-0"
+              >
+                <span>
+                  {props.product.is_active ? 'Deactivate' : 'Activate'}
+                </span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => props.onDelete(props.product)}
+                className="text-destructive hover:text-destructive flex-shrink-0"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </CardContent>
+        
+        {/* Footer with action button (user mode only) */}
+        {props.mode === 'user' && (
+          <CardFooter>
+            <Button
+              className="w-full"
+              onClick={handleAddToCart}
+              disabled={loading || isOutOfStock}
+              variant={props.popular ? "default" : "outline"}
+            >
+              {loading ? "Adding..." : isOutOfStock ? "Sold Out" : "Add to Cart"}
+            </Button>
+          </CardFooter>
+        )}
+      </Card>
+
+      {/* Athlete Selection Modal */}
+      {showAthleteSelection && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <Card className="w-full max-w-md">
+            <CardHeader>
+              <CardTitle>Select Athlete</CardTitle>
+              <CardDescription>
+                Choose which athlete this session is for
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {athletes.map((athlete) => (
+                  <Button
+                    key={athlete.id}
+                    variant="outline"
+                    className="w-full justify-start"
+                    onClick={() => handleAthleteSelection(athlete.id)}
+                    disabled={loading}
+                  >
+                    <Users className="h-4 w-4 mr-2" />
+                    {athlete.name}
+                    {athlete.age && ` (Age ${athlete.age})`}
+                  </Button>
+                ))}
+                <Button
+                  variant="dashed"
+                  className="w-full justify-start border-dashed"
+                  onClick={() => {
+                    setShowAthleteSelection(false)
+                    setShowAthleteForm(true) // Show athlete form instead of redirecting
+                  }}
+                >
+                  <Users className="h-4 w-4 mr-2" />
+                  Add New Athlete
+                </Button>
+              </div>
+              <div className="flex gap-2 pt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowAthleteSelection(false)}
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Add Athlete Modal */}
+      {showAthleteForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <Card className="w-full max-w-md">
+            <CardHeader>
+              <CardTitle>Add New Athlete</CardTitle>
+              <CardDescription>
+                Create a new athlete profile for this session
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="name">Name *</Label>
+                  <Input
+                    id="name"
+                    value={newAthlete.name}
+                    onChange={(e) => setNewAthlete({ ...newAthlete, name: e.target.value })}
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="age">Age</Label>
+                  <Input
+                    id="age"
+                    type="number"
+                    value={newAthlete.age}
+                    onChange={(e) => setNewAthlete({ ...newAthlete, age: e.target.value })}
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="school">School</Label>
+                  <Input
+                    id="school"
+                    value={newAthlete.school}
+                    onChange={(e) => setNewAthlete({ ...newAthlete, school: e.target.value })}
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="position">Position</Label>
+                  <Input
+                    id="position"
+                    value={newAthlete.position}
+                    onChange={(e) => setNewAthlete({ ...newAthlete, position: e.target.value })}
+                  />
+                </div>
+                
+                <div className="flex gap-2 pt-4">
+                  <Button 
+                    onClick={createAthlete} 
+                    disabled={loading || !newAthlete.name.trim()}
+                    className="flex-1"
+                  >
+                    {loading ? 'Creating...' : 'Create & Add to Cart'}
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      setShowAthleteForm(false)
+                      setShowAthleteSelection(true) // Go back to athlete selection
+                    }}
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+    </>
+  )
+}
