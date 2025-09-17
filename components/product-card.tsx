@@ -129,6 +129,49 @@ export function ProductCard(props: ProductCardProps) {
     })
   }
 
+  // Get stock status styling with enhanced color coding
+  const getStockStatus = () => {
+    const isOutOfStock = props.stockQuantity <= 0
+    
+    if (isOutOfStock) {
+      return {
+        textClass: "text-red-600 font-semibold",
+        iconClass: "text-red-500",
+        badgeClass: "bg-red-100 text-red-800 border-red-200",
+        text: "Sold Out",
+        buttonDisabled: true
+      }
+    }
+    
+    if (props.stockQuantity <= 3) {
+      return {
+        textClass: "text-orange-600 font-medium",
+        iconClass: "text-orange-500", 
+        badgeClass: "bg-orange-100 text-orange-800 border-orange-200",
+        text: `${props.stockQuantity} ${props.stockQuantity === 1 ? 'spot' : 'spots'} left`,
+        buttonDisabled: false
+      }
+    }
+    
+    if (props.stockQuantity <= 10) {
+      return {
+        textClass: "text-yellow-600 font-medium",
+        iconClass: "text-yellow-500",
+        badgeClass: "bg-yellow-100 text-yellow-800 border-yellow-200", 
+        text: `${props.stockQuantity} spots available`,
+        buttonDisabled: false
+      }
+    }
+    
+    return {
+      textClass: "text-green-600 font-medium",
+      iconClass: "text-green-500",
+      badgeClass: "bg-green-100 text-green-800 border-green-200",
+      text: `${props.stockQuantity} spots available`,
+      buttonDisabled: false
+    }
+  }
+
   // Get card styling based on urgency (user mode only)
   const getCardStyling = () => {
     if (props.mode === 'admin') {
@@ -181,7 +224,7 @@ export function ProductCard(props: ProductCardProps) {
       if (error) throw error
       setAthletes(data || [])
     } catch (error) {
-      console.error('Error loading athletes:', error)
+      showToast('Failed to load athletes', 'error')
     }
   }
 
@@ -206,7 +249,6 @@ export function ProductCard(props: ProductCardProps) {
       await loadAthletes()
       setShowAthleteSelection(true)
     } catch (error) {
-      console.error("Error preparing cart:", error)
       showToast("Failed to add to cart. Please try again.", 'error')
     } finally {
       setLoading(false)
@@ -216,11 +258,15 @@ export function ProductCard(props: ProductCardProps) {
   const handleAthleteSelection = async (athleteId: string) => {
     try {
       setLoading(true)
-      await addToCart(props.productId, athleteId, 1)
-      setShowAthleteSelection(false)
-      showToast('Added to cart!', 'success')
+      const result = await addToCart(props.productId, athleteId, 1)
+      
+      if (result.success) {
+        setShowAthleteSelection(false)
+        showToast('Added to cart!', 'success')
+      } else {
+        showToast(result.error || 'Failed to add to cart', 'error')
+      }
     } catch (error) {
-      console.error('Error adding to cart:', error)
       const errorMessage = error instanceof Error ? error.message : 'Failed to add to cart. Please try again.'
       showToast(errorMessage, 'error')
     } finally {
@@ -261,7 +307,6 @@ export function ProductCard(props: ProductCardProps) {
       setShowAthleteForm(false)
       setShowAthleteSelection(false)
     } catch (error) {
-      console.error('Error creating athlete:', error)
       showToast('Failed to create athlete', 'error')
     } finally {
       setLoading(false)
@@ -269,7 +314,7 @@ export function ProductCard(props: ProductCardProps) {
   }
 
   const styling = getCardStyling()
-  const isOutOfStock = props.stockQuantity <= 0
+  const stockStatus = getStockStatus()
 
   return (
     <>
@@ -280,18 +325,7 @@ export function ProductCard(props: ProductCardProps) {
             {props.endDateUrgency !== 'normal' ? styling.badgeText : 'Most Popular'}
           </Badge>
         )}
-        
-        {props.image && (
-          <div className="relative h-32 w-full">
-            <Image
-              src={props.image}
-              alt={props.title}
-              fill
-              className="object-cover rounded-t-lg"
-            />
-          </div>
-        )}
-        
+
         <CardHeader>
           <CardTitle className={`${props.mode === 'user' ? 'text-2xl' : 'text-lg'} truncate`} title={props.title}>
             {props.title}
@@ -323,14 +357,11 @@ export function ProductCard(props: ProductCardProps) {
             </span>
           </div>
 
-          {/* Stock Display */}
+          {/* Enhanced Stock Display */}
           <div className="flex items-center gap-2 text-sm">
-            <Users className="h-4 w-4" />
-            <span className={isOutOfStock ? "text-red-500 font-medium" : "text-muted-foreground"}>
-              {isOutOfStock 
-                ? "Sold Out" 
-                : `${props.stockQuantity} ${props.stockQuantity === 1 ? 'spot' : 'spots'} available`
-              }
+            <Users className={`h-4 w-4 ${stockStatus.iconClass}`} />
+            <span className={stockStatus.textClass}>
+              {stockStatus.text}
             </span>
           </div>
 
@@ -358,25 +389,13 @@ export function ProductCard(props: ProductCardProps) {
           )}
         </CardHeader>
         
-        <CardContent>
-          {/* Features (user mode only) */}
-          {props.mode === 'user' && props.features.length > 0 && (
-            <ul className="space-y-3">
-              {props.features.map((feature, index) => (
-                <li key={index} className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-primary" />
-                  <span className="text-sm">{feature}</span>
-                </li>
-              ))}
-            </ul>
-          )}
+        {props.mode === 'admin' && (
 
+        <CardContent>
           {/* Admin Actions */}
-          {props.mode === 'admin' && (
             <div className="flex flex-col xl:flex-row gap-2 pt-4">
               <Button
                 variant="outline"
-                size="sm"
                 onClick={() => props.onEdit(props.product)}
                 className="flex-1 min-w-0"
               >
@@ -385,7 +404,6 @@ export function ProductCard(props: ProductCardProps) {
               </Button>
               <Button
                 variant="outline"
-                size="sm"
                 onClick={() => props.onToggleStatus(props.product)}
                 className="flex-1 min-w-0"
               >
@@ -395,15 +413,17 @@ export function ProductCard(props: ProductCardProps) {
               </Button>
               <Button
                 variant="outline"
-                size="sm"
                 onClick={() => props.onDelete(props.product)}
-                className="text-destructive hover:text-destructive flex-shrink-0"
+                className="text-destructive hover:text-cream flex-shrink-0"
               >
                 <Trash2 className="h-4 w-4" />
+                <span className="">Delete</span>
+
               </Button>
             </div>
+            </CardContent>
+
           )}
-        </CardContent>
         
         {/* Footer with action button (user mode only) */}
         {props.mode === 'user' && (
@@ -411,10 +431,11 @@ export function ProductCard(props: ProductCardProps) {
             <Button
               className="w-full"
               onClick={handleAddToCart}
-              disabled={loading || isOutOfStock}
+              disabled={loading || stockStatus.buttonDisabled}
               variant={props.popular ? "default" : "outline"}
+              data-testid={stockStatus.buttonDisabled ? "sold-out-button" : "add-to-cart"}
             >
-              {loading ? "Adding..." : isOutOfStock ? "Sold Out" : "Add to Cart"}
+              {loading ? "Adding..." : stockStatus.buttonDisabled ? "Sold Out" : "Add to Cart"}
             </Button>
           </CardFooter>
         )}
@@ -450,8 +471,9 @@ export function ProductCard(props: ProductCardProps) {
                   className="w-full justify-start border-dashed"
                   onClick={() => {
                     setShowAthleteSelection(false)
-                    setShowAthleteForm(true) // Show athlete form instead of redirecting
+                    setShowAthleteForm(true)
                   }}
+                  data-testid="create-athlete"
                 >
                   <Users className="h-4 w-4 mr-2" />
                   Add New Athlete
@@ -490,6 +512,7 @@ export function ProductCard(props: ProductCardProps) {
                     value={newAthlete.name}
                     onChange={(e) => setNewAthlete({ ...newAthlete, name: e.target.value })}
                     required
+                    data-testid="athlete-name"
                   />
                 </div>
                 
@@ -526,6 +549,7 @@ export function ProductCard(props: ProductCardProps) {
                     onClick={createAthlete} 
                     disabled={loading || !newAthlete.name.trim()}
                     className="flex-1"
+                    data-testid="create-athlete-button"
                   >
                     {loading ? 'Creating...' : 'Create & Add to Cart'}
                   </Button>
@@ -533,7 +557,7 @@ export function ProductCard(props: ProductCardProps) {
                     variant="outline" 
                     onClick={() => {
                       setShowAthleteForm(false)
-                      setShowAthleteSelection(true) // Go back to athlete selection
+                      setShowAthleteSelection(true)
                     }}
                     className="flex-1"
                   >

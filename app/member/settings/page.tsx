@@ -11,8 +11,18 @@ import { useEffect, useState } from "react"
 import type { User } from "@supabase/supabase-js"
 import { UserIcon, Shield } from "lucide-react"
 
+interface UserProfile {
+  id: string
+  email: string
+  full_name: string | null
+  avatar_url: string | null
+  created_at: string
+  updated_at: string
+}
+
 export default function MemberSettings() {
   const [user, setUser] = useState<User | null>(null)
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [fullName, setFullName] = useState("")
   const [email, setEmail] = useState("")
   const [loading, setLoading] = useState(false)
@@ -25,7 +35,7 @@ export default function MemberSettings() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user)
       if (user) {
-        setFullName(user.user_metadata?.full_name || "")
+        fetchUserProfile(user.id)
         setEmail(user.email || "")
       }
     })
@@ -36,13 +46,30 @@ export default function MemberSettings() {
       const currentUser = session?.user ?? null
       setUser(currentUser)
       if (currentUser) {
-        setFullName(currentUser.user_metadata?.full_name || "")
+        fetchUserProfile(currentUser.id)
         setEmail(currentUser.email || "")
       }
     })
 
     return () => subscription.unsubscribe()
   }, [])
+
+  const fetchUserProfile = async (userId: string) => {
+    try {
+      const supabase = getSupabaseClient()
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', userId)
+        .single()
+
+      if (error) throw error
+      setUserProfile(data)
+      setFullName(data?.full_name || "")
+    } catch (error) {
+      console.error('Error fetching user profile:', error)
+    }
+  }
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -52,16 +79,43 @@ export default function MemberSettings() {
 
     try {
       const supabase = getSupabaseClient()
-      const { error } = await supabase.auth.updateUser({
-        data: { full_name: fullName },
-      })
-
-      if (error) {
-        setError(error.message)
-      } else {
-        setSuccess("Profile updated successfully!")
+      
+      if (!user) {
+        setError("No user found")
+        return
       }
+
+      // Update both auth metadata and database
+      const [authResult, dbResult] = await Promise.all([
+        // Update auth metadata
+        supabase.auth.updateUser({
+          data: { full_name: fullName },
+        }),
+        // Update database
+        supabase
+          .from('users')
+          .update({ 
+            full_name: fullName,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', user.id)
+      ])
+
+      if (authResult.error) {
+        setError(authResult.error.message)
+        return
+      }
+
+      if (dbResult.error) {
+        setError(dbResult.error.message)
+        return
+      }
+
+      // Refresh user profile data
+      await fetchUserProfile(user.id)
+      setSuccess("Profile updated successfully!")
     } catch (err) {
+      console.error('Error updating profile:', err)
       setError("An unexpected error occurred")
     } finally {
       setLoading(false)
@@ -150,8 +204,8 @@ export default function MemberSettings() {
                   <div>
                     <p className="text-sm font-medium">Member Since</p>
                     <p className="text-sm text-muted-foreground">
-                      {user?.created_at
-                        ? new Date(user.created_at).toLocaleDateString("en-US", {
+                      {userProfile?.created_at
+                        ? new Date(userProfile.created_at).toLocaleDateString("en-US", {
                             year: "numeric",
                             month: "long",
                             day: "numeric",

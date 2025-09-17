@@ -46,7 +46,7 @@ type CartAction =
 // Cart Context
 const CartContext = createContext<{
   state: CartState
-  addToCart: (productId: string, athleteId: string, quantity?: number) => Promise<void>
+  addToCart: (productId: string, athleteId: string, quantity?: number) => Promise<{ success: boolean; error?: string }>
   updateCartItem: (productId: string, athleteId: string, quantity: number) => Promise<void>
   removeFromCart: (productId: string, athleteId: string) => Promise<void>
   clearCart: () => Promise<void>
@@ -165,165 +165,116 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  // Add item to cart with comprehensive validation
-  const addToCart = async (productId: string, athleteId: string, quantity: number = 1) => {
+  // Simplified add to cart function - NO TOASTS, returns result
+  const addToCart = async (productId: string, athleteId: string, quantity: number = 1): Promise<{ success: boolean; error?: string }> => {
     try {
-      console.log('🛒 [CART] Starting addToCart with:', { productId, athleteId, quantity })
-      
-      dispatch({ type: 'SET_LOADING', payload: true })
       const supabase = getSupabaseClient()
       const sessionId = getSessionId()
       
-      console.log(' [CART] Session ID:', sessionId)
-
       // Get current user
       const { data: { user } } = await supabase.auth.getUser()
-      console.log('🛒 [CART] Current user:', user ? { id: user.id, email: user.email } : 'No user (guest)')
-
-      // VALIDATION 1: Check if athlete has already purchased this session
-      console.log('�� [CART] VALIDATION 1: Checking if athlete already purchased this session...')
-      const alreadyPurchased = await hasAthletePurchasedSession(athleteId, productId)
-      console.log('🛒 [CART] Already purchased check result:', alreadyPurchased)
-      
-      if (alreadyPurchased) {
-        console.log('🛒 [CART] ❌ BLOCKED: Athlete already purchased this session')
-        throw new Error('This athlete has already purchased this session')
+      if (!user) {
+        return { success: false, error: 'Please log in to add items to cart' }
       }
 
-      // VALIDATION 2: Check if athlete already has this session in cart (check database directly)
-      console.log('�� [CART] VALIDATION 2: Checking if athlete already has this session in cart...')
-      console.log('🛒 [CART] Querying cart_items with:', { sessionId, productId, athleteId })
-      
-      const { data: existingCartItem, error: existingCartError } = await supabase
+      // Check if athlete already has this session in cart
+      const { data: existingCartItem } = await supabase
         .from('cart_items')
         .select('id')
         .eq('session_id', sessionId)
-        .eq('product_id', productId)
+        .eq('user_id', user.id)
         .eq('athlete_id', athleteId)
+        .eq('product_id', productId)
         .single()
 
-      console.log('🛒 [CART] Existing cart item query result:', { 
-        data: existingCartItem, 
-        error: existingCartError,
-        errorCode: existingCartError?.code 
-      })
-
       if (existingCartItem) {
-        console.log('🛒 [CART] ❌ BLOCKED: Athlete already has this session in cart')
-        throw new Error('This athlete already has this session in their cart')
+        return { success: false, error: 'This athlete already has this session in their cart' }
       }
 
-      if (existingCartError && existingCartError.code !== 'PGRST116') {
-        console.log(' [CART] ❌ ERROR: Unexpected error checking existing cart item:', existingCartError)
-        throw existingCartError
+      // Check if athlete has already purchased this session
+      const { data: existingPurchase, error: purchaseError } = await supabase
+        .from('payment_athletes')
+        .select('id')
+        .eq('athlete_id', athleteId)
+        .eq('product_id', productId)
+        .single()
+
+      if (purchaseError && purchaseError.code !== 'PGRST116') {
+        console.error('Failed to check existing purchases:', purchaseError)
+        return { success: false, error: 'Failed to check purchase history' }
       }
 
-      console.log('🛒 [CART] ✅ VALIDATION 2 PASSED: No existing cart item found')
+      if (existingPurchase) {
+        return { success: false, error: 'This athlete has already purchased this session' }
+      }
 
-      // VALIDATION 3: Check product stock availability
-      console.log('�� [CART] VALIDATION 3: Checking product stock availability...')
+      // Fetch product details and validate stock
       const { data: product, error: productError } = await supabase
         .from('products')
-        .select('stock_quantity, name, is_active')
+        .select('*')
         .eq('id', productId)
         .single()
 
-      console.log('🛒 [CART] Product query result:', { 
-        product, 
-        error: productError 
-      })
-
       if (productError) {
-        console.log('🛒 [CART] ❌ ERROR: Failed to fetch product:', productError)
-        throw productError
+        console.error('Failed to fetch product:', productError)
+        return { success: false, error: 'Failed to load session details' }
       }
 
       if (!product.is_active) {
-        console.log('🛒 [CART] ❌ BLOCKED: Product is not active')
-        throw new Error('This session is no longer available')
+        return { success: false, error: 'This session is no longer available' }
       }
 
-      // VALIDATION 4: Check if there's any stock available
       if (product.stock_quantity <= 0) {
-        console.log(' [CART] ❌ BLOCKED: No stock available')
-        throw new Error(`${product.name} is sold out`)
+        return { success: false, error: `${product.name} is sold out` }
       }
 
-      console.log('🛒 [CART] ✅ VALIDATION 3 & 4 PASSED: Product is active and has stock')
+      // Check how many spots this user already has in their cart for this product
+      const { data: userCartItems, error: cartError } = await supabase
+        .from('cart_items')
+        .select('quantity')
+        .eq('session_id', sessionId)
+        .eq('user_id', user.id)
+        .eq('product_id', productId)
 
-      // For training sessions, quantity is always 1
-      const sessionQuantity = 1
-      console.log('🛒 [CART] Using session quantity:', sessionQuantity)
+      if (cartError) {
+        console.error('Failed to check user cart:', cartError)
+        return { success: false, error: 'Failed to check cart contents' }
+      }
 
-      // Add new item
-      console.log('🛒 [CART] Attempting to insert cart item with:', {
-        session_id: sessionId,
-        user_id: user?.id || null,
-        product_id: productId,
-        athlete_id: athleteId,
-        quantity: sessionQuantity
-      })
+      // Calculate total quantity already in user's cart for this product
+      const totalInCart = (userCartItems || []).reduce((sum: number, item: { quantity: number }) => sum + item.quantity, 0)
+      const availableForUser = product.stock_quantity - totalInCart
 
-      const { data, error } = await supabase
+      // Check if adding this quantity would exceed available stock
+      if (quantity > availableForUser) {
+        return { 
+          success: false, 
+          error: 'No spots left for this session' 
+        }
+      }
+
+      // Add to cart with all required fields
+      const { error: insertError } = await supabase
         .from('cart_items')
         .insert({
           session_id: sessionId,
-          user_id: user?.id || null,
+          user_id: user.id,
           product_id: productId,
           athlete_id: athleteId,
-          quantity: sessionQuantity
+          quantity: quantity
         })
-        .select(`
-          id,
-          product_id,
-          athlete_id,
-          quantity,
-          products (
-            id,
-            name,
-            description,
-            price_cents,
-            session_date,
-            stock_quantity,
-            stripe_product_id,
-            stripe_price_id
-          ),
-          athletes (
-            id,
-            name,
-            age,
-            school,
-            position
-          )
-        `)
-        .single()
 
-      console.log('🛒 [CART] Insert result:', { data, error, errorCode: error?.code })
-
-      if (error) {
-        console.log('🛒 [CART] ❌ ERROR: Failed to insert cart item:', error)
-        throw error
+      if (insertError) {
+        console.error('Failed to add to cart:', insertError)
+        return { success: false, error: 'Failed to add to cart' }
       }
 
-      const cartItem: CartItem = {
-        id: data.id,
-        productId: data.product_id,
-        athleteId: data.athlete_id,
-        quantity: data.quantity,
-        product: data.products,
-        athlete: data.athletes
-      }
-
-      console.log('🛒 [CART] ✅ SUCCESS: Created cart item:', cartItem)
-      dispatch({ type: 'ADD_ITEM', payload: cartItem })
-      
+      // Refresh cart to show new item
+      await refreshCart()
+      return { success: true }
     } catch (error) {
-      console.error('🛒 [CART] ❌ FINAL ERROR in addToCart:', error)
-      const errorMessage = error instanceof Error ? error.message : 'Failed to add item to cart'
-      dispatch({ type: 'SET_ERROR', payload: errorMessage })
-      throw error // Re-throw so calling components can handle it
-    } finally {
-      dispatch({ type: 'SET_LOADING', payload: false })
+      console.error('Unexpected error adding to cart:', error)
+      return { success: false, error: 'An unexpected error occurred' }
     }
   }
 
@@ -338,10 +289,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const supabase = getSupabaseClient()
       const sessionId = getSessionId()
 
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
       const { error } = await supabase
         .from('cart_items')
         .update({ quantity })
         .eq('session_id', sessionId)
+        .eq('user_id', user.id)
         .eq('product_id', productId)
         .eq('athlete_id', athleteId)
 
@@ -360,10 +316,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const supabase = getSupabaseClient()
       const sessionId = getSessionId()
 
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
       const { error } = await supabase
         .from('cart_items')
         .delete()
         .eq('session_id', sessionId)
+        .eq('user_id', user.id)
         .eq('product_id', productId)
         .eq('athlete_id', athleteId)
 
@@ -382,10 +343,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const supabase = getSupabaseClient()
       const sessionId = getSessionId()
 
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
       const { error } = await supabase
         .from('cart_items')
         .delete()
         .eq('session_id', sessionId)
+        .eq('user_id', user.id)
 
       if (error) throw error
 

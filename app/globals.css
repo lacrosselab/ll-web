@@ -1,96 +1,48 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-
-:root {
-  /* Updated to brand colors: Strawberry (#ED1233), Navy (#0F0040), Cream (#F7F0EA) */
-  --background: #f7f0ea; /* Cream background */
-  --foreground: #0f0040; /* Navy text */
-  --card: #ffffff; /* White cards for contrast on cream */
-  --card-foreground: #0f0040; /* Navy text on cards */
-  --popover: #ffffff; /* White popovers */
-  --popover-foreground: #0f0040; /* Navy text */
-  --primary: #ed1233; /* Strawberry for primary actions */
-  --primary-foreground: #ffffff; /* White text on strawberry */
-  --secondary: #0f0040; /* Navy for secondary elements */
-  --secondary-foreground: #ffffff; /* White text on navy */
-  --muted: #f0e8dc; /* Slightly darker cream for muted areas */
-  --muted-foreground: #6b6b6b; /* Muted navy for less important text */
-  --accent: #ed1233; /* Strawberry accents */
-  --accent-foreground: #ffffff; /* White text on strawberry */
-  --destructive: #dc2626; /* Red for destructive actions */
-  --destructive-foreground: #ffffff; /* White text */
-  --border: #e5ddd1; /* Subtle border on cream background */
-  --input: #ffffff; /* White input backgrounds */
-  --ring: #ed1233; /* Strawberry focus rings */
-  --chart-1: #ed1233; /* Strawberry */
-  --chart-2: #0f0040; /* Navy */
-  --chart-3: #f7f0ea; /* Cream */
-  --chart-4: #b91c1c; /* Darker red variant */
-  --chart-5: #1e1b4b; /* Lighter navy variant */
-  --radius: 0.5rem;
-  --sidebar: #ffffff; /* White sidebar */
-  --sidebar-foreground: #0f0040; /* Navy text */
-  --sidebar-primary: #ed1233; /* Strawberry primary */
-  --sidebar-primary-foreground: #ffffff; /* White text */
-  --sidebar-accent: #f7f0ea; /* Cream accent */
-  --sidebar-accent-foreground: #0f0040; /* Navy text */
-  --sidebar-border: #e5ddd1; /* Subtle borders */
-  --sidebar-ring: #ed1233; /* Strawberry focus */
-}
-
-/* TODO: Add custom font variables when Futura Condensed ExtraBold and Helvetica are available */
-@theme inline {
-  --font-sans: var(--font-geist-sans); /* TODO: Replace with Helvetica */
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-geist-sans); /* TODO: Replace with Futura Condensed ExtraBold */
-
-  /* Updated color mappings to use new brand colors */
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-
-  /* Brand color utilities */
-  --color-strawberry: #ed1233;
-  --color-navy: #0f0040;
-  --color-cream: #f7f0ea;
-}
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  /* Brand colors: Strawberry, Navy, Cream - HSL as single source of truth */
+  --background: 30 25% 95%; /* Cream background */
+  --foreground: 250 100% 13%; /* Navy text */
+  --card: 0 0% 100%; /* White cards */
+  --card-foreground: 250 100% 13%; /* Navy text on cards */
+  --popover: 0 0% 100%; /* White popovers */
+  --popover-foreground: 250 100% 13%; /* Navy text */
+  --primary: 350 89% 50%; /* Strawberry for primary actions */
+  --primary-foreground: 0 0% 100%; /* White text on strawberry */
+  --secondary: 30 25% 95%; /* Cream for secondary elements */
+  --secondary-foreground: 250 100% 13%; /* Navy text on cream */
+  --muted: 30 25% 95%; /* Cream for muted areas */
+  --muted-foreground: 0 0% 42%; /* Muted text */
+  --accent: 350 89% 50%; /* Strawberry accents */
+  --accent-foreground: 0 0% 100%; /* White text on strawberry */
+  --destructive: 0 84% 60%; /* Red for destructive actions */
+  --destructive-foreground: 0 0% 100%; /* White text */
+  --border: 30 20% 88%; /* Subtle border on cream background */
+  --input: 0 0% 100%; /* White input backgrounds */
+  --ring: 350 89% 50%; /* Strawberry focus rings */
+  --chart-1: 350 89% 50%; /* Strawberry */
+  --chart-2: 250 100% 13%; /* Navy */
+  --chart-3: 30 25% 95%; /* Cream */
+  --chart-4: 0 84% 60%; /* Darker red variant */
+  --chart-5: 250 100% 20%; /* Lighter navy variant */
+  --radius: 0.5rem;
+  --sidebar: 0 0% 100%; /* White sidebar */
+  --sidebar-foreground: 250 100% 13%; /* Navy text */
+  --sidebar-primary: 350 89% 50%; /* Strawberry primary */
+  --sidebar-primary-foreground: 0 0% 100%; /* White text */
+  --sidebar-accent: 30 25% 95%; /* Cream accent */
+  --sidebar-accent-foreground: 250 100% 13%; /* Navy text */
+  --sidebar-border: 30 20% 88%; /* Subtle borders */
+  --sidebar-ring: 350 89% 50%; /* Strawberry focus */
+}
+
+/* Brand color utilities - HSL only */
+.strawberry { color: hsl(350 89% 50%); }
+.navy { color: hsl(250 100% 13%); }
+.cream { background-color: hsl(30 25% 95%); }
 
 /* Add line-clamp utilities */
 .line-clamp-2 {
@@ -102,57 +54,77 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
+  
   html {
     scroll-behavior: smooth;
   }
+  
   body {
     @apply bg-background text-foreground font-sans;
+    /* Force the cream background and navy text using HSL */
+    background-color: hsl(30 25% 95%) !important;
+    color: hsl(250 100% 13%) !important;
   }
 
-  /* Added heading styles for brand typography */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-heading; /* TODO: Will use Futura Condensed ExtraBold when available */
+  /* Heading styles */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+    color: hsl(250 100% 13%) !important; /* Navy headings */
   }
 
-  /* Subtle button animations */
+  /* Button styles to match your original design */
   button, .btn {
     transition: all 0.2s ease-in-out;
   }
   
   button:hover, .btn:hover {
     transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
   button:active, .btn:active {
     transform: translateY(0);
   }
+
+  /* Ensure cards have proper styling */
+  .card {
+    background-color: hsl(0 0% 100%);
+    border: 1px solid hsl(30 20% 88%);
+    border-radius: 0.5rem;
+  }
+
+  /* Fix muted backgrounds to be cream instead of gray */
+  .bg-muted {
+    background-color: hsl(30 25% 95%) !important;
+  }
+
+  /* Fix secondary backgrounds to be cream instead of navy */
+  .bg-secondary {
+    background-color: hsl(30 25% 95%) !important;
+    color: hsl(250 100% 13%) !important;
+  }
 }
 
 @layer utilities {
-  /* Brand color utilities */
+  /* Brand color utilities - HSL only */
   .text-strawberry {
-    color: var(--color-strawberry);
+    color: hsl(350 89% 50%);
   }
   .bg-strawberry {
-    background-color: var(--color-strawberry);
+    background-color: hsl(350 89% 50%);
   }
   .text-navy {
-    color: var(--color-navy);
+    color: hsl(250 100% 13%);
   }
   .bg-navy {
-    background-color: var(--color-navy);
+    background-color: hsl(250 100% 13%);
   }
   .text-cream {
-    color: var(--color-cream);
+    color: hsl(30 25% 95%);
   }
   .bg-cream {
-    background-color: var(--color-cream);
+    background-color: hsl(30 25% 95%);
   }
 }

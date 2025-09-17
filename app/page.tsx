@@ -28,7 +28,7 @@ export default function HomePage() {
                 size="lg"
                 className="text-lg px-12 py-4 bg-primary hover:bg-primary/90 text-cream font-semibold"
               >
-                Join Here
+                Find A Session
               </Button>
             </Link>
           </AnimatedSection>

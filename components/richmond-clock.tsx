@@ -1,5 +1,6 @@
 "use client"
 
+import { Link } from "lucide-react"
 import { useState, useEffect } from "react"
 
 export function RichmondClock() {
@@ -43,8 +44,9 @@ export function RichmondClock() {
 
   return (
     <div className="text-center">
-      <div className="text-xs font-mono text-navy/80">
-        Richmond, VA
+      <div className="mb-2 cursor-pointer hover:text-strawberry" onClick={() => window.open("https://maps.app.goo.gl/nb9MUxNYtdX8EpSV6", "_blank")}>
+        <p className="text-xs font-mono text-navy/80">3006 Impala Place, Unit B</p>
+        <p className="text-xs font-mono text-navy/80">Henrico, VA 23228</p>
       </div>
       <div className="text-sm font-mono font-semibold text-navy">
         {time}

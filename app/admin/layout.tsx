@@ -5,7 +5,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import { getSupabaseClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Package, Users, BarChart3, Settings } from 'lucide-react'
+import { Calendar, Users } from 'lucide-react'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
@@ -31,10 +31,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }, [router, pathname])
 
   const navItems = [
-    { href: '/admin/products', label: 'Products', icon: Package },
+    { href: '/admin/products', label: 'Sessions', icon: Calendar },
     { href: '/admin/athletes', label: 'Athletes', icon: Users },
-    { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
-    { href: '/admin/settings', label: 'Settings', icon: Settings },
   ]
 
   return (

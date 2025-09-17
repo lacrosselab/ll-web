@@ -65,6 +65,7 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    data-testid="email"
                   />
                 </div>
                 <div className="space-y-2">
@@ -76,10 +77,11 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    data-testid="password"
                   />
                 </div>
                 {error && <p className="text-sm text-destructive">{error}</p>}
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full" disabled={loading} data-testid="login-button">
                   {loading ? "Signing in..." : "Sign In"}
                 </Button>
               </form>

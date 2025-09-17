@@ -102,6 +102,7 @@ export default function SignupPage() {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required
+                    data-testid="fullName"
                   />
                 </div>
                 <div className="space-y-2">
@@ -113,6 +114,7 @@ export default function SignupPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    data-testid="email"
                   />
                 </div>
                 <div className="space-y-2">
@@ -125,10 +127,11 @@ export default function SignupPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     minLength={6}
+                    data-testid="password"
                   />
                 </div>
                 {error && <p className="text-sm text-destructive">{error}</p>}
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full" disabled={loading} data-testid="signup-button">
                   {loading ? "Creating account..." : "Create Account"}
                 </Button>
               </form>

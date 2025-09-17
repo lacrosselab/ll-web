@@ -173,7 +173,7 @@ export default function CartPage() {
 
   if (state.items.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto min-h-[70vh] lg:min-h-[80vh] px-4 py-8">
         <div className="text-center py-12">
           <ShoppingCart className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
           <h1 className="text-3xl font-bold mb-4">Your cart is empty</h1>
@@ -189,7 +189,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto min-h-[70vh] lg:min-h-[80vh] px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Shopping Cart</h1>
         <Button variant="outline" onClick={clearCart}>
@@ -201,16 +201,21 @@ export default function CartPage() {
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-4">
           {state.items.map((item) => (
-            <Card key={`${item.productId}-${item.athleteId}`}>
+            <Card key={`${item.productId}-${item.athleteId}`} data-testid="cart-item">
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <div>
                     <CardTitle className="text-xl">{item.product.name}</CardTitle>
                     <CardDescription>{item.product.description}</CardDescription>
                   </div>
-                  <Badge variant="outline">
-                    {formatPrice(item.product.price_cents)}
-                  </Badge>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold">
+                      ${(item.product.price_cents / 100).toFixed(2)}
+                    </div>
+                    <Badge variant="outline" className="mt-1">
+                      {item.quantity} {item.quantity === 1 ? 'spot' : 'spots'}
+                    </Badge>
+                  </div>
                 </div>
               </CardHeader>
               
@@ -238,6 +243,7 @@ export default function CartPage() {
                       variant="outline"
                       size="sm"
                       onClick={() => removeFromCart(item.productId, item.athleteId)}
+                      data-testid="remove-item"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -300,6 +306,7 @@ export default function CartPage() {
                 className="w-full" 
                 onClick={handleCheckout}
                 disabled={checkoutLoading}
+                data-testid="checkout-button"
               >
                 {checkoutLoading ? 'Processing...' : 'Proceed to Checkout'}
               </Button>

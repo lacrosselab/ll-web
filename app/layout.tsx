@@ -24,13 +24,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        <CartProvider>
-          <ToastProvider>
+        <ToastProvider>
+          <CartProvider>
             <Navigation />
             {children}
             <Analytics />
-          </ToastProvider>
-        </CartProvider>
+          </CartProvider>
+        </ToastProvider>
         <Footer />
       </body>
     </html>

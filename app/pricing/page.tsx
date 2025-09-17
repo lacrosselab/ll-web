@@ -90,7 +90,8 @@ async function fetchProducts(): Promise<Product[]> {
     })
     
     if (!response.ok) {
-      throw new Error('Failed to fetch products')
+      console.error('Failed to fetch products:', response.status, response.statusText)
+      return []
     }
     
     const data: ProductsResponse = await response.json()
