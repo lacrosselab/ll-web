@@ -243,9 +243,9 @@ function SessionForm({
     setLoading(true)
 
     try {
-      const supabase = getSupabaseClient()
+      const supabase = getSupabaseClient() // Add this line
       
-      // Validate required fields - show toast instead of throwing
+      // Validate required fields
       if (!formData.name.trim()) {
         showToast('Session name is required', 'error')
         setLoading(false)
@@ -275,18 +275,71 @@ function SessionForm({
         session_date: formData.session_date,
         stock_quantity: parseInt(formData.stock_quantity),
         is_active: formData.is_active,
-        stripe_product_id: formData.stripe_product_id.trim() || null,
-        stripe_price_id: formData.stripe_price_id.trim() || null
+        // Remove these fields from the update - they shouldn't be changed
+        // stripe_product_id: formData.stripe_product_id.trim() || null,
+        // stripe_price_id: formData.stripe_price_id.trim() || null
       }
 
       if (product) {
+        // Update existing product
         const { error } = await supabase
           .from('products')
           .update(productData)
           .eq('id', product.id)
         if (error) throw error
-        showToast('Session updated successfully!', 'success')
+
+        // Check what changed and sync to Stripe
+        const nameChanged = product.name !== formData.name.trim()
+        const descriptionChanged = product.description !== (formData.description.trim() || null)
+        const priceChanged = product.price_cents !== Math.round(parseFloat(formData.price) * 100)
+
+        // Only call Stripe API if something changed and we have Stripe IDs
+        if ((nameChanged || descriptionChanged || priceChanged) && 
+            product.stripe_product_id && product.stripe_price_id) {
+          
+          try {
+            const stripeResponse = await fetch('/api/admin/products', {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                productId: product.stripe_product_id,  // Use existing Stripe IDs
+                priceId: product.stripe_price_id,      // Use existing Stripe IDs
+                name: productData.name,
+                description: productData.description,
+                price_cents: productData.price_cents,
+                currency: productData.currency,
+                nameChanged,
+                descriptionChanged,
+                priceChanged
+              })
+            })
+
+            if (!stripeResponse.ok) {
+              const errorData = await stripeResponse.json()
+              console.error('Stripe update failed:', errorData)
+              showToast('Session updated in database, but Stripe sync failed', 'error')
+            } else {
+              const stripeData = await stripeResponse.json()
+              // Update database with new price ID if price changed
+              if (priceChanged && stripeData.priceId !== product.stripe_price_id) {
+                await supabase
+                  .from('products')
+                  .update({ stripe_price_id: stripeData.priceId })
+                  .eq('id', product.id)
+              }
+              showToast('Session updated successfully!', 'success')
+            }
+          } catch (stripeError) {
+            console.error('Stripe sync error:', stripeError)
+            showToast('Session updated in database, but Stripe sync failed', 'error')
+          }
+        } else {
+          showToast('Session updated successfully!', 'success')
+        }
       } else {
+        // Create new product
         const { error } = await supabase
           .from('products')
           .insert(productData)
@@ -297,16 +350,7 @@ function SessionForm({
       onSuccess()
     } catch (err) {
       console.error('Error saving session:', err)
-      
-      // Better error handling
-      let errorMessage = 'There was an error saving the session.'
-      if (err instanceof Error) {
-        errorMessage = err.message
-      } else if (err && typeof err === 'object' && 'message' in err) {
-        errorMessage = String(err.message)
-      }
-      
-      showToast(errorMessage, 'error')
+      showToast('Failed to save session', 'error')
     } finally {
       setLoading(false)
     }
