@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { getSupabaseClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -39,7 +39,7 @@ interface UserProfile {
   updated_at: string
 }
 
-export default function MemberDashboard() {
+function DashboardContent() {
   const [user, setUser] = useState<User | null>(null)
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [recentPayments, setRecentPayments] = useState<Payment[]>([])
@@ -500,5 +500,13 @@ export default function MemberDashboard() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function MemberDashboard() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DashboardContent />
+    </Suspense>
   )
 }
