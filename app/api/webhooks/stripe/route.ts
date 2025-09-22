@@ -278,46 +278,22 @@ export async function POST(request: NextRequest) {
             }
 
           // Clear the user's cart after successful payment
-          // We need to get the session_id from the cart_items table for this user
           if (userId) {
             console.log(`[WEBHOOK] Attempting to clear cart for user: ${userId}`)
             
-            // Get all cart sessions for this user and clear them
-            const { data: userCartItems, error: cartQueryError } = await supabase
+            // Simply delete all cart items for this user (no session_id needed)
+            const { error: clearCartError } = await supabase
               .from('cart_items')
-              .select('session_id, product_id, athlete_id')
+              .delete()
               .eq('user_id', userId)
 
-            if (cartQueryError) {
-              console.error(`[WEBHOOK] Error querying cart items:`, cartQueryError)
+            if (clearCartError) {
+              console.error(`[WEBHOOK] Error clearing cart for user ${userId}:`, clearCartError)
             } else {
-              console.log(`[WEBHOOK] Found ${userCartItems?.length || 0} cart items for user`)
-              
-              if (userCartItems && userCartItems.length > 0) {
-                // Get unique session IDs
-                const sessionIds = [...new Set(userCartItems.map(item => item.session_id))]
-                console.log(`[WEBHOOK] Found ${sessionIds.length} unique cart sessions:`, sessionIds)
-                
-                // Clear all cart sessions for this user
-                for (const sessionId of sessionIds) {
-                  console.log(`[WEBHOOK] Clearing cart session: ${sessionId}`)
-                  const { error: clearCartError } = await supabase
-                    .from('cart_items')
-                    .delete()
-                    .eq('session_id', sessionId)
-
-                  if (clearCartError) {
-                    console.error(`[WEBHOOK] Error clearing cart session ${sessionId}:`, clearCartError)
-                  } else {
-                    console.log(`[WEBHOOK] Successfully cleared cart session: ${sessionId}`)
-                  }
-                }
-              } else {
-                console.log(`[WEBHOOK] No cart items found for user ${userId}`)
-              }
+              console.log(`[WEBHOOK] Successfully cleared cart for user: ${userId}`)
             }
           } else {
-            console.log(`[WEBHOOK] No userId available for cart clearing`)
+            console.log(`[WEBHOOK] No user ID found, skipping cart clear`)
           }
         }
         break

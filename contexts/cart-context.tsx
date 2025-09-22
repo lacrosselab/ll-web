@@ -97,27 +97,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     error: null
   })
 
-  // Get or create session ID
-  const getSessionId = (): string => {
-    if (typeof window === 'undefined') return ''
-    
-    let sessionId = localStorage.getItem('cart_session_id')
-    if (!sessionId) {
-      sessionId = `cart_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-      localStorage.setItem('cart_session_id', sessionId)
-    }
-    return sessionId
-  }
-
-  // Load cart from database
+  // Load cart from database (updated to use only user_id)
   const loadCart = async () => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true })
       const supabase = getSupabaseClient()
-      const sessionId = getSessionId()
 
       // Get current user
       const { data: { user } } = await supabase.auth.getUser()
+      
+      if (!user) {
+        // No user, no cart to load
+        dispatch({ type: 'SET_ITEMS', payload: [] })
+        return
+      }
 
       const { data, error } = await supabase
         .from('cart_items')
@@ -144,8 +137,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             position
           )
         `)
-        .eq('session_id', sessionId)
-        .eq('user_id', user?.id || null)
+        .eq('user_id', user.id) // Only filter by user_id now
 
       if (error) throw error
 
@@ -169,7 +161,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addToCart = async (productId: string, athleteId: string, quantity: number = 1): Promise<{ success: boolean; error?: string }> => {
     try {
       const supabase = getSupabaseClient()
-      const sessionId = getSessionId()
       
       // Get current user
       const { data: { user } } = await supabase.auth.getUser()
@@ -181,7 +172,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const { data: existingCartItem } = await supabase
         .from('cart_items')
         .select('id')
-        .eq('session_id', sessionId)
         .eq('user_id', user.id)
         .eq('athlete_id', athleteId)
         .eq('product_id', productId)
@@ -232,7 +222,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const { data: userCartItems, error: cartError } = await supabase
         .from('cart_items')
         .select('quantity')
-        .eq('session_id', sessionId)
         .eq('user_id', user.id)
         .eq('product_id', productId)
 
@@ -253,11 +242,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      // Add to cart with all required fields
+      // Add to cart with only user_id (no session_id)
       const { error: insertError } = await supabase
         .from('cart_items')
         .insert({
-          session_id: sessionId,
           user_id: user.id,
           product_id: productId,
           athlete_id: athleteId,
@@ -287,7 +275,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
 
       const supabase = getSupabaseClient()
-      const sessionId = getSessionId()
 
       // Get current user
       const { data: { user } } = await supabase.auth.getUser()
@@ -296,7 +283,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const { error } = await supabase
         .from('cart_items')
         .update({ quantity })
-        .eq('session_id', sessionId)
         .eq('user_id', user.id)
         .eq('product_id', productId)
         .eq('athlete_id', athleteId)
@@ -314,7 +300,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const removeFromCart = async (productId: string, athleteId: string) => {
     try {
       const supabase = getSupabaseClient()
-      const sessionId = getSessionId()
 
       // Get current user
       const { data: { user } } = await supabase.auth.getUser()
@@ -323,7 +308,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const { error } = await supabase
         .from('cart_items')
         .delete()
-        .eq('session_id', sessionId)
         .eq('user_id', user.id)
         .eq('product_id', productId)
         .eq('athlete_id', athleteId)
@@ -341,7 +325,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const clearCart = async () => {
     try {
       const supabase = getSupabaseClient()
-      const sessionId = getSessionId()
 
       // Get current user
       const { data: { user } } = await supabase.auth.getUser()
@@ -350,7 +333,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const { error } = await supabase
         .from('cart_items')
         .delete()
-        .eq('session_id', sessionId)
         .eq('user_id', user.id)
 
       if (error) throw error
@@ -377,9 +359,39 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     await loadCart()
   }
 
-  // Load cart on mount
+  // Auth-driven cart loading
   useEffect(() => {
-    loadCart()
+    const supabase = getSupabaseClient()
+    
+    // Get initial auth state
+    const getInitialSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session?.user) {
+        await loadCart()
+      }
+    }
+    
+    getInitialSession()
+    
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log('🛒 [CART] Auth state changed:', event, session?.user?.id)
+        
+        if (event === 'SIGNED_IN' && session?.user) {
+          await loadCart()
+        } else if (event === 'SIGNED_OUT') {
+          // Clear cart when user signs out
+          dispatch({ type: 'SET_ITEMS', payload: [] })
+          dispatch({ type: 'SET_ERROR', payload: null })
+        }
+      }
+    )
+    
+    // Cleanup subscription on unmount
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [])
 
   const value = {

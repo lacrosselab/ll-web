@@ -173,7 +173,7 @@ export default function CartPage() {
 
   if (state.items.length === 0) {
     return (
-      <div className="container mx-auto min-h-[70vh] lg:min-h-[80vh] px-4 py-8">
+      <div className="container mx-auto min-h-[70vh] lg:min-h-[77vh] px-4 py-8">
         <div className="text-center py-12">
           <ShoppingCart className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
           <h1 className="text-3xl font-bold mb-4">Your cart is empty</h1>
@@ -189,7 +189,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="container mx-auto min-h-[70vh] lg:min-h-[80vh] px-4 py-8">
+    <div className="container mx-auto min-h-[70vh] lg:min-h-[77vh] px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Shopping Cart</h1>
         <Button variant="outline" onClick={clearCart}>

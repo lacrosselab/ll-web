@@ -81,15 +81,13 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-
+    <div className="min-h-[70vh] lg:min-h-[77vh] bg-background">
       <div className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-md">
           <Card>
             <CardHeader className="text-center">
               <CardTitle className="text-2xl">Create your account</CardTitle>
-              <CardDescription>Get started with your free trial today</CardDescription>
+              <CardDescription>Book sessions, manage athlete profiles & more</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSignup} className="space-y-4">
