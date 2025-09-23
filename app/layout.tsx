@@ -1,3 +1,4 @@
+// app/layout.tsx
 import type React from "react"
 import type { Metadata } from "next"
 import { GeistSans } from "geist/font/sans"
@@ -9,6 +10,7 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import "./globals.css"
 import { CartProvider } from "@/contexts/cart-context"
+import { AuthProvider } from "@/contexts/auth-context"
 import { ToastProvider } from '@/components/ui/toast'
 
 export const metadata: Metadata = {
@@ -25,11 +27,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <ToastProvider>
-          <CartProvider>
-            <Navigation />
-            {children}
-            <Analytics />
-          </CartProvider>
+          <AuthProvider>
+            <CartProvider>
+              <Navigation />
+              {children}
+              <Analytics />
+            </CartProvider>
+          </AuthProvider>
         </ToastProvider>
         <Footer />
       </body>

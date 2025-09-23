@@ -12,6 +12,7 @@ import { getSupabaseClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { ProductCard } from '@/components/product-card'
 import { useToast } from '@/components/ui/toast'
+import { stripe } from '@/lib/stripe'
 
 interface Product {
   id: string
@@ -339,12 +340,26 @@ function SessionForm({
           showToast('Session updated successfully!', 'success')
         }
       } else {
-        // Create new product
-        const { error } = await supabase
-          .from('products')
-          .insert(productData)
-        if (error) throw error
-        showToast('Session created successfully!', 'success')
+        // Create new product via API
+        try {
+          const response = await fetch('/api/admin/products', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(productData)
+          })
+
+          if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Failed to create product')
+          }
+
+          showToast('Session created successfully!', 'success')
+        } catch (error) {
+          console.error('Failed to create session:', error)
+          showToast(`Failed to create session: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error')
+        }
       }
 
       onSuccess()

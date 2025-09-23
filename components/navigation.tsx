@@ -1,46 +1,50 @@
+// components/navigation.tsx
 "use client"
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { usePathname } from "next/navigation"
-import { getSupabaseClient } from "@/lib/supabase/client"
-import { useEffect, useState } from "react"
-import type { User } from "@supabase/supabase-js"
+import { useAuth } from "@/contexts/auth-context"
 import Image from "next/image"
 import { Menu, X } from "lucide-react"
 import { CartIcon } from "@/components/cart-icon"
+import { useState } from "react"
 
 export function Navigation() {
   const pathname = usePathname()
-  const [user, setUser] = useState<User | null>(null)
+  const { user, signOut, loading } = useAuth()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-  useEffect(() => {
-    const supabase = getSupabaseClient()
-
-    // Get initial user
-    supabase.auth.getUser().then(({ data: { user } }: any) => {
-      setUser(user)
-    })
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event: any, session: any) => {
-      setUser(session?.user ?? null)
-    })
-
-    return () => subscription.unsubscribe()
-  }, [])
-
   const handleSignOut = async () => {
-    const supabase = getSupabaseClient()
-    await supabase.auth.signOut()
-    setIsMobileMenuOpen(false)
+    try {
+      await signOut()
+      setIsMobileMenuOpen(false)
+    } catch (error) {
+      console.error("Sign out failed:", error)
+      setIsMobileMenuOpen(false)
+    }
   }
 
   // Check if user is admin
   const isAdmin = user?.email?.endsWith('@thelacrosselab.com')
+
+  // Show loading state while auth is initializing
+  if (loading) {
+    return (
+      <nav className="w-full border-b bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            <div className="flex items-center">
+              <Link href="/" className="flex items-center">
+                <Image src="/logo.svg" alt="Lacrosse Lab" width={120} height={16} className="h-6 w-auto" />
+              </Link>
+            </div>
+            <div className="text-sm text-muted-foreground">Loading...</div>
+          </div>
+        </div>
+      </nav>
+    )
+  }
 
   return (
     <nav className="w-full border-b bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
@@ -70,7 +74,6 @@ export function Navigation() {
                 )}
 
                  {/* Available Sessions - always shown */}
-          
                  <Link href="/pricing">
                   <Button variant="outline" size="sm">
                     Available Sessions

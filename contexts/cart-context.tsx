@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useReducer, useEffect } from 'react'
 import { getSupabaseClient } from '@/lib/supabase/client'
+import { useAuth } from './auth-context' // Add this import
 
 // Types
 interface CartItem {
@@ -53,6 +54,7 @@ const CartContext = createContext<{
   getTotalItems: () => number
   getTotalPrice: () => number
   refreshCart: () => Promise<void>
+  clearBrowserStorage: () => void // Added this to the context type
 } | null>(null)
 
 // Cart Reducer
@@ -97,6 +99,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     error: null
   })
 
+  // Use the centralized auth context
+  const { user, loading: authLoading } = useAuth()
+
   // Load cart from database (updated to use only user_id)
   const loadCart = async () => {
     try {
@@ -137,7 +142,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             position
           )
         `)
-        .eq('user_id', user.id) // Only filter by user_id now
+        .eq('user_id', user.id)
 
       if (error) throw error
 
@@ -153,7 +158,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       dispatch({ type: 'SET_ITEMS', payload: cartItems })
     } catch (error) {
       console.error('Error loading cart:', error)
-      dispatch({ type: 'SET_ERROR', payload: 'Failed to load cart' })
+      dispatch({ type: 'SET_ITEMS', payload: [] })
     }
   }
 
@@ -359,40 +364,33 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     await loadCart()
   }
 
-  // Auth-driven cart loading
-  useEffect(() => {
-    const supabase = getSupabaseClient()
-    
-    // Get initial auth state
-    const getInitialSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session?.user) {
-        await loadCart()
-      }
-    }
-    
-    getInitialSession()
-    
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('🛒 [CART] Auth state changed:', event, session?.user?.id)
-        
-        if (event === 'SIGNED_IN' && session?.user) {
-          await loadCart()
-        } else if (event === 'SIGNED_OUT') {
-          // Clear cart when user signs out
-          dispatch({ type: 'SET_ITEMS', payload: [] })
-          dispatch({ type: 'SET_ERROR', payload: null })
+  // Add this function to clear browser storage when needed
+  const clearBrowserStorage = () => {
+    if (typeof window !== 'undefined') {
+      // Clear Supabase auth tokens
+      const keys = Object.keys(localStorage)
+      keys.forEach(key => {
+        if (key.includes('supabase') || key.includes('sb-')) {
+          localStorage.removeItem(key)
         }
-      }
-    )
-    
-    // Cleanup subscription on unmount
-    return () => {
-      subscription.unsubscribe()
+      })
+      
+      // Clear session storage
+      sessionStorage.clear()
     }
-  }, [])
+  }
+
+  // Auth-driven cart loading - now uses centralized auth
+  useEffect(() => {
+    // Only load cart when auth is not loading and user is available
+    if (!authLoading && user) {
+      loadCart()
+    } else if (!authLoading && !user) {
+      // Clear cart when no user
+      dispatch({ type: 'SET_ITEMS', payload: [] })
+      dispatch({ type: 'SET_ERROR', payload: null })
+    }
+  }, [user, authLoading]) // Depend on auth state instead of managing own auth
 
   const value = {
     state,
@@ -402,7 +400,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     clearCart,
     getTotalItems,
     getTotalPrice,
-    refreshCart
+    refreshCart,
+    clearBrowserStorage // Add this
   }
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

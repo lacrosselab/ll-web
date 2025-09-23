@@ -143,6 +143,11 @@ export default function CartPage() {
 
       if (!response.ok) {
         const errorData = await response.json()
+        console.error('Checkout API Error:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData
+        })
         throw new Error(errorData.error || 'Failed to create checkout session')
       }
 

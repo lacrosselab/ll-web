@@ -55,7 +55,6 @@ export default function SignupPage() {
   if (success) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
         <div className="py-20 px-4 sm:px-6 lg:px-8">
           <div className="container mx-auto max-w-md">
             <Card>

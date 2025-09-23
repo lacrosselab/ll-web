@@ -17,7 +17,15 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { name, description, price_cents, currency = 'usd' } = body
+    const { 
+      name, 
+      description, 
+      price_cents, 
+      currency = 'usd',
+      session_date,
+      stock_quantity,
+      is_active = true
+    } = body
 
     // Create the product in Stripe with tax code
     const product = await stripe.products.create({
@@ -34,14 +42,44 @@ export async function POST(request: NextRequest) {
       currency,
     })
 
+    // Insert into database with Stripe IDs
+    const { data: dbProduct, error: dbError } = await supabase
+      .from('products')
+      .insert({
+        name,
+        description,
+        price_cents,
+        currency,
+        session_date,
+        stock_quantity,
+        is_active,
+        stripe_product_id: product.id,
+        stripe_price_id: price.id,
+      })
+      .select()
+      .single()
+
+    if (dbError) {
+      console.error('Database insert error:', dbError)
+      // Try to clean up Stripe products if database insert fails
+      try {
+        await stripe.products.update(product.id, { active: false })
+      } catch (cleanupError) {
+        console.error('Failed to cleanup Stripe product:', cleanupError)
+      }
+      throw dbError
+    }
+
     return NextResponse.json({
-      productId: product.id,
-      priceId: price.id,
+      success: true,
+      product: dbProduct,
+      stripeProductId: product.id,
+      stripePriceId: price.id,
     })
   } catch (error) {
-    console.error('Error creating Stripe product:', error)
+    console.error('Error creating product:', error)
     return NextResponse.json(
-      { error: 'Failed to create Stripe product' },
+      { error: 'Failed to create product' },
       { status: 500 }
     )
   }

@@ -121,10 +121,18 @@ export async function POST(request: NextRequest) {
     const session = await stripe.checkout.sessions.create(sessionData)
 
     return NextResponse.json({ sessionId: session.id })
-  } catch (error) {
+  }  catch (error) {
     console.error('Error creating checkout session:', error)
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined
+    })
     return NextResponse.json(
-      { error: 'Failed to create checkout session' },
+      { 
+        error: 'Failed to create checkout session',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }
