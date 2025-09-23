@@ -13,12 +13,32 @@ import type { User } from '@supabase/supabase-js'
 import { useCart } from '@/contexts/cart-context'
 import { useToast } from '@/components/ui/toast'
 
+interface PaymentAthlete {
+  id: string
+  quantity: number
+  unit_price_cents: number
+  created_at: string
+  athlete: {
+    id: string
+    name: string
+    age?: number
+    school?: string
+  }
+  product: {
+    id: string
+    name: string
+    session_date: string
+    description?: string
+  }
+}
+
 interface Payment {
   id: string
   amount: number
   currency: string
   status: string
   created_at: string
+  payment_athletes?: PaymentAthlete[]
 }
 
 interface Athlete {
@@ -60,7 +80,7 @@ function DashboardContent() {
   const addAthlete = searchParams.get('addAthlete') === 'true'
   const paymentSuccess = searchParams.get('success') === 'true'
   const { refreshCart } = useCart()
-  const { toast } = useToast()
+  const { showToast } = useToast()
 
   useEffect(() => {
     const supabase = getSupabaseClient()
@@ -125,13 +145,50 @@ function DashboardContent() {
   const fetchRecentPayments = async (userId: string) => {
     try {
       const supabase = getSupabaseClient()
+      
+      // Try to get detailed payment data with athlete and product info
       const { data, error } = await supabase
         .from('payments')
-        .select('*')
+        .select(`
+          *,
+          payment_athletes (
+            id,
+            quantity,
+            unit_price_cents,
+            created_at,
+            athlete:athletes (
+              id,
+              name,
+              age,
+              school
+            ),
+            product:products (
+              id,
+              name,
+              session_date,
+              description
+            )
+          )
+        `)
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
+        .limit(5) // Only show recent 5 payments on dashboard
 
-      if (error) throw error
+      if (error) {
+        console.error('Error fetching detailed payments:', error)
+        // Fallback to basic payments if detailed query fails
+        const { data: basicData, error: basicError } = await supabase
+          .from('payments')
+          .select('*')
+          .eq('user_id', userId)
+          .order('created_at', { ascending: false })
+          .limit(5)
+        
+        if (basicError) throw basicError
+        setRecentPayments(basicData || [])
+        return
+      }
+
       setRecentPayments(data || [])
     } catch (error) {
       console.error('Error fetching payments:', error)
@@ -159,6 +216,23 @@ function DashboardContent() {
   const createAthlete = async () => {
     if (!user) return
 
+    // Validate input before submitting
+    if (!newAthlete.name.trim()) {
+      showToast('Name is required. Please enter the athlete\'s name.', 'error')
+      return
+    }
+
+    // Validate age if provided
+    let ageValue: number | null = null
+    if (newAthlete.age.trim()) {
+      const ageNum = parseInt(newAthlete.age.trim())
+      if (isNaN(ageNum) || ageNum < 1 || ageNum > 100) {
+        showToast('Please enter a valid age between 1 and 100.', 'error')
+        return
+      }
+      ageValue = ageNum
+    }
+
     setAthleteFormLoading(true)
     try {
       const supabase = getSupabaseClient()
@@ -166,31 +240,27 @@ function DashboardContent() {
         .from('athletes')
         .insert({
           user_id: user.id,
-          name: newAthlete.name,
-          age: newAthlete.age || null,
-          school: newAthlete.school || null,
-          position: newAthlete.position || null,
+          name: newAthlete.name.trim(),
+          age: ageValue,
+          school: newAthlete.school.trim() || null,
+          position: newAthlete.position.trim() || null,
         })
 
-      if (error) throw error
+      if (error) {
+        console.error('Database error creating athlete:', error)
+        throw error
+      }
 
       // Reset form and refresh athletes
       setNewAthlete({ name: '', age: '', school: '', position: '' })
       setShowAthleteForm(false)
       setEditingAthlete(null)
       await fetchAthletes(user.id)
-      toast({
-        title: 'Athlete created successfully!',
-        description: 'Your athlete has been added to your account.',
-        variant: 'success',
-      })
+      showToast('Athlete created successfully!', 'success')
     } catch (error) {
       console.error('Error creating athlete:', error)
-      toast({
-        title: 'Failed to create athlete',
-        description: 'There was an error adding your athlete.',
-        variant: 'destructive',
-      })
+      const errorMessage = error instanceof Error ? error.message : 'There was an error adding your athlete.'
+      showToast(errorMessage, 'error')
     } finally {
       setAthleteFormLoading(false)
     }
@@ -199,38 +269,51 @@ function DashboardContent() {
   const updateAthlete = async () => {
     if (!user || !editingAthlete) return
 
+    // Validate input before submitting
+    if (!newAthlete.name.trim()) {
+      showToast('Name is required. Please enter the athlete\'s name.', 'error')
+      return
+    }
+
+    // Validate age if provided
+    let ageValue: number | null = null
+    if (newAthlete.age.trim()) {
+      const ageNum = parseInt(newAthlete.age.trim())
+      if (isNaN(ageNum) || ageNum < 1 || ageNum > 100) {
+        showToast('Please enter a valid age between 1 and 100.', 'error')
+        return
+      }
+      ageValue = ageNum
+    }
+
     setAthleteFormLoading(true)
     try {
       const supabase = getSupabaseClient()
       const { error } = await supabase
         .from('athletes')
         .update({
-          name: newAthlete.name,
-          age: newAthlete.age || null,
-          school: newAthlete.school || null,
-          position: newAthlete.position || null,
+          name: newAthlete.name.trim(),
+          age: ageValue,
+          school: newAthlete.school.trim() || null,
+          position: newAthlete.position.trim() || null,
         })
         .eq('id', editingAthlete.id)
 
-      if (error) throw error
+      if (error) {
+        console.error('Database error updating athlete:', error)
+        throw error
+      }
 
       // Reset form and refresh athletes
       setNewAthlete({ name: '', age: '', school: '', position: '' })
       setShowAthleteForm(false)
       setEditingAthlete(null)
       await fetchAthletes(user.id)
-      toast({
-        title: 'Athlete updated successfully!',
-        description: 'Your athlete has been updated.',
-        variant: 'success',
-      })
+      showToast('Athlete updated successfully!', 'success')
     } catch (error) {
       console.error('Error updating athlete:', error)
-      toast({
-        title: 'Failed to update athlete',
-        description: 'There was an error updating your athlete.',
-        variant: 'destructive',
-      })
+      const errorMessage = error instanceof Error ? error.message : 'There was an error updating your athlete.'
+      showToast(errorMessage, 'error')
     } finally {
       setAthleteFormLoading(false)
     }
@@ -250,18 +333,10 @@ function DashboardContent() {
 
       if (error) throw error
       await fetchAthletes(user!.id)
-      toast({
-        title: 'Athlete deleted successfully',
-        description: 'Your athlete has been removed.',
-        variant: 'success',
-      })
+      showToast('Athlete deleted successfully', 'success')
     } catch (error) {
       console.error('Error deleting athlete:', error)
-      toast({
-        title: 'Failed to delete athlete',
-        description: 'There was an error deleting your athlete.',
-        variant: 'destructive',
-      })
+      showToast('Failed to delete athlete', 'error')
     }
   }
 
@@ -379,25 +454,73 @@ function DashboardContent() {
 
         {/* Payment History */}
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Payment History</h2>
+          <h2 className="text-2xl font-semibold mb-4">Recent Payments</h2>
           {recentPayments.length > 0 ? (
             <div className="space-y-4">
               {recentPayments.map((payment) => (
                 <Card key={payment.id}>
                   <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">
-                          ${(payment.amount / 100).toFixed(2)} {payment.currency.toUpperCase()}
-                        </p>
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="font-semibold">
+                            ${(payment.amount / 100).toFixed(2)} {payment.currency.toUpperCase()}
+                          </h3>
+                          <Badge className='capitalize' variant={payment.status === 'succeeded' ? 'default' : 'secondary'}>
+                            {payment.status}
+                          </Badge>
+                        </div>
                         <p className="text-sm text-muted-foreground">
-                          {new Date(payment.created_at).toLocaleDateString()}
+                          {new Date(payment.created_at).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}
                         </p>
                       </div>
-                      <Badge variant={payment.status === 'succeeded' ? 'default' : 'secondary'}>
-                        {payment.status}
-                      </Badge>
                     </div>
+                    
+                    {/* Show detailed payment info if available */}
+                    {payment.payment_athletes && payment.payment_athletes.length > 0 ? (
+                      <div className="space-y-2 pt-3 border-t">
+                        {payment.payment_athletes.map((paymentAthlete) => (
+                          <div key={paymentAthlete.id} className="flex items-center justify-between text-sm">
+                            <div className="flex-1">
+                              <div className="font-medium">{paymentAthlete.product.name}</div>
+                              <div className="text-muted-foreground">
+                                {paymentAthlete.athlete.name}
+                                {paymentAthlete.athlete.age && ` (Age ${paymentAthlete.athlete.age})`}
+                                {paymentAthlete.athlete.school && ` - ${paymentAthlete.athlete.school}`}
+                              </div>
+                              <div className="text-muted-foreground">
+                                Session: {new Date(paymentAthlete.product.session_date).toLocaleDateString('en-US', {
+                                  weekday: 'short',
+                                  month: 'short',
+                                  day: 'numeric'
+                                })}
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div className="font-medium">
+                                ${(paymentAthlete.unit_price_cents * paymentAthlete.quantity / 100).toFixed(2)}
+                              </div>
+                              {paymentAthlete.quantity > 1 && (
+                                <div className="text-xs text-muted-foreground">
+                                  {paymentAthlete.quantity} × ${(paymentAthlete.unit_price_cents / 100).toFixed(2)}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      /* Fallback for payments without detailed data */
+                      <div className="pt-3 border-t">
+                        <div className="text-sm text-muted-foreground">
+                          Session Purchase - Details being processed
+                        </div>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               ))}
@@ -447,8 +570,12 @@ function DashboardContent() {
                   <Label htmlFor="age">Age</Label>
                   <Input
                     id="age"
+                    type="number"
+                    min="1"
+                    max="100"
                     value={newAthlete.age}
                     onChange={(e) => setNewAthlete({ ...newAthlete, age: e.target.value })}
+                    placeholder="Enter age (optional)"
                     data-testid="athlete-age"
                   />
                 </div>

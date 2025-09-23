@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { getSupabaseServer } from "@/lib/supabase/server"
+import { stripe } from "@/lib/stripe"
 
 export async function GET() {
   try {
@@ -20,8 +21,29 @@ export async function GET() {
       )
     }
 
+    // Verify Stripe sync for each product
+    const verifiedProducts = []
+    for (const product of products) {
+      try {
+        // Check if Stripe product is also active
+        const stripeProduct = await stripe.products.retrieve(product.stripe_product_id)
+        
+        // If database says active but Stripe says inactive, skip this product
+        if (!stripeProduct.active) {
+          console.warn(`Product ${product.id} is active in DB but inactive in Stripe - skipping`)
+          continue
+        }
+        
+        verifiedProducts.push(product)
+      } catch (stripeError) {
+        console.error(`Error verifying Stripe product ${product.stripe_product_id}:`, stripeError)
+        // If we can't verify with Stripe, skip this product to be safe
+        continue
+      }
+    }
+
     // Transform database products to match the expected format
-    const transformedProducts = products.map(product => ({
+    const transformedProducts = verifiedProducts.map(product => ({
       id: product.id,
       name: product.name,
       description: product.description,

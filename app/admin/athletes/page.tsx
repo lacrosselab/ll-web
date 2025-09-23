@@ -1,15 +1,16 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { getSupabaseClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Users, Search, Calendar, User, School } from 'lucide-react'
-import { getSupabaseClient } from '@/lib/supabase/client'
+import { Badge } from '@/components/ui/badge'
+import { Search, User, Calendar, DollarSign, Eye } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useToast } from '@/components/ui/toast'
 
 interface Athlete {
   id: string
@@ -21,7 +22,7 @@ interface Athlete {
   user: {
     id: string
     email: string
-  }
+  } | null  // Make user nullable
   session_history: {
     id: string
     product: {
@@ -47,6 +48,7 @@ export default function AdminAthletesPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedAthlete, setSelectedAthlete] = useState<Athlete | null>(null)
   const router = useRouter()
+  const { showToast } = useToast()
 
   useEffect(() => {
     loadAthletes()
@@ -107,6 +109,7 @@ export default function AdminAthletesPage() {
       // Transform the data to match our interface
       const transformedAthletes = (data || []).map((athlete: any) => ({
         ...athlete,
+        user: athlete.user || null, // Handle null user case
         session_history: athlete.session_history || []
       }))
 
@@ -136,7 +139,7 @@ export default function AdminAthletesPage() {
 
   const filteredAthletes = athletes.filter(athlete =>
     athlete.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    athlete.user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (athlete.user?.email && athlete.user.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
     (athlete.school && athlete.school.toLowerCase().includes(searchTerm.toLowerCase()))
   )
 
@@ -147,7 +150,14 @@ export default function AdminAthletesPage() {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Loading athletes...</div>
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-16 bg-gray-200 rounded"></div>
+            ))}
+          </div>
+        </div>
       </div>
     )
   }
@@ -155,75 +165,59 @@ export default function AdminAthletesPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center text-red-500">{error}</div>
-        <Button onClick={loadAthletes} className="mt-4">Try Again</Button>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
+          <p className="text-muted-foreground mb-4">{error}</p>
+          <Button onClick={loadAthletes}>Try Again</Button>
+        </div>
       </div>
     )
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col lg:flex-row gap-4 xl:gap-0 justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold">Athletes Management</h1>
-          <p className="text-muted-foreground">View all athletes and their session history</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder="Search athletes..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 w-64"
-            />
-          </div>
-        </div>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Athlete Management</h1>
+        <p className="text-muted-foreground">
+          View and manage all registered athletes and their session history
+        </p>
       </div>
 
-      {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Athletes</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold" data-testid="total-athletes">{athletes.length}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Sessions</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold" data-testid="total-sessions">
-              {athletes.reduce((total, athlete) => total + getTotalSessions(athlete), 0)}
-            </div>
-          </CardContent>
-        </Card>
+      {/* Search */}
+      <div className="mb-6">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Input
+            placeholder="Search athletes by name, email, or school..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
       </div>
 
       {/* Athletes Table */}
-      <Card data-testid="athletes-section">
+      <Card>
         <CardHeader>
-          <CardTitle>Athletes ({filteredAthletes.length})</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <User className="h-5 w-5" />
+            Athletes ({filteredAthletes.length})
+          </CardTitle>
           <CardDescription>
-            All registered athletes with their session history
+            All registered athletes and their session attendance
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {/* Desktop Table */}
-          <div className="hidden md:block">
+          <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Athlete</TableHead>
-                  <TableHead>Contact</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Age</TableHead>
                   <TableHead>School</TableHead>
+                  <TableHead>Position</TableHead>
+                  <TableHead>Contact</TableHead>
                   <TableHead>Sessions</TableHead>
-                  <TableHead>Joined</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -231,35 +225,23 @@ export default function AdminAthletesPage() {
                 {filteredAthletes.map((athlete) => (
                   <TableRow key={athlete.id}>
                     <TableCell>
-                      <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-muted-foreground" />
-                        <div>
-                          <div className="font-medium">{athlete.name}</div>
-                          {athlete.age && (
-                            <div className="text-sm text-muted-foreground">Age {athlete.age}</div>
-                          )}
-                          {athlete.position && (
-                            <Badge variant="outline" className="text-xs">
-                              {athlete.position}
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
+                      <div className="font-medium">{athlete.name}</div>
+                    </TableCell>
+                    <TableCell>
+                      {athlete.age ? `${athlete.age}` : '-'}
+                    </TableCell>
+                    <TableCell>
+                      {athlete.school || '-'}
+                    </TableCell>
+                    <TableCell>
+                      {athlete.position || '-'}
                     </TableCell>
                     <TableCell>
                       <div className="text-sm">
-                        <div className="font-medium">{athlete.user.email}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      {athlete.school ? (
-                        <div className="flex items-center gap-1 text-sm">
-                          <School className="h-3 w-3" />
-                          {athlete.school}
+                        <div className="font-medium">
+                          {athlete.user?.email || 'User deleted'}
                         </div>
-                      ) : (
-                        <span className="text-muted-foreground">—</span>
-                      )}
+                      </div>
                     </TableCell>
                     <TableCell>
                       <Badge variant="secondary">
@@ -267,16 +249,12 @@ export default function AdminAthletesPage() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <div className="text-sm text-muted-foreground">
-                        {formatDate(athlete.created_at)}
-                      </div>
-                    </TableCell>
-                    <TableCell>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => setSelectedAthlete(athlete)}
                       >
+                        <Eye className="h-4 w-4 mr-1" />
                         View Details
                       </Button>
                     </TableCell>
@@ -285,96 +263,29 @@ export default function AdminAthletesPage() {
               </TableBody>
             </Table>
           </div>
-
-          {/* Mobile Cards */}
-          <div className="md:hidden space-y-4">
-            {filteredAthletes.map((athlete) => (
-              <Card key={athlete.id} className="p-4">
-                <div className="flex justify-between items-start mb-3">
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-muted-foreground" />
-                    <div>
-                      <div className="font-medium">{athlete.name}</div>
-                      {athlete.age && (
-                        <div className="text-sm text-muted-foreground">Age {athlete.age}</div>
-                      )}
-                    </div>
-                  </div>
-                  <Badge variant="secondary">
-                    {getTotalSessions(athlete)} sessions
-                  </Badge>
-                </div>
-                
-                <div className="space-y-2 text-sm">
-                  <div>
-                    <span className="text-muted-foreground">Contact: </span>
-                    <span className="font-medium">{athlete.user.email}</span>
-                  </div>
-                  {athlete.school && (
-                    <div className="flex items-center gap-1">
-                      <School className="h-3 w-3 text-muted-foreground" />
-                      <span>{athlete.school}</span>
-                    </div>
-                  )}
-                  {athlete.position && (
-                    <div>
-                      <Badge variant="outline" className="text-xs">
-                        {athlete.position}
-                      </Badge>
-                    </div>
-                  )}
-                  <div>
-                    <span className="text-muted-foreground">Joined: </span>
-                    <span>{formatDate(athlete.created_at)}</span>
-                  </div>
-                </div>
-                
-                <div className="mt-4">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setSelectedAthlete(athlete)}
-                    className="w-full"
-                  >
-                    View Session History
-                  </Button>
-                </div>
-              </Card>
-            ))}
-          </div>
         </CardContent>
       </Card>
 
       {/* Athlete Details Modal */}
       {selectedAthlete && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto" data-testid="athlete-details-modal">
+          <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <CardHeader>
-              <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle className="text-2xl">{selectedAthlete.name}</CardTitle>
-                  <CardDescription>
-                    Session attendance ledger for {selectedAthlete.name}
-                  </CardDescription>
-                </div>
-                <Button variant="outline" onClick={() => setSelectedAthlete(null)}>
-                  Close
-                </Button>
-              </div>
+              <CardTitle className="flex items-center gap-2">
+                <User className="h-5 w-5" />
+                {selectedAthlete.name}
+              </CardTitle>
+              <CardDescription>
+                Athlete details and session history
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Athlete Info */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-muted rounded-lg">
+              {/* Basic Info */}
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-sm font-medium">Contact</Label>
+                  <Label className="text-sm font-medium">Name</Label>
                   <div className="mt-1 text-sm text-muted-foreground">
-                    {selectedAthlete.user.email}
-                  </div>
-                </div>
-                <div>
-                  <Label className="text-sm font-medium">School</Label>
-                  <div className="mt-1 text-sm text-muted-foreground">
-                    {selectedAthlete.school || 'Not specified'}
+                    {selectedAthlete.name}
                   </div>
                 </div>
                 <div>
@@ -384,9 +295,27 @@ export default function AdminAthletesPage() {
                   </div>
                 </div>
                 <div>
+                  <Label className="text-sm font-medium">School</Label>
+                  <div className="mt-1 text-sm text-muted-foreground">
+                    {selectedAthlete.school || 'Not specified'}
+                  </div>
+                </div>
+                <div>
                   <Label className="text-sm font-medium">Position</Label>
                   <div className="mt-1 text-sm text-muted-foreground">
                     {selectedAthlete.position || 'Not specified'}
+                  </div>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">Contact</Label>
+                  <div className="mt-1 text-sm text-muted-foreground">
+                    {selectedAthlete.user?.email || 'User deleted'}
+                  </div>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">Registered</Label>
+                  <div className="mt-1 text-sm text-muted-foreground">
+                    {formatDate(selectedAthlete.created_at)}
                   </div>
                 </div>
               </div>
@@ -402,15 +331,17 @@ export default function AdminAthletesPage() {
                           <div>
                             <div className="font-medium">{session.product.name}</div>
                             <div className="text-sm text-muted-foreground">
-                              Session Date: {formatDate(session.product.session_date)}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              Registered: {formatDate(session.created_at)}
+                              {formatDate(session.product.session_date)}
                             </div>
                           </div>
                           <div className="text-right">
-                            <Badge variant="default" className="text-xs">
-                              Attended
+                            <div className="font-medium">
+                              {formatPrice(session.product.price_cents)}
+                            </div>
+                            <Badge 
+                              variant={session.payment.status === 'succeeded' ? 'default' : 'secondary'}
+                            >
+                              {session.payment.status}
                             </Badge>
                           </div>
                         </div>
@@ -418,10 +349,19 @@ export default function AdminAthletesPage() {
                     ))}
                   </div>
                 ) : (
-                  <div className="mt-2 text-sm text-muted-foreground p-4 bg-muted rounded-lg">
+                  <div className="mt-2 text-sm text-muted-foreground">
                     No sessions attended yet
                   </div>
                 )}
+              </div>
+
+              <div className="flex justify-end pt-4 border-t">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setSelectedAthlete(null)}
+                >
+                  Close
+                </Button>
               </div>
             </CardContent>
           </Card>

@@ -87,6 +87,45 @@ export async function POST(request: NextRequest) {
 
     // Handle multiple line items (cart checkout)
     if (lineItems && Array.isArray(lineItems)) {
+      // Validate line items
+      if (lineItems.length === 0) {
+        return NextResponse.json({ error: 'No items in cart' }, { status: 400 })
+      }
+
+      // Verify each product is still active in both DB and Stripe
+      for (const item of lineItems) {
+        try {
+          // Check database
+          const { data: dbProduct, error: dbError } = await supabase
+            .from('products')
+            .select('is_active, stripe_product_id')
+            .eq('stripe_price_id', item.price)
+            .single()
+
+          if (dbError || !dbProduct?.is_active) {
+            return NextResponse.json({ 
+              error: 'One or more items are no longer available',
+              details: 'Product is inactive in database'
+            }, { status: 400 })
+          }
+
+          // Check Stripe
+          const stripeProduct = await stripe.products.retrieve(dbProduct.stripe_product_id)
+          if (!stripeProduct.active) {
+            return NextResponse.json({ 
+              error: 'One or more items are no longer available',
+              details: 'Product is inactive in Stripe'
+            }, { status: 400 })
+          }
+        } catch (verifyError) {
+          console.error('Error verifying product:', verifyError)
+          return NextResponse.json({ 
+            error: 'Unable to verify product availability',
+            details: 'Please refresh and try again'
+          }, { status: 400 })
+        }
+      }
+
       // FIXED: Remove metadata from line items, add to session metadata instead
       sessionData.line_items = lineItems.map((item: any) => ({
         price: item.price,
@@ -121,7 +160,7 @@ export async function POST(request: NextRequest) {
     const session = await stripe.checkout.sessions.create(sessionData)
 
     return NextResponse.json({ sessionId: session.id })
-  }  catch (error) {
+  } catch (error) {
     console.error('Error creating checkout session:', error)
     console.error('Error details:', {
       message: error instanceof Error ? error.message : 'Unknown error',

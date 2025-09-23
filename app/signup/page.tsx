@@ -18,7 +18,6 @@ export default function SignupPage() {
   const [fullName, setFullName] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
-  const [success, setSuccess] = useState(false)
   const router = useRouter()
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -43,40 +42,14 @@ export default function SignupPage() {
       if (error) {
         setError(error.message)
       } else {
-        setSuccess(true)
+        // Redirect to dashboard instead of showing confirmation
+        router.push('/member/dashboard')
       }
     } catch (err) {
       setError("An unexpected error occurred")
     } finally {
       setLoading(false)
     }
-  }
-
-  if (success) {
-    return (
-      <div className="min-h-screen bg-background">
-        <div className="py-20 px-4 sm:px-6 lg:px-8">
-          <div className="container mx-auto max-w-md">
-            <Card>
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl">Check your email</CardTitle>
-                <CardDescription>
-                  We've sent you a confirmation link at <strong>{email}</strong>
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="text-center">
-                <p className="text-sm text-muted-foreground mb-4">
-                  Click the link in the email to confirm your account and get started.
-                </p>
-                <Link href="/login">
-                  <Button variant="outline">Back to Sign In</Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    )
   }
 
   return (
