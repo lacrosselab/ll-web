@@ -8,7 +8,7 @@ export default function HomePage() {
   return (
     <div className="flex-col bg-cover bg-bottom bg-no-repeat overflow-hidden" style={{backgroundImage: 'url(/web-bg.png)'}}>
       {/* Main content area - takes up remaining space */}
-      <main className="flex-1 min-h-[70vh] lg:min-h-[77vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 min-h-0 bg-black/25 backdrop-blur-sm">
+      <main className="flex-1 min-h-[70vh] lg:min-h-[77vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 min-h-0 bg-[navy]/10 backdrop-blur-md">
         <div className="container mx-auto text-center max-w-4xl">
           <AnimatedSection animation="fadeIn" delay={0.2}>
             <div className="mb-2 flex justify-center">
