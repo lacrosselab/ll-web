@@ -238,8 +238,9 @@ function DashboardContent() {
       const supabase = getSupabaseClient()
       const { error } = await supabase
         .from('athletes')
-        // @ts-ignore - Supabase TypeScript types not properly generate
-        .update({
+          // @ts-ignore - Supabase TypeScript types not properly generated
+        .insert({
+          user_id: user.id,
           name: newAthlete.name.trim(),
           age: ageValue,
           school: newAthlete.school.trim() || null,
@@ -284,6 +285,12 @@ function DashboardContent() {
         return
       }
       ageValue = ageNum
+    }
+
+    // Validate that we have an athlete ID
+    if (!editingAthlete.id) {
+      showToast('Error: Athlete ID is missing. Please try again.', 'error')
+      return
     }
 
     setAthleteFormLoading(true)
