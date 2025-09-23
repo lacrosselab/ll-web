@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { getSupabaseServer } from '@/lib/supabase/server'
+import { logger } from '@/lib/utils'
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,48 +28,45 @@ export async function POST(request: NextRequest) {
         .single()
 
       if (profileError && profileError.code !== 'PGRST116') {
-        console.error('Error fetching user profile:', profileError)
+        logger.error('Error fetching user profile', profileError)
         throw profileError
       }
 
       if (userProfile?.stripe_customer_id) {
         // User already has a Stripe customer ID
         stripeCustomerId = userProfile.stripe_customer_id
-        console.log('Using existing Stripe customer:', stripeCustomerId)
+        logger.debug('Using existing Stripe customer')
       } else {
         // Create new Stripe customer
-        console.log('Creating new Stripe customer for user:', user.email)
+        logger.debug('Creating new Stripe customer')
         const customer = await stripe.customers.create({
           email: user.email!,
           metadata: {
-            userId: user.id,
-            email: user.email!
-          }
+            user_id: user.id,
+          },
         })
-        
         stripeCustomerId = customer.id
-        
-        // Save the Stripe customer ID to the user's profile
+
+        // Save customer ID to user profile
         const { error: updateError } = await supabase
           .from('users')
           .upsert({
             id: user.id,
             email: user.email,
             stripe_customer_id: stripeCustomerId,
-            updated_at: new Date().toISOString()
           })
 
         if (updateError) {
-          console.error('Error saving Stripe customer ID:', updateError)
+          logger.error('Error saving Stripe customer ID', updateError)
           // Don't throw here - we can still proceed with the checkout
         } else {
-          console.log('Saved Stripe customer ID to user profile')
+          logger.debug('Saved Stripe customer ID to user profile')
         }
       }
-    } catch (error) {
-      console.error('Error handling Stripe customer:', error)
+    } catch (customerError) {
+      logger.error('Error handling Stripe customer', customerError)
       // Fallback to using email (creates guest customer)
-      console.log('Falling back to customer_email approach')
+      logger.debug('Falling back to customer_email approach')
       stripeCustomerId = ''
     }
 
@@ -118,7 +116,7 @@ export async function POST(request: NextRequest) {
             }, { status: 400 })
           }
         } catch (verifyError) {
-          console.error('Error verifying product:', verifyError)
+          logger.error('Error verifying product', verifyError)
           return NextResponse.json({ 
             error: 'Unable to verify product availability',
             details: 'Please refresh and try again'
@@ -161,12 +159,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ sessionId: session.id })
   } catch (error) {
-    console.error('Error creating checkout session:', error)
-    console.error('Error details:', {
-      message: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined,
-      name: error instanceof Error ? error.name : undefined
-    })
+    logger.error('Error creating checkout session', error)
     return NextResponse.json(
       { 
         error: 'Failed to create checkout session',

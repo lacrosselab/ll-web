@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react'
 import { getSupabaseClient } from '@/lib/supabase/client'
 import { useAuth } from './auth-context' // Add this import
+import { logger } from '@/lib/utils'
 
 // Types
 interface CartItem {
@@ -157,7 +158,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
       dispatch({ type: 'SET_ITEMS', payload: cartItems })
     } catch (error) {
-      console.error('Error loading cart:', error)
+      logger.error('Error loading cart', error)
       dispatch({ type: 'SET_ITEMS', payload: [] })
     }
   }
@@ -174,13 +175,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Check if athlete already has this session in cart
-      const { data: existingCartItem } = await supabase
+      logger.debug('Checking for existing cart item')
+      
+      const { data: existingCartItem, error: cartError } = await supabase
         .from('cart_items')
         .select('id')
         .eq('user_id', user.id)
         .eq('athlete_id', athleteId)
         .eq('product_id', productId)
         .single()
+
+      if (cartError && cartError.code !== 'PGRST116') {
+        logger.error('Failed to check existing cart items', cartError)
+        return { success: false, error: 'Failed to check cart status' }
+      }
 
       if (existingCartItem) {
         return { success: false, error: 'This athlete already has this session in their cart' }
@@ -195,7 +203,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         .single()
 
       if (purchaseError && purchaseError.code !== 'PGRST116') {
-        console.error('Failed to check existing purchases:', purchaseError)
+        logger.error('Failed to check existing purchases', purchaseError)
         return { success: false, error: 'Failed to check purchase history' }
       }
 
@@ -211,7 +219,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         .single()
 
       if (productError) {
-        console.error('Failed to fetch product:', productError)
+        logger.error('Failed to fetch product', productError)
         return { success: false, error: 'Failed to load session details' }
       }
 
@@ -224,14 +232,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Check how many spots this user already has in their cart for this product
-      const { data: userCartItems, error: cartError } = await supabase
+      const { data: userCartItems, error: cartError2 } = await supabase
         .from('cart_items')
         .select('quantity')
         .eq('user_id', user.id)
         .eq('product_id', productId)
 
-      if (cartError) {
-        console.error('Failed to check user cart:', cartError)
+      if (cartError2) {
+        logger.error('Failed to check user cart', cartError2)
         return { success: false, error: 'Failed to check cart contents' }
       }
 
@@ -258,7 +266,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         })
 
       if (insertError) {
-        console.error('Failed to add to cart:', insertError)
+        logger.error('Failed to add to cart', insertError)
         return { success: false, error: 'Failed to add to cart' }
       }
 
@@ -266,7 +274,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       await refreshCart()
       return { success: true }
     } catch (error) {
-      console.error('Unexpected error adding to cart:', error)
+      logger.error('Unexpected error adding to cart', error)
       return { success: false, error: 'An unexpected error occurred' }
     }
   }
@@ -296,7 +304,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
       dispatch({ type: 'UPDATE_ITEM', payload: { productId, athleteId, quantity } })
     } catch (error) {
-      console.error('Error updating cart item:', error)
+      logger.error('Error updating cart item', error)
       dispatch({ type: 'SET_ERROR', payload: 'Failed to update cart item' })
     }
   }
@@ -321,7 +329,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
       dispatch({ type: 'REMOVE_ITEM', payload: { productId, athleteId } })
     } catch (error) {
-      console.error('Error removing from cart:', error)
+      logger.error('Error removing from cart', error)
       dispatch({ type: 'SET_ERROR', payload: 'Failed to remove item from cart' })
     }
   }
@@ -344,7 +352,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
       dispatch({ type: 'CLEAR_CART' })
     } catch (error) {
-      console.error('Error clearing cart:', error)
+      logger.error('Error clearing cart', error)
       dispatch({ type: 'SET_ERROR', payload: 'Failed to clear cart' })
     }
   }
@@ -419,7 +427,7 @@ export function useCart() {
 // Check if athlete has already purchased this session
 const hasAthletePurchasedSession = async (athleteId: string, productId: string): Promise<boolean> => {
   try {
-    console.log(' [CART] Checking purchase history for:', { athleteId, productId })
+    logger.debug('Checking purchase history')
     
     const supabase = getSupabaseClient()
     const { data, error } = await supabase
@@ -429,23 +437,17 @@ const hasAthletePurchasedSession = async (athleteId: string, productId: string):
       .eq('product_id', productId)
       .single()
 
-    console.log('🛒 [CART] Purchase history query result:', { 
-      data, 
-      error, 
-      errorCode: error?.code 
-    })
-
-    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
-      console.log('🛒 [CART] ❌ ERROR checking purchase history:', error)
-      throw error
+    if (error && error.code !== 'PGRST116') {
+      logger.error('Error checking purchase history', error)
+      return false // Assume not purchased if we can't check
     }
 
     const hasPurchased = !!data
-    console.log('🛒 [CART] Has athlete purchased this session?', hasPurchased)
+    logger.debug('Purchase check result:', hasPurchased)
     return hasPurchased
   } catch (error) {
-    console.error('🛒 [CART] ❌ ERROR in hasAthletePurchasedSession:', error)
-    return false // Default to allowing purchase if check fails
+    logger.error('Exception checking purchase history', error)
+    return false // Assume not purchased if there's an exception
   }
 }
 

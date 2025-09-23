@@ -9,7 +9,6 @@ export async function POST(request: NextRequest) {
   console.log("🚨 WEBHOOK ENDPOINT HIT! 🚨")
   console.log("🚨 Request method:", request.method)
   console.log("🚨 Request URL:", request.url)
-  console.log("🚨 Headers:", Object.fromEntries(request.headers.entries()))
   
   try {
     const body = await request.text()
@@ -20,7 +19,6 @@ export async function POST(request: NextRequest) {
     console.log("🚨 Webhook secret length:", webhookSecret?.length)
     console.log("🚨 Signature header exists:", !!signature)
     console.log("🚨 Body length:", body.length)
-    console.log("🚨 Body preview:", body.substring(0, 200))
 
     let event: Stripe.Event
 
