@@ -4,6 +4,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { getSupabaseClient } from '@/lib/supabase/client'
 import type { User, Session } from '@supabase/supabase-js'
+import { logger } from '@/lib/utils'
 
 interface AuthState {
   user: User | null
@@ -83,7 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.id)
+        logger.debug('Auth state changed:', event)
         
         if (mounted) {
           setState(prev => ({

@@ -2,42 +2,34 @@ import { type NextRequest, NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe"
 import { getSupabaseService } from "@/lib/supabase/service"
 import type Stripe from "stripe"
-
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+import { logger } from '@/lib/utils'
 
 export async function POST(request: NextRequest) {
-  console.log("🚨 WEBHOOK ENDPOINT HIT! 🚨")
-  console.log("🚨 Request method:", request.method)
-  console.log("🚨 Request URL:", request.url)
+  logger.debug("Webhook endpoint hit")
+  logger.debug("Request method:", request.method)
   
   try {
     const body = await request.text()
     const signature = request.headers.get("stripe-signature")!
 
-    console.log("🚨 WEBHOOK DEBUG INFO:")
-    console.log("🚨 Webhook secret exists:", !!webhookSecret)
-    console.log("🚨 Webhook secret length:", webhookSecret?.length)
-    console.log("🚨 Signature header exists:", !!signature)
-    console.log("🚨 Body length:", body.length)
+    logger.debug("Webhook debug info:", {
+      webhookSecretExists: !!process.env.STRIPE_WEBHOOK_SECRET,
+      signatureExists: !!signature,
+      bodyLength: body.length
+    })
 
     let event: Stripe.Event
 
     try {
-      event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
-      console.log("[v0] Webhook signature verified successfully")
+      event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!)
+      logger.debug("Webhook signature verified successfully")
     } catch (err) {
-      console.error("[v0] Webhook signature verification failed:", err)
-      console.error("[v0] Error details:", {
-        message: err instanceof Error ? err.message : "Unknown error",
-        webhookSecretPrefix: webhookSecret?.substring(0, 8) + "...",
-        signaturePrefix: signature?.substring(0, 20) + "...",
-      })
+      logger.error("Webhook signature verification failed", err)
       return NextResponse.json({ error: "Invalid signature" }, { status: 400 })
     }
 
-    console.log("[v0] Processing webhook event:", event.type)
-    console.log("[v0] Event ID:", event.id)
-    console.log("[v0] Event data object type:", event.data.object.object)
+    logger.debug("Processing webhook event:", event.type)
+    logger.debug("Event ID:", event.id)
 
     const supabase = getSupabaseService()
 
@@ -47,73 +39,42 @@ export async function POST(request: NextRequest) {
         
         // For one-time payments, record the payment and process cart items
         if (session.payment_status === 'paid') {
-          console.log('[WEBHOOK] Processing checkout.session.completed for session:', session.id)
-          console.log('[WEBHOOK] Session customer:', session.customer)
-          console.log('[WEBHOOK] Session metadata:', session.metadata)
+          logger.debug('Processing checkout.session.completed for session:', session.id)
           
           // Get the customer to access its metadata
           const customer = await stripe.customers.retrieve(session.customer as string) as Stripe.Customer
-          console.log('[WEBHOOK] Retrieved customer:', {
-            id: customer.id,
-            email: customer.email,
-            metadata: customer.metadata
-          })
+          logger.debug('Retrieved customer info')
           
           // Get the payment intent to get more details
           const paymentIntent = await stripe.paymentIntents.retrieve(session.payment_intent as string)
-          console.log('[WEBHOOK] Payment intent amount:', paymentIntent.amount)
+          logger.debug('Retrieved payment intent')
           
           // Record the payment - try multiple ways to get userId
           let userId = customer.metadata?.userId || session.metadata?.userId
           
           // If we still don't have userId, try to find it by email
           if (!userId && customer.email) {
-            console.log('[WEBHOOK] No userId in metadata, looking up by email:', customer.email)
+            logger.debug('Looking up user by email')
             const { data: userByEmail, error: emailError } = await supabase
               .from('users')
               .select('id')
               .eq('email', customer.email)
               .single()
             
-            if (emailError) {
-              console.error('[WEBHOOK] Error looking up user by email:', emailError)
+            if (emailError && emailError.code !== 'PGRST116') {
+              logger.error('Error looking up user by email', emailError)
             } else if (userByEmail) {
               userId = userByEmail.id
-              console.log('[WEBHOOK] Found user by email:', userId)
+              logger.debug('Found user by email')
             }
           }
           
           if (!userId) {
-            console.error('[WEBHOOK] Could not determine userId for payment processing')
+            logger.error('Could not determine userId for payment processing')
             throw new Error('Could not determine userId for payment processing')
           }
           
-          console.log('[WEBHOOK] Using userId for payment:', userId)
-          
-          // Test database connection and table access
-          console.log('[WEBHOOK] Testing database connection...')
-          const { data: testQuery, error: testError } = await supabase
-            .from('payment_athletes')
-            .select('id')
-            .limit(1)
-          
-          if (testError) {
-            console.error('[WEBHOOK] payment_athletes table test failed:', testError)
-          } else {
-            console.log('[WEBHOOK] payment_athletes table accessible')
-          }
-          
-          // Test payments table access
-          const { data: paymentsTest, error: paymentsError } = await supabase
-            .from('payments')
-            .select('id')
-            .limit(1)
-          
-          if (paymentsError) {
-            console.error('[WEBHOOK] payments table test failed:', paymentsError)
-          } else {
-            console.log('[WEBHOOK] payments table accessible')
-          }
+          logger.debug('Using userId for payment')
           
           // Check if payment already exists (handle duplicate webhook calls)
           const { data: existingPayment, error: existingPaymentError } = await supabase
@@ -124,7 +85,7 @@ export async function POST(request: NextRequest) {
 
           let payment
           if (existingPayment) {
-            console.log('[WEBHOOK] Payment already exists, using existing record:', existingPayment.id)
+            logger.debug('Payment already exists, using existing record')
             payment = existingPayment
           } else {
             // Create new payment record
@@ -141,41 +102,30 @@ export async function POST(request: NextRequest) {
               .single()
 
             if (paymentError) {
-              console.error("Error creating payment record:", paymentError)
+              logger.error("Error creating payment record", paymentError)
               throw paymentError
             }
             payment = newPayment
-            console.log('[WEBHOOK] Created new payment record:', payment.id)
+            logger.debug('Created new payment record')
           }
 
           // Process each line item to create payment_athletes records and reduce stock
-          // Always fetch line items from the session (session.line_items might be null)
           try {
-            console.log('[WEBHOOK] Fetching line items from session...')
+            logger.debug('Fetching line items from session')
             const lineItems = await stripe.checkout.sessions.listLineItems(session.id)
-            console.log('[WEBHOOK] Processing line items:', lineItems.data.length)
-            console.log('[WEBHOOK] Line items data:', JSON.stringify(lineItems.data, null, 2))
+            logger.debug('Processing line items:', lineItems.data.length)
               
-              for (let i = 0; i < lineItems.data.length; i++) {
+            for (let i = 0; i < lineItems.data.length; i++) {
               const lineItem = lineItems.data[i]
-              console.log(`[WEBHOOK] Processing line item ${i}:`, {
-                price_id: lineItem.price?.id,
-                quantity: lineItem.quantity
-              })
+              logger.debug(`Processing line item ${i}`)
               
               // Get athlete info from session metadata (not line item metadata)
               const athleteId = session.metadata?.[`athlete_${i}_id`]
               const athleteName = session.metadata?.[`athlete_${i}_name`]
               const productId = session.metadata?.[`athlete_${i}_product_id`]
               
-              console.log(`[WEBHOOK] Athlete info for index ${i}:`, {
-                athleteId,
-                athleteName,
-                productId
-              })
-              
               if (!athleteId) {
-                console.error(`[WEBHOOK] No athlete_id in session metadata for index ${i}:`, session.metadata)
+                logger.error(`No athlete_id in session metadata for index ${i}`)
                 continue
               }
 
@@ -184,7 +134,7 @@ export async function POST(request: NextRequest) {
               let productError
               
               if (productId) {
-                console.log(`[WEBHOOK] Looking up product by ID: ${productId}`)
+                logger.debug(`Looking up product by ID`)
                 const result = await supabase
                   .from('products')
                   .select('id, name, price_cents, stock_quantity, stripe_price_id')
@@ -193,7 +143,7 @@ export async function POST(request: NextRequest) {
                 product = result.data
                 productError = result.error
               } else {
-                console.log(`[WEBHOOK] Looking up product by stripe_price_id: ${lineItem.price?.id}`)
+                logger.debug(`Looking up product by stripe_price_id`)
                 const result = await supabase
                   .from('products')
                   .select('id, name, price_cents, stock_quantity, stripe_price_id')
@@ -204,18 +154,14 @@ export async function POST(request: NextRequest) {
               }
 
               if (productError || !product) {
-                console.error(`[WEBHOOK] Error finding product:`, productError)
+                logger.error(`Error finding product`, productError)
                 continue
               }
               
-              console.log(`[WEBHOOK] Found product:`, {
-                id: product.id,
-                name: product.name,
-                current_stock: product.stock_quantity
-              })
+              logger.debug(`Found product:`, product.name)
 
               // Check if payment_athletes record already exists
-              const { data: existingPaymentAthlete } = await supabase
+              const { data: existingPaymentAthlete, error: existingError } = await supabase
                 .from('payment_athletes')
                 .select('id')
                 .eq('payment_id', payment.id)
@@ -223,11 +169,16 @@ export async function POST(request: NextRequest) {
                 .eq('product_id', product.id)
                 .single()
 
+              if (existingError && existingError.code !== 'PGRST116') {
+                logger.error(`Error checking existing payment_athletes record`, existingError)
+                continue
+              }
+
               if (existingPaymentAthlete) {
-                console.log(`[WEBHOOK] Payment_athletes record already exists for athlete ${athleteId}, product ${product.id}`)
+                logger.debug(`Payment_athletes record already exists`)
               } else {
                 // Create payment_athletes record
-                console.log(`[WEBHOOK] Creating payment_athletes record for athlete ${athleteId}, product ${product.id}`)
+                logger.debug(`Creating payment_athletes record`)
                 const { error: paymentAthleteError } = await supabase
                   .from('payment_athletes')
                   .insert({
@@ -239,19 +190,18 @@ export async function POST(request: NextRequest) {
                   })
 
                 if (paymentAthleteError) {
-                  console.error(`[WEBHOOK] Error creating payment_athletes record:`, paymentAthleteError)
+                  logger.error(`Error creating payment_athletes record`, paymentAthleteError)
                   continue
                 } else {
-                  console.log(`[WEBHOOK] Successfully created payment_athletes record`)
+                  logger.debug(`Successfully created payment_athletes record`)
                 }
               }
 
               // Only reduce stock if this is the first time processing this payment
               if (!existingPaymentAthlete) {
-                // Reduce stock quantity
                 const quantityToReduce = lineItem.quantity || 1
                 const newStockQuantity = Math.max(0, product.stock_quantity - quantityToReduce)
-                console.log(`[WEBHOOK] Updating stock: ${product.stock_quantity} - ${quantityToReduce} = ${newStockQuantity}`)
+                logger.debug(`Updating stock: ${product.stock_quantity} - ${quantityToReduce} = ${newStockQuantity}`)
                 
                 const { error: stockError } = await supabase
                   .from('products')
@@ -259,39 +209,38 @@ export async function POST(request: NextRequest) {
                   .eq('id', product.id)
 
                 if (stockError) {
-                  console.error(`[WEBHOOK] Error updating stock:`, stockError)
+                  logger.error(`Error updating stock`, stockError)
                   continue
                 } else {
-                  console.log(`[WEBHOOK] Successfully updated stock for product ${product.name}`)
+                  logger.debug(`Successfully updated stock for product`)
                 }
               } else {
-                console.log(`[WEBHOOK] Skipping stock update - already processed for this payment`)
+                logger.debug(`Skipping stock update - already processed for this payment`)
               }
 
-              console.log(`[WEBHOOK] Processed payment for athlete ${athleteName} (${athleteId}) for product ${product.name}`)
+              logger.debug(`Processed payment for athlete and product`)
             }
-            } catch (lineItemError) {
-              console.error('[WEBHOOK] Error processing line items:', lineItemError)
-              throw lineItemError
-            }
+          } catch (lineItemError) {
+            logger.error('Error processing line items', lineItemError)
+            throw lineItemError
+          }
 
           // Clear the user's cart after successful payment
           if (userId) {
-            console.log(`[WEBHOOK] Attempting to clear cart for user: ${userId}`)
+            logger.debug(`Attempting to clear cart for user`)
             
-            // Simply delete all cart items for this user (no session_id needed)
             const { error: clearCartError } = await supabase
               .from('cart_items')
               .delete()
               .eq('user_id', userId)
 
             if (clearCartError) {
-              console.error(`[WEBHOOK] Error clearing cart for user ${userId}:`, clearCartError)
+              logger.error(`Error clearing cart for user`, clearCartError)
             } else {
-              console.log(`[WEBHOOK] Successfully cleared cart for user: ${userId}`)
+              logger.debug(`Successfully cleared cart for user`)
             }
           } else {
-            console.log(`[WEBHOOK] No user ID found, skipping cart clear`)
+            logger.debug(`No user ID found, skipping cart clear`)
           }
         }
         break
@@ -299,8 +248,7 @@ export async function POST(request: NextRequest) {
 
       case "payment_intent.succeeded": {
         // Skip this event - we handle payments in checkout.session.completed
-        // where we have access to customer metadata with the correct userId
-        console.log("[DEBUG] payment_intent.succeeded - Skipping (handled in checkout.session.completed)")
+        logger.debug("payment_intent.succeeded - Skipping (handled in checkout.session.completed)")
         break
       }
 
@@ -319,24 +267,21 @@ export async function POST(request: NextRequest) {
       }
 
       case "charge.succeeded": {
-        console.log("[WEBHOOK] Processing charge.succeeded event")
+        logger.debug("Processing charge.succeeded event")
         const charge = event.data.object as Stripe.Charge
         
-        // Get the payment intent to find the checkout session
         if (charge.payment_intent) {
           const paymentIntent = await stripe.paymentIntents.retrieve(charge.payment_intent as string)
-          console.log("[WEBHOOK] Payment intent metadata:", paymentIntent.metadata)
+          logger.debug("Payment intent metadata retrieved")
           
-          // Try to find the checkout session from the payment intent
-          if (paymentIntent.metadata?.checkout_session_id) {
+          if (paymentIntent.metadata.checkout_session_id) {
             const session = await stripe.checkout.sessions.retrieve(paymentIntent.metadata.checkout_session_id)
-            console.log("[WEBHOOK] Found checkout session from charge.succeeded:", session.id)
+            logger.debug("Found checkout session from charge.succeeded")
             
             // Process the session as if it was checkout.session.completed
             if (session.payment_status === 'paid') {
-              console.log("[WEBHOOK] Processing charge.succeeded as checkout.session.completed")
+              logger.debug("Processing charge.succeeded as checkout.session.completed")
               // We'll need to call the same processing logic here
-              // For now, let's just log that we found it
             }
           }
         }
@@ -344,13 +289,12 @@ export async function POST(request: NextRequest) {
       }
 
       default:
-        console.log(`[WEBHOOK] Unhandled event type: ${event.type}`)
-        console.log(`[WEBHOOK] Event data:`, JSON.stringify(event.data, null, 2))
+        logger.debug(`Unhandled event type: ${event.type}`)
     }
 
     return NextResponse.json({ received: true })
   } catch (error) {
-    console.error("Webhook error:", error)
+    logger.error("Webhook error", error)
     return NextResponse.json({ error: "Webhook handler failed" }, { status: 500 })
   }
 }

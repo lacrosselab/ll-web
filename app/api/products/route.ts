@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { getSupabaseServer } from "@/lib/supabase/server"
 import { stripe } from "@/lib/stripe"
+import { logger } from "@/lib/utils"
 
 export async function GET() {
   try {
@@ -14,7 +15,7 @@ export async function GET() {
       .order('session_date', { ascending: true })
 
     if (error) {
-      console.error("Error fetching products from database:", error)
+      logger.error("Error fetching products from database:", error)
       return NextResponse.json(
         { error: "Failed to fetch products", details: error.message }, 
         { status: 500 }
@@ -30,13 +31,13 @@ export async function GET() {
         
         // If database says active but Stripe says inactive, skip this product
         if (!stripeProduct.active) {
-          console.warn(`Product ${product.id} is active in DB but inactive in Stripe - skipping`)
+          logger.warn(`Product is active in DB but inactive in Stripe - skipping`)
           continue
         }
         
         verifiedProducts.push(product)
       } catch (stripeError) {
-        console.error(`Error verifying Stripe product ${product.stripe_product_id}:`, stripeError)
+        logger.error(`Error verifying Stripe product`, stripeError)
         // If we can't verify with Stripe, skip this product to be safe
         continue
       }
@@ -74,7 +75,7 @@ export async function GET() {
     })
 
   } catch (error) {
-    console.error("Error fetching products:", error)
+    logger.error("Error fetching products:", error)
     return NextResponse.json(
       { error: "Failed to fetch products", details: error instanceof Error ? error.message : 'Unknown error' }, 
       { status: 500 }
