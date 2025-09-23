@@ -33,7 +33,7 @@ export function useGSAP() {
 
 // Hook for fade in animations
 export function useFadeIn(delay = 0, duration = 1) {
-  const ref = useRef<HTMLElement>(null)
+  const ref = useRef<HTMLDivElement>(null)
   const { gsap, isMobile } = useGSAP()
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export function useFadeIn(delay = 0, duration = 1) {
 
 // Hook for slide in animations
 export function useSlideIn(direction: "left" | "right" | "up" | "down" = "up", delay = 0, duration = 1) {
-  const ref = useRef<HTMLElement>(null)
+  const ref = useRef<HTMLDivElement>(null)
   const { gsap, isMobile } = useGSAP()
 
   useEffect(() => {
@@ -95,7 +95,7 @@ export function useSlideIn(direction: "left" | "right" | "up" | "down" = "up", d
 
 // Hook for scroll-triggered animations
 export function useScrollAnimation(trigger: string, animation: any, delay = 0) {
-  const ref = useRef<HTMLElement>(null)
+  const ref = useRef<HTMLDivElement>(null)
   const { gsap, ScrollTrigger, isMobile } = useGSAP()
 
   useEffect(() => {

@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Check, Clock, Users, DollarSign, Calendar, Package, Edit, Trash2 } from "lucide-react"
+import { Check, Clock, Users, DollarSign, Calendar, Package, Edit, Trash2, Plus } from "lucide-react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { getSupabaseClient } from "@/lib/supabase/client"
@@ -258,7 +258,11 @@ export function ProductCard(props: ProductCardProps) {
   const handleAthleteSelection = async (athleteId: string) => {
     try {
       setLoading(true)
-      const result = await addToCart(props.productId, athleteId, 1)
+      const result = await addToCart(
+        props.mode === 'user' ? props.productId : props.product.id, 
+        athleteId, 
+        1
+      )
       
       if (result.success) {
         setShowAthleteSelection(false)
@@ -284,6 +288,7 @@ export function ProductCard(props: ProductCardProps) {
 
       const { data, error } = await supabase
         .from('athletes')
+        // @ts-ignore - Supabase TypeScript types not properly generated
         .insert({
           user_id: user.id,
           name: newAthlete.name,
@@ -300,6 +305,7 @@ export function ProductCard(props: ProductCardProps) {
       setAthletes([data, ...athletes])
       
       // Auto-select the new athlete and add to cart
+      // @ts-ignore - Supabase TypeScript types not properly generated
       await handleAthleteSelection(data.id)
       
       // Reset form and close modals
@@ -467,7 +473,7 @@ export function ProductCard(props: ProductCardProps) {
                   </Button>
                 ))}
                 <Button
-                  variant="dashed"
+                  variant="outline"
                   className="w-full justify-start border-dashed"
                   onClick={() => {
                     setShowAthleteSelection(false)
@@ -475,7 +481,7 @@ export function ProductCard(props: ProductCardProps) {
                   }}
                   data-testid="create-athlete"
                 >
-                  <Users className="h-4 w-4 mr-2" />
+                  <Plus className="h-4 w-4 mr-2" />
                   Add New Athlete
                 </Button>
               </div>

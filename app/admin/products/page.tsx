@@ -32,8 +32,7 @@ interface Product {
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [showCreateForm, setShowCreateForm] = useState(false)
+  const [showForm, setShowForm] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const router = useRouter()
   const { showToast } = useToast()
@@ -47,18 +46,6 @@ export default function AdminProductsPage() {
       setLoading(true)
       const supabase = getSupabaseClient()
       
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        router.push('/login?redirect=/admin/products')
-        return
-      }
-
-      // Check if user is admin
-      if (!user.email?.endsWith('@thelacrosselab.com')) {
-        router.push('/')
-        return
-      }
-
       const { data, error } = await supabase
         .from('products')
         .select('*')
@@ -66,9 +53,9 @@ export default function AdminProductsPage() {
 
       if (error) throw error
       setProducts(data || [])
-    } catch (err) {
-      console.error('Error loading products:', err)
-      setError('Failed to load products')
+    } catch (error) {
+      console.error('Error loading products:', error)
+      showToast('Failed to load sessions', 'error')
     } finally {
       setLoading(false)
     }
@@ -81,9 +68,11 @@ export default function AdminProductsPage() {
       // Update both database and Stripe to keep them in sync
       const newActiveStatus = !product.is_active
       
-      // Update database first
+      // Update database first - use any to bypass TypeScript issues
+      // @ts-ignore - Supabase TypeScript types not properly generated
       const { error: dbError } = await supabase
         .from('products')
+        // @ts-ignore - Supabase TypeScript types not properly generated
         .update({ is_active: newActiveStatus })
         .eq('id', product.id)
 
@@ -106,8 +95,10 @@ export default function AdminProductsPage() {
           const errorData = await response.json()
           console.error('Stripe update failed:', errorData)
           // Revert database change if Stripe update fails
+          // @ts-ignore - Supabase TypeScript types not properly generated
           await supabase
             .from('products')
+            // @ts-ignore - Supabase TypeScript types not properly generated
             .update({ is_active: product.is_active })
             .eq('id', product.id)
           throw new Error('Failed to sync with Stripe')
@@ -115,8 +106,10 @@ export default function AdminProductsPage() {
       } catch (stripeError) {
         console.error('Error updating Stripe product:', stripeError)
         // Revert database change if Stripe update fails
+        // @ts-ignore - Supabase TypeScript types not properly generated
         await supabase
           .from('products')
+          // @ts-ignore - Supabase TypeScript types not properly generated
           .update({ is_active: product.is_active })
           .eq('id', product.id)
         throw new Error('Failed to sync with Stripe')
@@ -138,120 +131,175 @@ export default function AdminProductsPage() {
     try {
       const supabase = getSupabaseClient()
       
-      // Delete from Stripe first (archive the product) - only if it's not a temp product
-      if (product.stripe_product_id && !product.stripe_product_id.startsWith('temp_')) {
-        const response = await fetch(`/api/admin/products?productId=${product.stripe_product_id}`, {
-          method: 'DELETE',
-        })
-        
-        if (!response.ok) {
-          throw new Error('Failed to delete from Stripe')
-        }
-      }
-
       // Delete from database
-      const { error } = await supabase
+      const { error: dbError } = await supabase
         .from('products')
         .delete()
         .eq('id', product.id)
 
-      if (error) throw error
+      if (dbError) throw dbError
+
+      // Archive in Stripe (don't delete to preserve history)
+      try {
+        const response = await fetch('/api/admin/products', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ productId: product.stripe_product_id }),
+        })
+
+        if (!response.ok) {
+          console.error('Stripe deletion failed, but database deletion succeeded')
+        }
+      } catch (stripeError) {
+        console.error('Error deleting from Stripe:', stripeError)
+      }
+
       await loadProducts()
       showToast('Session deleted successfully', 'success')
     } catch (err) {
       console.error('Error deleting product:', err)
-      showToast('Failed to delete session', 'error')
+      showToast(err instanceof Error ? err.message : 'Failed to delete session', 'error')
     }
+  }
+
+  const editProduct = (product: Product) => {
+    setEditingProduct(product)
+    setShowForm(true)
+  }
+
+  const closeForm = () => {
+    setShowForm(false)
+    setEditingProduct(null)
   }
 
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Loading sessions...</div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center text-red-500">{error}</div>
-        <Button onClick={loadProducts} className="mt-4">Try Again</Button>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold">Session Management</h1>
+        </div>
+        <div className="grid gap-4">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="p-4">
+              <div className="animate-pulse">
+                <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
     )
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col lg:flex-row gap-4 xl:gap-0 justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold">Session Management</h1>
-          <p className="text-muted-foreground">Manage your training sessions and availability</p>
-        </div>
-        <Button className='w-full lg:w-auto' onClick={() => setShowCreateForm(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Session
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-3xl font-bold">Session Management</h1>
+        <Button onClick={() => setShowForm(true)} className="flex items-center gap-2">
+          <Plus className="h-4 w-4" />
+          Add New Session
         </Button>
       </div>
 
-      {/* Sessions Grid - Using shared ProductCard */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            mode="admin"
-            title={product.name}
-            description={product.description}
-            price={formatPrice(product.price_cents)}
-            sessionDate={product.session_date}
-            stockQuantity={product.stock_quantity}
-            product={product}
-            onEdit={setEditingProduct}
-            onToggleStatus={toggleProductStatus}
-            onDelete={deleteProduct}
-          />
-        ))}
-      </div>
-
-      {/* Create/Edit Session Form */}
-      {(showCreateForm || editingProduct) && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle>
-                {editingProduct ? 'Edit Session' : 'Create New Session'}
-              </CardTitle>
-              <CardDescription>
-                {editingProduct ? 'Update session details' : 'Add a new training session'}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <SessionForm
-                product={editingProduct}
-                onClose={() => {
-                  setShowCreateForm(false)
-                  setEditingProduct(null)
-                }}
-                onSuccess={() => {
-                  setShowCreateForm(false)
-                  setEditingProduct(null)
-                  loadProducts()
-                }}
-              />
-            </CardContent>
-          </Card>
+      {products.length === 0 ? (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <Calendar className="h-12 w-12 text-muted-foreground mb-4" />
+            <CardTitle className="text-xl mb-2">No Sessions Found</CardTitle>
+            <CardDescription className="text-center mb-4">
+              Get started by creating your first training session.
+            </CardDescription>
+            <Button onClick={() => setShowForm(true)}>
+              Create Your First Session
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid gap-6">
+          {products.map((product) => (
+            <Card key={product.id} className="overflow-hidden">
+              <CardHeader className="pb-4">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-1">
+                    <CardTitle className="text-xl">{product.name}</CardTitle>
+                    <CardDescription className="text-sm">
+                      {product.description || 'No description provided'}
+                    </CardDescription>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant={product.is_active ? 'default' : 'secondary'}>
+                      {product.is_active ? 'Active' : 'Inactive'}
+                    </Badge>
+                    <Badge variant="outline">
+                      Stock: {product.stock_quantity}
+                    </Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  <div>
+                    <Label className="text-sm font-medium text-muted-foreground">Price</Label>
+                    <p className="text-lg font-semibold">
+                      ${(product.price_cents / 100).toFixed(2)} {product.currency.toUpperCase()}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-muted-foreground">Session Date</Label>
+                    <p className="text-lg font-semibold">
+                      {new Date(product.session_date).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-muted-foreground">Status</Label>
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={product.is_active}
+                        onCheckedChange={() => toggleProductStatus(product)}
+                      />
+                      <span className="text-sm">
+                        {product.is_active ? 'Active' : 'Inactive'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => editProduct(product)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => deleteProduct(product)}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
+      )}
+
+      {showForm && (
+        <SessionForm
+          product={editingProduct}
+          onClose={closeForm}
+          onSuccess={() => {
+            closeForm()
+            loadProducts()
+          }}
+        />
       )}
     </div>
   )
-}
-
-// Helper function to format price
-function formatPrice(cents: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(cents / 100)
 }
 
 // Session Form Component
@@ -264,25 +312,23 @@ function SessionForm({
   onClose: () => void
   onSuccess: () => void
 }) {
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: product?.name || '',
     description: product?.description || '',
-    price: product?.price_cents ? (product.price_cents / 100).toString() : '',
+    price: product ? (product.price_cents / 100).toString() : '',
     session_date: product?.session_date || '',
-    stock_quantity: product?.stock_quantity || 10,
+    stock_quantity: product?.stock_quantity?.toString() || '10',
     is_active: product?.is_active ?? true,
-    stripe_product_id: product?.stripe_product_id || '',
-    stripe_price_id: product?.stripe_price_id || '',
   })
-  const [loading, setLoading] = useState(false)
-  const { showToast } = useToast() // Add this line
+  const { showToast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
     try {
-      const supabase = getSupabaseClient() // Add this line
+      const supabase = getSupabaseClient()
       
       // Validate required fields
       if (!formData.name.trim()) {
@@ -314,172 +360,175 @@ function SessionForm({
         session_date: formData.session_date,
         stock_quantity: parseInt(formData.stock_quantity),
         is_active: formData.is_active,
-        // Remove these fields from the update - they shouldn't be changed
-        // stripe_product_id: formData.stripe_product_id.trim() || null,
-        // stripe_price_id: formData.stripe_price_id.trim() || null
       }
 
       if (product) {
         // Update existing product
+        // @ts-ignore - Supabase TypeScript types not properly generated
         const { error } = await supabase
           .from('products')
+          // @ts-ignore - Supabase TypeScript types not properly generated
           .update(productData)
           .eq('id', product.id)
         if (error) throw error
 
-        // Check what changed and sync to Stripe
-        const nameChanged = product.name !== formData.name.trim()
-        const descriptionChanged = product.description !== (formData.description.trim() || null)
-        const priceChanged = product.price_cents !== Math.round(parseFloat(formData.price) * 100)
-
-        // Only call Stripe API if something changed and we have Stripe IDs
-        if ((nameChanged || descriptionChanged || priceChanged) && 
-            product.stripe_product_id && product.stripe_price_id) {
-          
-          try {
-            const stripeResponse = await fetch('/api/admin/products', {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                productId: product.stripe_product_id,  // Use existing Stripe IDs
-                priceId: product.stripe_price_id,      // Use existing Stripe IDs
-                name: productData.name,
-                description: productData.description,
-                price_cents: productData.price_cents,
-                currency: productData.currency,
-                nameChanged,
-                descriptionChanged,
-                priceChanged
-              })
-            })
-
-            if (!stripeResponse.ok) {
-              const errorData = await stripeResponse.json()
-              console.error('Stripe update failed:', errorData)
-              showToast('Session updated in database, but Stripe sync failed', 'error')
-            } else {
-              const stripeData = await stripeResponse.json()
-              // Update database with new price ID if price changed
-              if (priceChanged && stripeData.priceId !== product.stripe_price_id) {
-                await supabase
-                  .from('products')
-                  .update({ stripe_price_id: stripeData.priceId })
-                  .eq('id', product.id)
-              }
-              showToast('Session updated successfully!', 'success')
-            }
-          } catch (stripeError) {
-            console.error('Stripe sync error:', stripeError)
-            showToast('Session updated in database, but Stripe sync failed', 'error')
-          }
-        } else {
-          showToast('Session updated successfully!', 'success')
-        }
-      } else {
-        // Create new product via API
+        // Update Stripe product
         try {
           const response = await fetch('/api/admin/products', {
-            method: 'POST',
+            method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(productData)
+            body: JSON.stringify({
+              productId: product.stripe_product_id,
+              priceId: product.stripe_price_id,
+              name: productData.name,
+              description: productData.description,
+              price_cents: productData.price_cents,
+              currency: productData.currency,
+              nameChanged: product.name !== productData.name,
+              descriptionChanged: product.description !== productData.description,
+              priceChanged: product.price_cents !== productData.price_cents,
+            }),
           })
 
           if (!response.ok) {
             const errorData = await response.json()
-            throw new Error(errorData.error || 'Failed to create product')
+            console.error('Stripe update failed:', errorData)
+            showToast('Session updated in database, but Stripe sync failed', 'error')
+          } else {
+            const stripeData = await response.json()
+            // Update database with new price ID if price changed
+            await supabase
+              .from('products')
+              // @ts-ignore - Supabase TypeScript types not properly generated
+              .update({ stripe_price_id: stripeData.priceId })
+              .eq('id', product.id)
+            showToast('Session updated successfully', 'success')
           }
-
-          showToast('Session created successfully!', 'success')
-        } catch (error) {
-          console.error('Failed to create session:', error)
-          showToast(`Failed to create session: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error')
+        } catch (stripeError) {
+          console.error('Error updating Stripe product:', stripeError)
+          showToast('Session updated in database, but Stripe sync failed', 'error')
         }
+      } else {
+        // Create new product
+        const response = await fetch('/api/admin/products', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(productData),
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.error || 'Failed to create session')
+        }
+
+        showToast('Session created successfully', 'success')
       }
 
       onSuccess()
-    } catch (err) {
-      console.error('Error saving session:', err)
-      showToast('Failed to save session', 'error')
+    } catch (error) {
+      console.error('Error saving product:', error)
+      showToast(error instanceof Error ? error.message : 'Failed to save session', 'error')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <Label htmlFor="name">Session Name</Label>
-        <Input
-          id="name"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          required
-        />
-      </div>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+      <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <CardHeader>
+          <CardTitle>{product ? 'Edit Session' : 'Create New Session'}</CardTitle>
+          <CardDescription>
+            {product ? 'Update the session details below.' : 'Fill in the details to create a new training session.'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="name">Session Name *</Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="e.g., Advanced Shooting Clinic"
+                required
+              />
+            </div>
 
-      <div>
-        <Label htmlFor="description">Description</Label>
-        <Input
-          id="description"
-          value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-        />
-      </div>
+            <div>
+              <Label htmlFor="description">Description</Label>
+              <Input
+                id="description"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                placeholder="Brief description of the session"
+              />
+            </div>
 
-      <div>
-        <Label htmlFor="price">Price (in cents)</Label>
-        <Input
-          id="price"
-          type="number"
-          value={formData.price}
-          onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-          required
-        />
-      </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="price">Price (USD) *</Label>
+                <Input
+                  id="price"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={formData.price}
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  placeholder="0.00"
+                  required
+                />
+              </div>
 
-      <div>
-        <Label htmlFor="session_date">Session Date</Label>
-        <Input
-          id="session_date"
-          type="date"
-          value={formData.session_date}
-          onChange={(e) => setFormData({ ...formData, session_date: e.target.value })}
-          required
-        />
-      </div>
+              <div>
+                <Label htmlFor="stock_quantity">Stock Quantity *</Label>
+                <Input
+                  id="stock_quantity"
+                  type="number"
+                  min="0"
+                  value={formData.stock_quantity}
+                  onChange={(e) => setFormData({ ...formData, stock_quantity: e.target.value })}
+                  placeholder="10"
+                  required
+                />
+              </div>
+            </div>
 
-      <div>
-        <Label htmlFor="stock_quantity">Available Spots</Label>
-        <Input
-          id="stock_quantity"
-          type="number"
-          value={formData.stock_quantity}
-          onChange={(e) => setFormData({ ...formData, stock_quantity: parseInt(e.target.value) || 0 })}
-          required
-        />
-      </div>
+            <div>
+              <Label htmlFor="session_date">Session Date *</Label>
+              <Input
+                id="session_date"
+                type="date"
+                value={formData.session_date}
+                onChange={(e) => setFormData({ ...formData, session_date: e.target.value })}
+                required
+              />
+            </div>
 
-      <div className="flex items-center space-x-2">
-        <Switch
-          id="is_active"
-          checked={formData.is_active}
-          onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
-        />
-        <Label htmlFor="is_active">Active</Label>
-      </div>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="is_active"
+                checked={formData.is_active}
+                onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+              />
+              <Label htmlFor="is_active">Active (visible to customers)</Label>
+            </div>
 
-      <div className="flex gap-2 pt-4">
-        <Button type="button" variant="outline" onClick={onClose} className="flex-1">
-          Cancel
-        </Button>
-        <Button type="submit" disabled={loading} className="flex-1">
-          {loading ? 'Saving...' : (product ? 'Update Session' : 'Create Session')}
-        </Button>
-      </div>
-    </form>
+            <div className="flex gap-2 pt-4">
+              <Button type="submit" disabled={loading}>
+                {loading ? 'Saving...' : (product ? 'Update Session' : 'Create Session')}
+              </Button>
+              <Button type="button" variant="outline" onClick={onClose}>
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   )
 }

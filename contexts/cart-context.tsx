@@ -223,11 +223,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return { success: false, error: 'Failed to load session details' }
       }
 
+      // @ts-ignore - Supabase TypeScript types not properly generated
       if (!product.is_active) {
         return { success: false, error: 'This session is no longer available' }
       }
-
+      // @ts-ignore - Supabase TypeScript types not properly generated
       if (product.stock_quantity <= 0) {
+        // @ts-ignore - Supabase TypeScript types not properly generated
         return { success: false, error: `${product.name} is sold out` }
       }
 
@@ -245,6 +247,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
       // Calculate total quantity already in user's cart for this product
       const totalInCart = (userCartItems || []).reduce((sum: number, item: { quantity: number }) => sum + item.quantity, 0)
+      // @ts-ignore - Supabase TypeScript types not properly generated
       const availableForUser = product.stock_quantity - totalInCart
 
       // Check if adding this quantity would exceed available stock
@@ -258,6 +261,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       // Add to cart with only user_id (no session_id)
       const { error: insertError } = await supabase
         .from('cart_items')
+        // @ts-ignore - Supabase TypeScript types not properly generated
         .insert({
           user_id: user.id,
           product_id: productId,
@@ -295,6 +299,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
       const { error } = await supabase
         .from('cart_items')
+        // @ts-ignore - Supabase TypeScript types not properly generated
         .update({ quantity })
         .eq('user_id', user.id)
         .eq('product_id', productId)

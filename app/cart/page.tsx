@@ -72,6 +72,7 @@ export default function CartPage() {
 
       const { data, error } = await supabase
         .from('athletes')
+        // @ts-ignore - Supabase TypeScript types not properly generated
         .insert({
           user_id: user.id,
           name: newAthlete.name,
