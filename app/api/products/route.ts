@@ -16,10 +16,12 @@ export async function GET() {
 
     if (error) {
       logger.error("Error fetching products from database:", error)
-      return NextResponse.json(
+      const response = NextResponse.json(
         { error: "Failed to fetch products", details: error.message }, 
         { status: 500 }
       )
+      response.headers.set('Cache-Control', 'no-store')
+      return response
     }
 
     // Verify Stripe sync for each product
