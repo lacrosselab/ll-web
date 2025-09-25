@@ -64,7 +64,7 @@ function formatSessionDate(sessionDate: string): string {
   const daysUntilSession = getDaysUntilSession(sessionDate)
   
   if (daysUntilSession <= 0) return 'Session has passed'
-  if (daysUntilSession === 1) return 'Session tomorrow'
+  if (daysUntilSession === 1) return 'Session soon'
   if (daysUntilSession <= 7) return `Session in ${daysUntilSession} days`
   
   return `Session ${session.toLocaleDateString('en-US', { 

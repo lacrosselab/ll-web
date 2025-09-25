@@ -188,7 +188,7 @@ export function ProductCard(props: ProductCardProps) {
         return {
           cardClass: "relative border-red-500 shadow-lg",
           badgeClass: "bg-primary text-primary-foreground",
-          badgeText: "Session Tomorrow"
+          badgeText: "Session Soon"
         }
       case 'ending-soon':
         return {
