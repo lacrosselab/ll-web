@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import dynamic from 'next/dynamic'
 
 // Prevent static generation of cart page
 export const dynamic = 'force-dynamic'
