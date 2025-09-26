@@ -614,7 +614,7 @@ function DashboardContent() {
                 </div>
 
                 <div>
-                  <Label htmlFor="grade">Grade</Label>
+                  <Label className="mb-2" htmlFor="grade">Grade</Label>
                   <select
                     id="grade"
                     value={newAthlete.grade}

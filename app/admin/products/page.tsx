@@ -197,7 +197,7 @@ export default function AdminProductsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col md:flex-row gap-4 lg:items-center md:justify-between mb-8">
         <h1 className="text-3xl font-bold">Session Management</h1>
         <Button onClick={() => setShowForm(true)} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />

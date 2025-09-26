@@ -38,8 +38,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto px-4 py-6">
-        <div className="flex gap-6">
-          {/* Sidebar */}
+        <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex flex-col gap-4">
+        <h1 className="text-xl font-bold">Admin Tabs</h1>
+        {/* Sidebar */}
           <div className="flex flex-col gap-4">
             {navItems.map((item) => {
               const Icon = item.icon
@@ -58,6 +60,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               )
             })}
           </div>
+          </div>
+
 
           {/* Main Content */}
           <div className="flex-1">

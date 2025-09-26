@@ -187,7 +187,7 @@ export default function AdminAthletesPage() {
 
       {/* Search */}
       <div className="mb-6">
-        <div className="relative">
+        <div className="relative max-w-sm">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
             placeholder="Search athletes by name, email, or school..."
@@ -199,7 +199,7 @@ export default function AdminAthletesPage() {
       </div>
 
       {/* Athletes Table */}
-      <Card>
+      <Card className="max-w-[500px] lg:max-w-[80vw] overflow-x-scroll">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
@@ -207,54 +207,58 @@ export default function AdminAthletesPage() {
           </CardTitle>
           <CardDescription>
             All registered athletes and their session attendance
+            <span className="block sm:hidden text-xs mt-1 text-blue-600">
+              ← Scroll horizontally to see all columns
+            </span>
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
+          <div className="flex flex-col gap-4">
+            <div className="overflow-x-auto -mx-4 px-4">
+              <Table className="min-w-full">
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Age</TableHead>
-                  <TableHead>School</TableHead>
-                  <TableHead>Position</TableHead>
-                  <TableHead>Grade</TableHead>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Sessions</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead className="min-w-[120px]">Name</TableHead>
+                  <TableHead className="min-w-[60px]">Age</TableHead>
+                  <TableHead className="min-w-[120px]">School</TableHead>
+                  <TableHead className="min-w-[100px]">Position</TableHead>
+                  <TableHead className="min-w-[80px]">Grade</TableHead>
+                  <TableHead className="min-w-[150px]">Contact</TableHead>
+                  <TableHead className="min-w-[100px]">Sessions</TableHead>
+                  <TableHead className="min-w-[120px]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredAthletes.map((athlete) => (
                   <TableRow key={athlete.id}>
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">
                       <div className="font-medium">{athlete.name}</div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">
                       {athlete.age ? `${athlete.age}` : '-'}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">
                       {athlete.school || '-'}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">
                       {athlete.position || '-'}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">
                       {athlete.grade || '-'}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">
                       <div className="text-sm">
                         <div className="font-medium">
                           {athlete.user?.email || 'User deleted'}
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">
                       <Badge variant="secondary">
                         {getTotalSessions(athlete)} sessions
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">
                       <Button
                         variant="outline"
                         size="sm"
@@ -267,7 +271,8 @@ export default function AdminAthletesPage() {
                   </TableRow>
                 ))}
               </TableBody>
-            </Table>
+              </Table>
+            </div>
           </div>
         </CardContent>
       </Card>
