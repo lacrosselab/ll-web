@@ -26,6 +26,7 @@ interface PricingCardProps {
   endDateUrgency?: 'normal' | 'ending-soon' | 'ending-very-soon'
   stockQuantity?: number
   sessionDate?: string
+  endDate?: string
 }
 
 export function PricingCard({
@@ -43,6 +44,7 @@ export function PricingCard({
   endDateUrgency = 'normal',
   stockQuantity = 0,
   sessionDate = '',
+  endDate,
 }: PricingCardProps) {
   return (
     <ProductCard
@@ -59,6 +61,7 @@ export function PricingCard({
       allPrices={allPrices}
       endDateUrgency={endDateUrgency}
       sessionDate={sessionDate}
+      endDate={endDate}
       stockQuantity={stockQuantity}
     />
   )

@@ -18,6 +18,7 @@ interface Athlete {
   age?: number
   school?: string
   position?: string
+  grade?: string
 }
 
 export default function CartPage() {
@@ -31,7 +32,8 @@ export default function CartPage() {
     name: '',
     age: '',
     school: '',
-    position: ''
+    position: '',
+    grade: ''
   })
   const router = useRouter()
 
@@ -78,7 +80,8 @@ export default function CartPage() {
           name: newAthlete.name,
           age: newAthlete.age ? parseInt(newAthlete.age) : null,
           school: newAthlete.school || null,
-          position: newAthlete.position || null
+          position: newAthlete.position || null,
+          grade: newAthlete.grade || null
         })
         .select()
         .single()
@@ -86,7 +89,7 @@ export default function CartPage() {
       if (error) throw error
 
       setAthletes([data, ...athletes])
-      setNewAthlete({ name: '', age: '', school: '', position: '' })
+      setNewAthlete({ name: '', age: '', school: '', position: '', grade: '' })
       setShowAthleteForm(false)
     } catch (error) {
       console.error('Error creating athlete:', error)
@@ -109,6 +112,21 @@ export default function CartPage() {
       month: 'short',
       day: 'numeric'
     })
+  }
+
+  const formatSessionDate = (sessionDate: string, endDate?: string): string => {
+    if (endDate) {
+      const startFormatted = new Date(sessionDate).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric'
+      })
+      const endFormatted = new Date(endDate).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric'
+      })
+      return `${startFormatted} - ${endFormatted}`
+    }
+    return formatDate(sessionDate)
   }
 
   const handleCheckout = async () => {
@@ -229,7 +247,7 @@ export default function CartPage() {
                 {/* Session Date */}
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="h-4 w-4" />
-                  <span>Session: {formatDate(item.product.session_date)}</span>
+                  <span>Session: {formatSessionDate(item.product.session_date, item.product.end_date)}</span>
                 </div>
 
                 {/* Athlete Display */}
@@ -369,6 +387,31 @@ export default function CartPage() {
                     value={newAthlete.position}
                     onChange={(e) => setNewAthlete({ ...newAthlete, position: e.target.value })}
                   />
+                </div>
+
+                <div>
+                  <Label htmlFor="grade">Grade</Label>
+                  <select
+                    id="grade"
+                    value={newAthlete.grade}
+                    onChange={(e) => setNewAthlete({ ...newAthlete, grade: e.target.value })}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <option value="">Select grade (optional)</option>
+                    <option value="K">Kindergarten</option>
+                    <option value="1">1st Grade</option>
+                    <option value="2">2nd Grade</option>
+                    <option value="3">3rd Grade</option>
+                    <option value="4">4th Grade</option>
+                    <option value="5">5th Grade</option>
+                    <option value="6">6th Grade</option>
+                    <option value="7">7th Grade</option>
+                    <option value="8">8th Grade</option>
+                    <option value="9">9th Grade</option>
+                    <option value="10">10th Grade</option>
+                    <option value="11">11th Grade</option>
+                    <option value="12">12th Grade</option>
+                  </select>
                 </div>
                 
                 <div className="flex gap-2 pt-4">

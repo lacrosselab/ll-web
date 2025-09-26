@@ -7,6 +7,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { getSupabaseClient } from "@/lib/supabase/client"
 import Image from "next/image"
+import { logger } from '@/lib/utils'
 import { useCart } from "@/contexts/cart-context"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -30,6 +31,7 @@ interface AdminProduct {
   price_cents: number
   currency: string
   session_date: string
+  end_date?: string
   stock_quantity: number
   is_active: boolean
   stripe_product_id: string
@@ -44,6 +46,7 @@ interface BaseProductCardProps {
   description: string | null
   price: string
   sessionDate: string
+  endDate?: string
   stockQuantity: number
   image?: string
 }
@@ -81,7 +84,8 @@ export function ProductCard(props: ProductCardProps) {
     name: '',
     age: '',
     school: '',
-    position: ''
+    position: '',
+    grade: ''
   })
   const router = useRouter()
   const { addToCart } = useCart()
@@ -99,13 +103,34 @@ export function ProductCard(props: ProductCardProps) {
   }
 
   // Format session date display
-  const formatSessionDate = (sessionDateString: string): string => {
+  const formatSessionDate = (sessionDateString: string, endDateString?: string): string => {
     try {
       const sessionDate = new Date(sessionDateString)
       const now = new Date()
       const diffTime = sessionDate.getTime() - now.getTime()
       const daysUntilSession = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
       
+      // If we have an end date, show the date range
+      if (endDateString) {
+        const endDate = new Date(endDateString)
+        logger.debug('endDate', endDate)
+        const startFormatted = sessionDate.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric'
+        })
+        const endFormatted = endDate.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric'
+        })
+        
+        if (daysUntilSession <= 0) return `Session ${startFormatted} - ${endFormatted} (has passed)`
+        if (daysUntilSession === 1) return `Session ${startFormatted} - ${endFormatted} (tomorrow)`
+        if (daysUntilSession <= 7) return `Session ${startFormatted} - ${endFormatted} (in ${daysUntilSession} days)`
+        
+        return `Session ${startFormatted} - ${endFormatted}`
+      }
+      
+      // Original single date logic
       if (daysUntilSession <= 0) return 'Session has passed'
       if (daysUntilSession === 1) return 'Session tomorrow'
       if (daysUntilSession <= 7) return `Session in ${daysUntilSession} days`
@@ -294,7 +319,8 @@ export function ProductCard(props: ProductCardProps) {
           name: newAthlete.name,
           age: newAthlete.age ? parseInt(newAthlete.age) : null,
           school: newAthlete.school || null,
-          position: newAthlete.position || null
+          position: newAthlete.position || null,
+          grade: newAthlete.grade || null
         })
         .select()
         .single()
@@ -309,7 +335,7 @@ export function ProductCard(props: ProductCardProps) {
       await handleAthleteSelection(data.id)
       
       // Reset form and close modals
-      setNewAthlete({ name: '', age: '', school: '', position: '' })
+      setNewAthlete({ name: '', age: '', school: '', position: '', grade: '' })
       setShowAthleteForm(false)
       setShowAthleteSelection(false)
     } catch (error) {
@@ -357,7 +383,7 @@ export function ProductCard(props: ProductCardProps) {
             <Clock className="h-4 w-4" />
             <span>
               {props.mode === 'user' 
-                ? formatSessionDate(props.sessionDate)
+                ? formatSessionDate(props.sessionDate, props.endDate)
                 : formatDate(props.sessionDate)
               }
             </span>
@@ -548,6 +574,31 @@ export function ProductCard(props: ProductCardProps) {
                     value={newAthlete.position}
                     onChange={(e) => setNewAthlete({ ...newAthlete, position: e.target.value })}
                   />
+                </div>
+
+                <div>
+                  <Label htmlFor="grade">Grade</Label>
+                  <select
+                    id="grade"
+                    value={newAthlete.grade}
+                    onChange={(e) => setNewAthlete({ ...newAthlete, grade: e.target.value })}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <option value="">Select grade (optional)</option>
+                    <option value="K">Kindergarten</option>
+                    <option value="1">1st Grade</option>
+                    <option value="2">2nd Grade</option>
+                    <option value="3">3rd Grade</option>
+                    <option value="4">4th Grade</option>
+                    <option value="5">5th Grade</option>
+                    <option value="6">6th Grade</option>
+                    <option value="7">7th Grade</option>
+                    <option value="8">8th Grade</option>
+                    <option value="9">9th Grade</option>
+                    <option value="10">10th Grade</option>
+                    <option value="11">11th Grade</option>
+                    <option value="12">12th Grade</option>
+                  </select>
                 </div>
                 
                 <div className="flex gap-2 pt-4">

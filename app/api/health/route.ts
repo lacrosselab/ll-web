@@ -4,7 +4,7 @@ import { getSupabaseServer } from '@/lib/supabase/server'
 export async function GET() {
   try {
     const startTime = Date.now()
-    // Re-commit
+    // Re-commit 
     // Check database connection
     const supabase = await getSupabaseServer()
     const { error: dbError } = await supabase

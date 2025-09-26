@@ -18,6 +18,7 @@ interface Athlete {
   age?: number
   school?: string
   position?: string
+  grade?: string
   created_at: string
   user: {
     id: string
@@ -80,6 +81,7 @@ export default function AdminAthletesPage() {
           age,
           school,
           position,
+          grade,
           created_at,
           user:users!athletes_user_id_fkey (
             id,
@@ -216,6 +218,7 @@ export default function AdminAthletesPage() {
                   <TableHead>Age</TableHead>
                   <TableHead>School</TableHead>
                   <TableHead>Position</TableHead>
+                  <TableHead>Grade</TableHead>
                   <TableHead>Contact</TableHead>
                   <TableHead>Sessions</TableHead>
                   <TableHead>Actions</TableHead>
@@ -235,6 +238,9 @@ export default function AdminAthletesPage() {
                     </TableCell>
                     <TableCell>
                       {athlete.position || '-'}
+                    </TableCell>
+                    <TableCell>
+                      {athlete.grade || '-'}
                     </TableCell>
                     <TableCell>
                       <div className="text-sm">
@@ -304,6 +310,12 @@ export default function AdminAthletesPage() {
                   <Label className="text-sm font-medium">Position</Label>
                   <div className="mt-1 text-sm text-muted-foreground">
                     {selectedAthlete.position || 'Not specified'}
+                  </div>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">Grade</Label>
+                  <div className="mt-1 text-sm text-muted-foreground">
+                    {selectedAthlete.grade || 'Not specified'}
                   </div>
                 </div>
                 <div>

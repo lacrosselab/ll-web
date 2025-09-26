@@ -44,9 +44,10 @@ interface Payment {
 interface Athlete {
   id: string
   name: string
-  age?: string
+  age?: number
   school?: string
   position?: string
+  grade?: string
   created_at: string
 }
 
@@ -72,7 +73,8 @@ function DashboardContent() {
     name: '',
     age: '',
     school: '',
-    position: ''
+    position: '',
+    grade: ''
   })
   
   const searchParams = useSearchParams()
@@ -245,6 +247,7 @@ function DashboardContent() {
           age: ageValue,
           school: newAthlete.school.trim() || null,
           position: newAthlete.position.trim() || null,
+          grade: newAthlete.grade.trim() || null,
         })
 
       if (error) {
@@ -253,7 +256,7 @@ function DashboardContent() {
       }
 
       // Reset form and refresh athletes
-      setNewAthlete({ name: '', age: '', school: '', position: '' })
+      setNewAthlete({ name: '', age: '', school: '', position: '', grade: '' })
       setShowAthleteForm(false)
       setEditingAthlete(null)
       await fetchAthletes(user.id)
@@ -304,6 +307,7 @@ function DashboardContent() {
           age: ageValue,
           school: newAthlete.school.trim() || null,
           position: newAthlete.position.trim() || null,
+          grade: newAthlete.grade.trim() || null,
         })
         .eq('id', editingAthlete.id)
 
@@ -313,7 +317,7 @@ function DashboardContent() {
       }
 
       // Reset form and refresh athletes
-      setNewAthlete({ name: '', age: '', school: '', position: '' })
+      setNewAthlete({ name: '', age: '', school: '', position: '', grade: '' })
       setShowAthleteForm(false)
       setEditingAthlete(null)
       await fetchAthletes(user.id)
@@ -352,9 +356,10 @@ function DashboardContent() {
     setEditingAthlete(athlete)
     setNewAthlete({
       name: athlete.name,
-      age: athlete.age || '',
+      age: athlete.age ? athlete.age.toString() : '',
       school: athlete.school || '',
-      position: athlete.position || ''
+      position: athlete.position || '',
+      grade: athlete.grade || ''
     })
     setShowAthleteForm(true)
   }
@@ -608,6 +613,32 @@ function DashboardContent() {
                   />
                 </div>
 
+                <div>
+                  <Label htmlFor="grade">Grade</Label>
+                  <select
+                    id="grade"
+                    value={newAthlete.grade}
+                    onChange={(e) => setNewAthlete({ ...newAthlete, grade: e.target.value })}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    data-testid="athlete-grade"
+                  >
+                    <option value="">Select grade (optional)</option>
+                    <option value="K">Kindergarten</option>
+                    <option value="1">1st Grade</option>
+                    <option value="2">2nd Grade</option>
+                    <option value="3">3rd Grade</option>
+                    <option value="4">4th Grade</option>
+                    <option value="5">5th Grade</option>
+                    <option value="6">6th Grade</option>
+                    <option value="7">7th Grade</option>
+                    <option value="8">8th Grade</option>
+                    <option value="9">9th Grade</option>
+                    <option value="10">10th Grade</option>
+                    <option value="11">11th Grade</option>
+                    <option value="12">12th Grade</option>
+                  </select>
+                </div>
+
                 <div className="flex gap-2 pt-4">
                   <Button
                     type="button"
@@ -615,7 +646,7 @@ function DashboardContent() {
                     onClick={() => {
                       setShowAthleteForm(false)
                       setEditingAthlete(null)
-                      setNewAthlete({ name: '', age: '', school: '', position: '' })
+                      setNewAthlete({ name: '', age: '', school: '', position: '', grade: '' })
                     }}
                     className="flex-1"
                   >

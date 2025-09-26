@@ -21,6 +21,7 @@ interface Product {
   price_cents: number
   currency: string
   session_date: string
+  end_date?: string
   stock_quantity: number
   is_active: boolean
   stripe_product_id: string
@@ -318,6 +319,7 @@ function SessionForm({
     description: product?.description || '',
     price: product ? (product.price_cents / 100).toString() : '',
     session_date: product?.session_date || '',
+    end_date: product?.end_date || '',
     stock_quantity: product?.stock_quantity?.toString() || '10',
     is_active: product?.is_active ?? true,
   })
@@ -358,6 +360,7 @@ function SessionForm({
         price_cents: Math.round(parseFloat(formData.price) * 100),
         currency: 'usd',
         session_date: formData.session_date,
+        end_date: formData.end_date || null,
         stock_quantity: parseInt(formData.stock_quantity),
         is_active: formData.is_active,
       }
@@ -506,6 +509,16 @@ function SessionForm({
                 value={formData.session_date}
                 onChange={(e) => setFormData({ ...formData, session_date: e.target.value })}
                 required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="end_date">End Date (Optional)</Label>
+              <Input
+                id="end_date"
+                type="date"
+                value={formData.end_date}
+                onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
               />
             </div>
 

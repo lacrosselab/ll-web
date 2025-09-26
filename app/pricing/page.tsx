@@ -24,6 +24,7 @@ interface Product {
   prices: ProductPrice[]
   // New fields from our database
   session_date: string
+  end_date?: string
   stock_quantity: number
   is_active: boolean
 }
@@ -59,10 +60,30 @@ function getDaysUntilSession(sessionDate: string): number {
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 }
 
-function formatSessionDate(sessionDate: string): string {
+function formatSessionDate(sessionDate: string, endDate?: string): string {
   const session = new Date(sessionDate)
   const daysUntilSession = getDaysUntilSession(sessionDate)
   
+  // If we have an end date, show the date range
+  if (endDate) {
+    const end = new Date(endDate)
+    const startFormatted = session.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric'
+    })
+    const endFormatted = end.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric'
+    })
+    
+    if (daysUntilSession <= 0) return `Session ${startFormatted} - ${endFormatted} (has passed)`
+    if (daysUntilSession === 1) return `Session ${startFormatted} - ${endFormatted} (soon)`
+    if (daysUntilSession <= 7) return `Session ${startFormatted} - ${endFormatted} (in ${daysUntilSession} days)`
+    
+    return `Session ${startFormatted} - ${endFormatted}`
+  }
+  
+  // Original single date logic
   if (daysUntilSession <= 0) return 'Session has passed'
   if (daysUntilSession === 1) return 'Session soon'
   if (daysUntilSession <= 7) return `Session in ${daysUntilSession} days`
@@ -226,11 +247,12 @@ export default function PricingPage() {
                     image={product.images[0]}
                     allPrices={product.prices}
                     // Use session date for display
-                    endsOn={formatSessionDate(product.session_date)}
+                    endsOn={formatSessionDate(product.session_date, product.end_date)}
                     endDateUrgency={sessionUrgency}
                     // Add new props for stock and session info
                     stockQuantity={product.stock_quantity}
                     sessionDate={product.session_date}
+                    endDate={product.end_date}
                   />
                 )
               })}

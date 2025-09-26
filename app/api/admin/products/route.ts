@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
       price_cents, 
       currency = 'usd',
       session_date,
+      end_date,
       stock_quantity,
       is_active = true
     } = body
@@ -51,6 +52,7 @@ export async function POST(request: NextRequest) {
         price_cents,
         currency,
         session_date,
+        end_date,
         stock_quantity,
         is_active,
         stripe_product_id: product.id,
