@@ -67,6 +67,7 @@ export async function GET() {
       }],
       // Add our new fields
       session_date: product.session_date,
+      end_date: product.end_date,
       stock_quantity: product.stock_quantity,
       is_active: product.is_active
     }))

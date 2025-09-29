@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Check, Clock, Users, DollarSign, Calendar, Package, Edit, Trash2, Plus, ChevronDown, ChevronUp } from "lucide-react"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { getSupabaseClient } from "@/lib/supabase/client"
 import Image from "next/image"
@@ -88,9 +88,23 @@ export function ProductCard(props: ProductCardProps) {
     grade: ''
   })
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
+  const [showExpandButton, setShowExpandButton] = useState(false)
+  const descriptionRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const { addToCart } = useCart()
   const { showToast } = useToast()
+
+  // Check if description text overflows the 4-line limit
+  useEffect(() => {
+    if (descriptionRef.current && props.description) {
+      const element = descriptionRef.current
+      const lineHeight = parseFloat(getComputedStyle(element).lineHeight)
+      const maxHeight = lineHeight * 4 // 4 lines
+      const actualHeight = element.scrollHeight
+      
+      setShowExpandButton(actualHeight > maxHeight)
+    }
+  }, [props.description])
 
   // Get interval display text
   const getIntervalText = (interval: string, intervalCount?: number | null): string => {
@@ -103,46 +117,46 @@ export function ProductCard(props: ProductCardProps) {
     return `/${interval}`
   }
 
-  // Format session date display
-  const formatSessionDate = (sessionDateString: string, endDateString?: string): string => {
+  // Format session date display - just the actual date, no relative text
+  const formatSessionDate = (sessionDateString: string, endDateString?: string): { startDate: string, endDate?: string } => {
+    try {
+      const sessionDate = new Date(sessionDateString)
+      const startFormatted = sessionDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      })
+      
+      if (endDateString) {
+        const endDate = new Date(endDateString)
+        const endFormatted = endDate.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        })
+        return { startDate: startFormatted, endDate: endFormatted }
+      }
+      
+      return { startDate: startFormatted }
+    } catch (error) {
+      logger.debug('formatSessionDate error:', error)
+      return { startDate: '' }
+    }
+  }
+
+  // Get color coding for session date based on timing
+  const getSessionDateColor = (sessionDateString: string): string => {
     try {
       const sessionDate = new Date(sessionDateString)
       const now = new Date()
       const diffTime = sessionDate.getTime() - now.getTime()
       const daysUntilSession = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
       
-      // If we have an end date, show the date range
-      if (endDateString) {
-        const endDate = new Date(endDateString)
-        logger.debug('endDate', endDate)
-        const startFormatted = sessionDate.toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric'
-        })
-        const endFormatted = endDate.toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric'
-        })
-        
-        if (daysUntilSession <= 0) return `Session ${startFormatted} - ${endFormatted} (has passed)`
-        if (daysUntilSession === 1) return `Session ${startFormatted} - ${endFormatted} (tomorrow)`
-        if (daysUntilSession <= 7) return `Session ${startFormatted} - ${endFormatted} (in ${daysUntilSession} days)`
-        
-        return `Session ${startFormatted} - ${endFormatted}`
-      }
-      
-      // Original single date logic
-      if (daysUntilSession <= 0) return 'Session has passed'
-      if (daysUntilSession === 1) return 'Session tomorrow'
-      if (daysUntilSession <= 7) return `Session in ${daysUntilSession} days`
-      
-      return `Session ${sessionDate.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric', 
-        year: 'numeric' 
-      })}`
+      if (daysUntilSession <= 0) return 'text-gray-500' // Past sessions
+      if (daysUntilSession <= 7) return 'text-red-600' // This week
+      return 'text-green-600' // More than a week away
     } catch {
-      return ''
+      return 'text-gray-500'
     }
   }
 
@@ -365,14 +379,29 @@ export function ProductCard(props: ProductCardProps) {
           </CardTitle>
           
           {/* Session Date Display - More Prominent */}
-          <div className="flex items-center gap-2 text-base font-medium text-primary bg-primary/10 px-3 py-2 rounded-lg">
+          <div className="flex items-center gap-2 text-base font-medium py-2 rounded-lg">
             <Calendar className="h-5 w-5" />
-            <span>
-              {props.mode === 'user' 
-                ? formatSessionDate(props.sessionDate, props.endDate)
-                : formatDate(props.sessionDate)
-              }
-            </span>
+            <div className="flex flex-col">
+              {(() => {
+                const formattedDates = props.mode === 'user' 
+                  ? formatSessionDate(props.sessionDate, props.endDate)
+                  : { startDate: formatDate(props.sessionDate) }
+                
+                
+                return (
+                  <>
+                    <span className={props.mode === 'user' ? getSessionDateColor(props.sessionDate) : 'text-primary'}>
+                      {formattedDates.startDate}
+                    </span>
+                    {props.mode === 'user' && formattedDates.endDate && (
+                      <span className="text-sm text-muted-foreground">
+                        to {formattedDates.endDate}
+                      </span>
+                    )}
+                  </>
+                )
+              })()}
+            </div>
           </div>
           
           {/* Price Display */}
@@ -388,10 +417,13 @@ export function ProductCard(props: ProductCardProps) {
           {/* Description with Expand/Collapse */}
           {props.description && (
             <div className="space-y-2">
-              <CardDescription className={`${isDescriptionExpanded ? '' : 'line-clamp-4'}`}>
+              <CardDescription 
+                ref={descriptionRef}
+                className={`${isDescriptionExpanded ? '' : 'line-clamp-4'}`}
+              >
                 {props.description}
               </CardDescription>
-              {props.description.length > 100 && (
+              {showExpandButton && (
                 <Button
                   variant="ghost"
                   size="sm"
