@@ -245,7 +245,10 @@ export default function AdminProductsPage() {
                   <div>
                     <Label className="text-sm font-medium text-muted-foreground">Price</Label>
                     <p className="text-lg font-semibold">
-                      ${(product.price_cents / 100).toFixed(2)} {product.currency.toUpperCase()}
+                      {new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: product.currency.toUpperCase(),
+                      }).format(product.price_cents / 100)}
                     </p>
                   </div>
                   <div>

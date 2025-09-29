@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Check, Clock, Users, DollarSign, Calendar, Package, Edit, Trash2, Plus } from "lucide-react"
+import { Check, Clock, Users, DollarSign, Calendar, Package, Edit, Trash2, Plus, ChevronDown, ChevronUp } from "lucide-react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { getSupabaseClient } from "@/lib/supabase/client"
@@ -87,6 +87,7 @@ export function ProductCard(props: ProductCardProps) {
     position: '',
     grade: ''
   })
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
   const router = useRouter()
   const { addToCart } = useCart()
   const { showToast } = useToast()
@@ -362,11 +363,17 @@ export function ProductCard(props: ProductCardProps) {
           <CardTitle className={`${props.mode === 'user' ? 'text-2xl' : 'text-lg'} truncate`} title={props.title}>
             {props.title}
           </CardTitle>
-          {props.description && (
-            <CardDescription className="line-clamp-2">
-              {props.description}
-            </CardDescription>
-          )}
+          
+          {/* Session Date Display - More Prominent */}
+          <div className="flex items-center gap-2 text-base font-medium text-primary bg-primary/10 px-3 py-2 rounded-lg">
+            <Calendar className="h-5 w-5" />
+            <span>
+              {props.mode === 'user' 
+                ? formatSessionDate(props.sessionDate, props.endDate)
+                : formatDate(props.sessionDate)
+              }
+            </span>
+          </div>
           
           {/* Price Display */}
           <div className="flex items-baseline gap-1">
@@ -378,16 +385,32 @@ export function ProductCard(props: ProductCardProps) {
             )}
           </div>
 
-          {/* Session Date Display */}
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Clock className="h-4 w-4" />
-            <span>
-              {props.mode === 'user' 
-                ? formatSessionDate(props.sessionDate, props.endDate)
-                : formatDate(props.sessionDate)
-              }
-            </span>
-          </div>
+          {/* Description with Expand/Collapse */}
+          {props.description && (
+            <div className="space-y-2">
+              <CardDescription className={`${isDescriptionExpanded ? '' : 'line-clamp-4'}`}>
+                {props.description}
+              </CardDescription>
+              {props.description.length > 100 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                  className="h-auto text-primary hover:text-cream"
+                >
+                  {isDescriptionExpanded ? (
+                    <>
+                      Show less <ChevronUp className="h-4 w-4 ml-1" />
+                    </>
+                  ) : (
+                    <>
+                      Show more <ChevronDown className="h-4 w-4 ml-1" />
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
+          )}
 
           {/* Enhanced Stock Display */}
           <div className="flex items-center gap-2 text-sm">

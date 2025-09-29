@@ -236,7 +236,7 @@ export default function CartPage() {
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold">
-                      ${(item.product.price_cents / 100).toFixed(2)}
+                      {formatPrice(item.product.price_cents)}
                     </div>
                     <Badge variant="outline" className="mt-1">
                       {item.quantity} {item.quantity === 1 ? 'spot' : 'spots'}

@@ -219,12 +219,7 @@ export default function PricingPage() {
               </button>
             </div>
           ) : products.length > 0 ? (
-            <div className={`grid gap-8 max-w-6xl mx-auto ${
-              products.length === 1 ? 'grid-cols-1 max-w-md' :
-              products.length === 2 ? 'md:grid-cols-2' :
-              products.length === 3 ? 'md:grid-cols-3' :
-              'md:grid-cols-2 lg:grid-cols-3'
-            }`}>
+            <div className="grid gap-8 max-w-7xl mx-auto">
               {products.map((product) => {
                 // Show the first (and likely only) price
                 const displayPrice = product.prices[0]

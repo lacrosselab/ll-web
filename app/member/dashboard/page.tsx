@@ -477,7 +477,10 @@ function DashboardContent() {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
                           <h3 className="font-semibold">
-                            ${(payment.amount / 100).toFixed(2)} {payment.currency.toUpperCase()}
+                            {new Intl.NumberFormat('en-US', {
+                              style: 'currency',
+                              currency: payment.currency.toUpperCase(),
+                            }).format(payment.amount / 100)}
                           </h3>
                           <Badge className='capitalize' variant={payment.status === 'succeeded' ? 'default' : 'secondary'}>
                             {payment.status}
