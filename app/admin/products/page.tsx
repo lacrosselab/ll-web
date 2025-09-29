@@ -224,7 +224,7 @@ export default function AdminProductsPage() {
           {products.map((product) => (
             <Card key={product.id} className="overflow-hidden">
               <CardHeader className="pb-4">
-                <div className="flex items-start justify-between">
+                <div className="flex flex-col lg:flex-row  gap-4 items-start justify-between">
                   <div className="space-y-1">
                     <CardTitle className="text-xl">{product.name}</CardTitle>
                     <CardDescription className="text-sm">
