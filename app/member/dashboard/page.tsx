@@ -164,15 +164,17 @@ function DashboardContent() {
               age,
               school
             ),
-            product:products (
+            product:products!inner (
               id,
               name,
               session_date,
-              description
+              description,
+              is_active
             )
           )
         `)
         .eq('user_id', userId)
+        .eq('payment_athletes.product.is_active', true)
         .order('created_at', { ascending: false })
         .limit(5) // Only show recent 5 payments on dashboard
 
@@ -483,7 +485,7 @@ function DashboardContent() {
                             }).format(payment.amount / 100)}
                           </h3>
                           <Badge className='capitalize' variant={payment.status === 'succeeded' ? 'default' : 'secondary'}>
-                            {payment.status}
+                            {payment.status || 'Unknown status'}
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground">
@@ -502,19 +504,23 @@ function DashboardContent() {
                         {payment.payment_athletes.map((paymentAthlete) => (
                           <div key={paymentAthlete.id} className="flex items-center justify-between text-sm">
                             <div className="flex-1">
-                              <div className="font-medium">{paymentAthlete.product.name}</div>
-                              <div className="text-muted-foreground">
-                                {paymentAthlete.athlete.name}
-                                {paymentAthlete.athlete.age && ` (Age ${paymentAthlete.athlete.age})`}
-                                {paymentAthlete.athlete.school && ` - ${paymentAthlete.athlete.school}`}
+                              <div className="font-medium">
+                                {paymentAthlete.product?.name || 'Product not found'}
                               </div>
                               <div className="text-muted-foreground">
-                                Session: {new Date(paymentAthlete.product.session_date).toLocaleDateString('en-US', {
-                                  weekday: 'short',
-                                  month: 'short',
-                                  day: 'numeric'
-                                })}
+                                {paymentAthlete.athlete?.name || 'Athlete not found'}
+                                {paymentAthlete.athlete?.age && ` (Age ${paymentAthlete.athlete.age})`}
+                                {paymentAthlete.athlete?.school && ` - ${paymentAthlete.athlete.school}`}
                               </div>
+                              {paymentAthlete.product?.session_date && (
+                                <div className="text-muted-foreground">
+                                  Session: {new Date(paymentAthlete.product.session_date).toLocaleDateString('en-US', {
+                                    weekday: 'short',
+                                    month: 'short',
+                                    day: 'numeric'
+                                  })}
+                                </div>
+                              )}
                             </div>
                             <div className="text-right">
                               <div className="font-medium">

@@ -90,13 +90,14 @@ export default function AdminAthletesPage() {
           session_history:payment_athletes (
             id,
             created_at,
-            product:products (
+            product:products!inner (
               id,
               name,
               session_date,
-              price_cents
+              price_cents,
+              is_active
             ),
-            payment:payments (
+            payment:payments!inner (
               id,
               amount,
               status,
@@ -104,6 +105,7 @@ export default function AdminAthletesPage() {
             )
           )
         `)
+        .eq('session_history.product.is_active', true)
         .order('created_at', { ascending: false })
 
       if (error) throw error
@@ -346,19 +348,25 @@ export default function AdminAthletesPage() {
                       <Card key={session.id} className="p-4">
                         <div className="flex justify-between items-center">
                           <div>
-                            <div className="font-medium">{session.product.name}</div>
-                            <div className="text-sm text-muted-foreground">
-                              {formatDate(session.product.session_date)}
+                            <div className="font-medium">
+                              {session.product?.name || 'Product not found'}
                             </div>
+                            {session.product?.session_date && (
+                              <div className="text-sm text-muted-foreground">
+                                {formatDate(session.product.session_date)}
+                              </div>
+                            )}
                           </div>
                           <div className="text-right">
-                            <div className="font-medium">
-                              {formatPrice(session.product.price_cents)}
-                            </div>
+                            {session.product?.price_cents && (
+                              <div className="font-medium">
+                                {formatPrice(session.product.price_cents)}
+                              </div>
+                            )}
                             <Badge 
-                              variant={session.payment.status === 'succeeded' ? 'default' : 'secondary'}
+                              variant={session.payment?.status === 'succeeded' ? 'default' : 'secondary'}
                             >
-                              {session.payment.status}
+                              {session.payment?.status || 'Payment not found'}
                             </Badge>
                           </div>
                         </div>
