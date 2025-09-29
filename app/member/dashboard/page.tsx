@@ -396,8 +396,8 @@ function DashboardContent() {
 
         {/* Athletes Section */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-semibold">Your Athletes</h2>
+          <div className="flex-col lg:flex-row mb-4 justify-between">
+            <h2 className="text-2xl font-semibold mb-4">Your Athletes</h2>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => router.push('/member/settings')}>
                 <Settings className="h-4 w-4 mr-2" />
