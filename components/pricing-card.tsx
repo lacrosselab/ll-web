@@ -27,6 +27,7 @@ interface PricingCardProps {
   stockQuantity?: number
   sessionDate?: string
   endDate?: string
+  isHighSchool?: boolean | null
 }
 
 export function PricingCard({
@@ -45,6 +46,7 @@ export function PricingCard({
   stockQuantity = 0,
   sessionDate = '',
   endDate,
+  isHighSchool,
 }: PricingCardProps) {
   return (
     <ProductCard
@@ -63,6 +65,7 @@ export function PricingCard({
       sessionDate={sessionDate}
       endDate={endDate}
       stockQuantity={stockQuantity}
+      isHighSchool={isHighSchool}
     />
   )
 }

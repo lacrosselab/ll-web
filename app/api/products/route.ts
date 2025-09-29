@@ -69,7 +69,8 @@ export async function GET() {
       session_date: product.session_date,
       end_date: product.end_date,
       stock_quantity: product.stock_quantity,
-      is_active: product.is_active
+      is_active: product.is_active,
+      is_high_school: product.is_high_school
     }))
 
     return NextResponse.json({

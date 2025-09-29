@@ -24,6 +24,7 @@ interface Product {
   end_date?: string
   stock_quantity: number
   is_active: boolean
+  is_high_school?: boolean | null
   stripe_product_id: string
   stripe_price_id: string
   created_at: string
@@ -237,6 +238,11 @@ export default function AdminProductsPage() {
                     <Badge variant="outline">
                       Stock: {product.stock_quantity}
                     </Badge>
+                    {product.is_high_school !== null && (
+                      <Badge variant={product.is_high_school ? 'default' : 'secondary'}>
+                        {product.is_high_school ? 'High School' : 'Middle School'}
+                      </Badge>
+                    )}
                   </div>
                 </div>
               </CardHeader>
@@ -325,6 +331,7 @@ function SessionForm({
     end_date: product?.end_date || '',
     stock_quantity: product?.stock_quantity?.toString() || '10',
     is_active: product?.is_active ?? true,
+    is_high_school: product?.is_high_school ?? null,
   })
   const { showToast } = useToast()
 
@@ -366,6 +373,7 @@ function SessionForm({
         end_date: formData.end_date || null,
         stock_quantity: parseInt(formData.stock_quantity),
         is_active: formData.is_active,
+        is_high_school: formData.is_high_school,
       }
 
       if (product) {
@@ -532,6 +540,48 @@ function SessionForm({
                 onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
               />
               <Label htmlFor="is_active">Active (visible to customers)</Label>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="school_level">School Level (Optional)</Label>
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="high_school"
+                    name="school_level"
+                    value="true"
+                    checked={formData.is_high_school === true}
+                    onChange={() => setFormData({ ...formData, is_high_school: true })}
+                    className="h-4 w-4"
+                  />
+                  <Label htmlFor="high_school">High School</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="middle_school"
+                    name="school_level"
+                    value="false"
+                    checked={formData.is_high_school === false}
+                    onChange={() => setFormData({ ...formData, is_high_school: false })}
+                    className="h-4 w-4"
+                  />
+                  <Label htmlFor="middle_school">Middle School</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="not_specified"
+                    name="school_level"
+                    value="null"
+                    checked={formData.is_high_school === null}
+                    onChange={() => setFormData({ ...formData, is_high_school: null })}
+                    className="h-4 w-4"
+                  />
+                  <Label htmlFor="not_specified">Not Specified</Label>
+                </div>
+              </div>
             </div>
 
             <div className="flex gap-2 pt-4">

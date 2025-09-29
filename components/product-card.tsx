@@ -49,6 +49,7 @@ interface BaseProductCardProps {
   endDate?: string
   stockQuantity: number
   image?: string
+  isHighSchool?: boolean | null
 }
 
 // User-facing card props (pricing page)
@@ -120,19 +121,27 @@ export function ProductCard(props: ProductCardProps) {
   // Format session date display - just the actual date, no relative text
   const formatSessionDate = (sessionDateString: string, endDateString?: string): { startDate: string, endDate?: string } => {
     try {
-      const sessionDate = new Date(sessionDateString)
+      // Parse date string to avoid timezone issues by treating as UTC
+      const parseDate = (dateString: string) => {
+        const [year, month, day] = dateString.split('-').map(Number)
+        return new Date(Date.UTC(year, month - 1, day)) // Use UTC to avoid timezone shifts
+      }
+      
+      const sessionDate = parseDate(sessionDateString)
       const startFormatted = sessionDate.toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
-        year: 'numeric'
+        year: 'numeric',
+        timeZone: 'UTC' // Force UTC display
       })
       
       if (endDateString) {
-        const endDate = new Date(endDateString)
+        const endDate = parseDate(endDateString)
         const endFormatted = endDate.toLocaleDateString('en-US', {
           month: 'short',
           day: 'numeric',
-          year: 'numeric'
+          year: 'numeric',
+          timeZone: 'UTC' // Force UTC display
         })
         return { startDate: startFormatted, endDate: endFormatted }
       }
@@ -147,12 +156,24 @@ export function ProductCard(props: ProductCardProps) {
   // Get color coding for session date based on timing
   const getSessionDateColor = (sessionDateString: string): string => {
     try {
-      const sessionDate = new Date(sessionDateString)
+      // Parse date string to avoid timezone issues by treating as UTC
+      const parseDate = (dateString: string) => {
+        const [year, month, day] = dateString.split('-').map(Number)
+        return new Date(Date.UTC(year, month - 1, day)) // Use UTC to avoid timezone shifts
+      }
+      
+      const sessionDate = parseDate(sessionDateString)
       const now = new Date()
-      const diffTime = sessionDate.getTime() - now.getTime()
+      
+      // Compare dates at start of day to include the full session day
+      const sessionStartOfDay = new Date(Date.UTC(sessionDate.getUTCFullYear(), sessionDate.getUTCMonth(), sessionDate.getUTCDate()))
+      const nowStartOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+      
+      const diffTime = sessionStartOfDay.getTime() - nowStartOfDay.getTime()
       const daysUntilSession = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
       
-      if (daysUntilSession <= 0) return 'text-gray-500' // Past sessions
+      if (daysUntilSession < 0) return 'text-gray-500' // Past sessions (yesterday or earlier)
+      if (daysUntilSession === 0) return 'text-red-600' // Today - urgent!
       if (daysUntilSession <= 7) return 'text-red-600' // This week
       return 'text-green-600' // More than a week away
     } catch {
@@ -162,11 +183,19 @@ export function ProductCard(props: ProductCardProps) {
 
   // Format date for admin view
   const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    })
+    try {
+      // Parse date string to avoid timezone issues by treating as UTC
+      const [year, month, day] = dateString.split('-').map(Number)
+      const date = new Date(Date.UTC(year, month - 1, day)) // Use UTC to avoid timezone shifts
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        timeZone: 'UTC' // Force UTC display
+      })
+    } catch {
+      return dateString // fallback to original string
+    }
   }
 
   // Get stock status styling with enhanced color coding
@@ -378,6 +407,18 @@ export function ProductCard(props: ProductCardProps) {
             {props.title}
           </CardTitle>
           
+          {/* School Level Badge - Prominent */}
+          {props.mode === 'user' && props.isHighSchool !== null && (
+            <div className="flex items-center gap-2 mb-2">
+              <Badge 
+                variant={props.isHighSchool ? 'default' : 'secondary'}
+                className="text-sm font-medium px-3 py-1"
+              >
+                {props.isHighSchool ? 'High School' : 'Middle School'}
+              </Badge>
+            </div>
+          )}
+          
           {/* Session Date Display - More Prominent */}
           <div className="flex items-center gap-2 text-base font-medium py-2 rounded-lg">
             <Calendar className="h-5 w-5" />
@@ -390,12 +431,24 @@ export function ProductCard(props: ProductCardProps) {
                 
                 return (
                   <>
-                    <span className={props.mode === 'user' ? getSessionDateColor(props.sessionDate) : 'text-primary'}>
-                      {formattedDates.startDate}
-                    </span>
-                    {props.mode === 'user' && formattedDates.endDate && (
-                      <span className="text-sm text-muted-foreground">
-                        to {formattedDates.endDate}
+                    {props.mode === 'user' && formattedDates.endDate ? (
+                      <>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium text-muted-foreground">Start:</span>
+                          <span className={getSessionDateColor(props.sessionDate)}>
+                            {formattedDates.startDate}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium text-muted-foreground">End:</span>
+                          <span className="text-base font-medium text-muted-foreground">
+                            {formattedDates.endDate}
+                          </span>
+                        </div>
+                      </>
+                    ) : (
+                      <span className={props.mode === 'user' ? getSessionDateColor(props.sessionDate) : 'text-primary'}>
+                        {formattedDates.startDate}
                       </span>
                     )}
                   </>
@@ -451,6 +504,7 @@ export function ProductCard(props: ProductCardProps) {
               {stockStatus.text}
             </span>
           </div>
+
 
           {/* Multiple Price Options (user mode only) */}
           {props.mode === 'user' && props.allPrices.length > 1 && (

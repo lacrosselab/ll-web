@@ -27,6 +27,7 @@ interface Product {
   end_date?: string
   stock_quantity: number
   is_active: boolean
+  is_high_school?: boolean | null
 }
 
 interface ProductsResponse {
@@ -39,14 +40,20 @@ function isProductActive(product: Product): boolean {
   // Check if product is active in database
   if (!product.is_active) return false
   
-  // Check if session date has passed
-  const sessionDate = new Date(product.session_date)
+  // Check if session date has passed using UTC to avoid timezone issues
+  const parseDate = (dateString: string) => {
+    const [year, month, day] = dateString.split('-').map(Number)
+    return new Date(Date.UTC(year, month - 1, day))
+  }
+  
+  const sessionDate = parseDate(product.session_date)
   const now = new Date()
   
-  // Set time to end of day for the session date to include the full day
-  sessionDate.setHours(23, 59, 59, 999)
+  // Compare dates at start of day to include the full session day
+  const sessionStartOfDay = new Date(Date.UTC(sessionDate.getUTCFullYear(), sessionDate.getUTCMonth(), sessionDate.getUTCDate()))
+  const nowStartOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
   
-  return now <= sessionDate
+  return nowStartOfDay <= sessionStartOfDay
 }
 
 function isProductInStock(product: Product): boolean {
@@ -248,6 +255,7 @@ export default function PricingPage() {
                     stockQuantity={product.stock_quantity}
                     sessionDate={product.session_date}
                     endDate={product.end_date}
+                    isHighSchool={product.is_high_school}
                   />
                 )
               })}
