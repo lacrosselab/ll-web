@@ -16,22 +16,31 @@ import { ToastProvider } from '@/components/ui/toast'
 
 export const metadata: Metadata = {
   title: {
-    default: "Lacrosse Lab - Professional Lacrosse Training & Development",
-    template: "%s | Lacrosse Lab"
+    default: "Female-First Lacrosse Training | The Lacrosse Lab | Richmond & Central Virginia",
+    template: "%s | The Lacrosse Lab"
   },
-  description: "Professional lacrosse training and development programs. Expert coaching, personalized training sessions, and comprehensive development programs for athletes of all levels.",
+  description: "Richmond & central Virginia's premier girls lacrosse training program. Offseason training for middle and high school players. Skill development, stick work, shooting, and game strategy.",
   keywords: [
-    "lacrosse training",
-    "lacrosse coaching",
-    "lacrosse development",
-    "professional lacrosse",
-    "lacrosse lessons",
-    "lacrosse camps",
-    "athlete development"
+    "richmond va lacrosse training",
+    "central virginia lacrosse",
+    "middle school lacrosse training richmond",
+    "high school lacrosse training richmond",
+    "lacrosse offseason training richmond va",
+    "women's lacrosse training richmond",
+    "lacrosse skills development richmond",
+    "lacrosse coaching richmond va",
+    "lacrosse training sessions richmond",
+    "girls lacrosse training richmond",
+    "lacrosse camps richmond va",
+    "lacrosse lessons richmond",
+    "lacrosse development richmond",
+    "collegiate school lacrosse",
+    "douglas freeman lacrosse",
+    "richmond lacrosse clubs"
   ],
-  authors: [{ name: "Lacrosse Lab" }],
-  creator: "Lacrosse Lab",
-  publisher: "Lacrosse Lab",
+  authors: [{ name: "The Lacrosse Lab" }],
+  creator: "The Lacrosse Lab",
+  publisher: "The Lacrosse Lab",
   formatDetection: {
     email: false,
     address: false,
@@ -45,22 +54,22 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://lacrosselab.com',
-    title: "Lacrosse Lab - Professional Lacrosse Training & Development",
-    description: "Professional lacrosse training and development programs. Expert coaching, personalized training sessions, and comprehensive development programs for athletes of all levels.",
-    siteName: "Lacrosse Lab",
+    title: "Female-First Lacrosse Training | The Lacrosse Lab | Richmond & Central Virginia",
+    description: "Richmond & central Virginia's premier girls lacrosse training program. Offseason training for middle and high school players. Skill development, stick work, shooting, and game strategy.",
+    siteName: "The Lacrosse Lab",
     images: [
       {
         url: '/web-bg.png',
         width: 1200,
         height: 630,
-        alt: 'Lacrosse Lab - Professional Training',
+        alt: 'The Lacrosse Lab - Richmond VA Lacrosse Training',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Lacrosse Lab - Professional Lacrosse Training & Development",
-    description: "Professional lacrosse training and development programs. Expert coaching, personalized training sessions, and comprehensive development programs for athletes of all levels.",
+    title: "Female-First Lacrosse Training | The Lacrosse Lab | Richmond & Central Virginia",
+    description: "Richmond & central Virginia's premier girls lacrosse training program. Offseason training for middle and high school players. Skill development, stick work, shooting, and game strategy.",
     images: ['/web-bg.png'],
   },
   robots: {
@@ -99,6 +108,33 @@ export default function RootLayout({
         />
         <meta name="theme-color" content="#000000" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        
+        {/* Local Business Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SportsActivityLocation",
+              "name": "The Lacrosse Lab",
+              "description": "Richmond & central Virginia's premier girls lacrosse training program. Offseason training for middle and high school players. Skill development, stick work, shooting, and game strategy.",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Richmond",
+                "addressRegion": "VA",
+                "addressCountry": "US"
+              },
+              "sport": "Lacrosse",
+              "audience": ["Middle School", "High School"],
+              "offers": {
+                "@type": "Offer",
+                "description": "female-first lacrosse training sessions",
+                "category": "Sports Training"
+              },
+              "url": process.env.NEXT_PUBLIC_SITE_URL || 'https://lacrosselab.com'
+            })
+          }}
+        />
       </head>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <ErrorBoundary>
