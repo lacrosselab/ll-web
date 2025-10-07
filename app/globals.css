@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Futura Font */
+@font-face {
+  font-family: 'Futura';
+  src: url('/fonts/Futura Condensed Extra Bold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Brand colors: Strawberry, Navy, Cream - HSL as single source of truth */
   --background: 30 25% 95%; /* Cream background */
