@@ -160,7 +160,7 @@ export default function MemberSettings() {
                     <div className="space-y-2">
                       <Label htmlFor="email">Email Address</Label>
                       <Input id="email" value={email} disabled placeholder="Email cannot be changed here" />
-                      <p className="text-xs text-muted-foreground">Contact <a href="mailto:hello@lacrosselab.com" className="text-primary hover:underline">support</a> to change your email address.</p>
+                      <p className="text-xs text-muted-foreground">Contact <a href="mailto:hello@thelacrosselab.com" className="text-primary hover:underline">support</a> to change your email address.</p>
                     </div>
                     {error && <p className="text-sm text-destructive">{error}</p>}
                     {success && <p className="text-sm text-green-600">{success}</p>}
