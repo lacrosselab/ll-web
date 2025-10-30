@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { Search, User, Calendar, DollarSign, Eye } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/toast'
+import { formatDateOnly } from '@/lib/utils'
 
 interface Athlete {
   id: string
@@ -353,7 +354,7 @@ export default function AdminAthletesPage() {
                             </div>
                             {session.product?.session_date && (
                               <div className="text-sm text-muted-foreground">
-                                {formatDate(session.product.session_date)}
+                                {formatDateOnly(session.product.session_date)}
                               </div>
                             )}
                           </div>

@@ -32,3 +32,35 @@ export const logger = {
     console.info(...args)
   }
 }
+
+// Date-only helpers to avoid timezone shifts for YYYY-MM-DD fields
+// These ensure the rendered calendar date matches what's stored in the DB
+export function parseDateOnlyUTC(dateString: string): Date {
+  const [year, month, day] = dateString.split('-').map(Number)
+  return new Date(Date.UTC(year, month - 1, day))
+}
+
+export function formatDateOnly(
+  dateString: string,
+  locale: string = 'en-US',
+  options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' }
+): string {
+  try {
+    const date = parseDateOnlyUTC(dateString)
+    return date.toLocaleDateString(locale, { ...options, timeZone: 'UTC' })
+  } catch {
+    return dateString
+  }
+}
+
+export function formatDateRange(
+  startDateString: string,
+  endDateString?: string,
+  locale: string = 'en-US',
+  options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' }
+): { start: string; end?: string } {
+  const start = formatDateOnly(startDateString, locale, options)
+  if (!endDateString) return { start }
+  const end = formatDateOnly(endDateString, locale, options)
+  return { start, end }
+}

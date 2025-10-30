@@ -13,6 +13,7 @@ import { useToast } from '@/components/ui/toast'
 import { getSupabaseClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Minus, Plus, Trash2, ShoppingCart, User, Calendar, DollarSign } from 'lucide-react'
+import { formatDateOnly, formatDateRange } from '@/lib/utils'
 
 interface Athlete {
   id: string
@@ -108,27 +109,9 @@ export default function CartPage() {
     }).format(cents / 100)
   }
 
-  const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    })
-  }
-
   const formatSessionDate = (sessionDate: string, endDate?: string): string => {
-    if (endDate) {
-      const startFormatted = new Date(sessionDate).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric'
-      })
-      const endFormatted = new Date(endDate).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric'
-      })
-      return `${startFormatted} - ${endFormatted}`
-    }
-    return formatDate(sessionDate)
+    const range = formatDateRange(sessionDate, endDate, 'en-US', { month: 'short', day: 'numeric' })
+    return range.end ? `${range.start} - ${range.end}` : formatDateOnly(sessionDate)
   }
 
   const handleCheckout = async () => {

@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label'
 import { UserIcon, Plus, Edit, Trash2, Settings, Clock, Users } from 'lucide-react'
 import type { User } from '@supabase/supabase-js'
 import { useCart } from '@/contexts/cart-context'
+import { formatDateOnly } from '@/lib/utils'
 import { useToast } from '@/components/ui/toast'
 
 interface PaymentAthlete {
@@ -514,11 +515,14 @@ function DashboardContent() {
                               </div>
                               {paymentAthlete.product?.session_date && (
                                 <div className="text-muted-foreground">
-                                  Session: {new Date(paymentAthlete.product.session_date).toLocaleDateString('en-US', {
-                                    weekday: 'short',
-                                    month: 'short',
-                                    day: 'numeric'
-                                  })}
+                                  {(() => {
+                                    const formatted = formatDateOnly(
+                                      paymentAthlete.product.session_date,
+                                      'en-US',
+                                      { weekday: 'short', month: 'short', day: 'numeric' }
+                                    )
+                                    return `Session: ${formatted}`
+                                  })()}
                                 </div>
                               )}
                             </div>

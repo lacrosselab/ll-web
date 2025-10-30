@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation'
 import { ProductCard } from '@/components/product-card'
 import { useToast } from '@/components/ui/toast'
 import { stripe } from '@/lib/stripe'
+import { formatDateOnly } from '@/lib/utils'
 
 interface Product {
   id: string
@@ -260,7 +261,7 @@ export default function AdminProductsPage() {
                   <div>
                     <Label className="text-sm font-medium text-muted-foreground">Session Date</Label>
                     <p className="text-lg font-semibold">
-                      {new Date(product.session_date).toLocaleDateString()}
+                      {formatDateOnly(product.session_date)}
                     </p>
                   </div>
                   <div>

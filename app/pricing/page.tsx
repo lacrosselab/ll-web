@@ -3,6 +3,7 @@
 import { PricingCard } from "@/components/pricing-card"
 import { createCheckoutSession } from "@/lib/checkout"
 import { useEffect, useState } from "react"
+import { formatDateOnly, formatDateRange, parseDateOnlyUTC } from "@/lib/utils"
 
 // Types for our database product data
 interface ProductPrice {
@@ -61,26 +62,30 @@ function isProductInStock(product: Product): boolean {
 }
 
 function getDaysUntilSession(sessionDate: string): number {
-  const session = new Date(sessionDate)
+  const session = parseDateOnlyUTC(sessionDate)
   const now = new Date()
-  const diffTime = session.getTime() - now.getTime()
+  const sessionStartOfDay = new Date(Date.UTC(session.getUTCFullYear(), session.getUTCMonth(), session.getUTCDate()))
+  const nowStartOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+  const diffTime = sessionStartOfDay.getTime() - nowStartOfDay.getTime()
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 }
 
 function formatSessionDate(sessionDate: string, endDate?: string): string {
-  const session = new Date(sessionDate)
+  const session = parseDateOnlyUTC(sessionDate)
   const daysUntilSession = getDaysUntilSession(sessionDate)
   
   // If we have an end date, show the date range
   if (endDate) {
-    const end = new Date(endDate)
+    const end = parseDateOnlyUTC(endDate)
     const startFormatted = session.toLocaleDateString('en-US', {
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
+      timeZone: 'UTC'
     })
     const endFormatted = end.toLocaleDateString('en-US', {
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
+      timeZone: 'UTC'
     })
     
     if (daysUntilSession <= 0) return `Session ${startFormatted} - ${endFormatted} (has passed)`
@@ -98,7 +103,8 @@ function formatSessionDate(sessionDate: string, endDate?: string): string {
   return `Session ${session.toLocaleDateString('en-US', { 
     month: 'short', 
     day: 'numeric', 
-    year: 'numeric' 
+    year: 'numeric',
+    timeZone: 'UTC'
   })}`
 }
 
