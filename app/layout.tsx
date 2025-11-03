@@ -16,10 +16,10 @@ import { ToastProvider } from '@/components/ui/toast'
 
 export const metadata: Metadata = {
   title: {
-    default: "Female-First Lacrosse Training | The Lacrosse Lab | Richmond & Central Virginia",
+    default: "The Lacrosse Lab | Richmond Youth Lacrosse Training",
     template: "%s | The Lacrosse Lab"
   },
-  description: "Richmond & central Virginia's premier girls lacrosse training program. Offseason training for middle and high school players. Skill development, stick work, shooting, and game strategy.",
+  description: "Richmond & central Virginia's premier lacrosse training program. Offseason training for players of all ages. Skill development, stick work, shooting, and game strategy.",
   keywords: [
     "richmond va lacrosse training",
     "central virginia lacrosse",
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://lacrosselab.com',
-    title: "Female-First Lacrosse Training | The Lacrosse Lab | Richmond & Central Virginia",
+    title: "The Lacrosse Lab | Richmond Youth Lacrosse Training",
     description: "Richmond & central Virginia's premier girls lacrosse training program. Offseason training for middle and high school players. Skill development, stick work, shooting, and game strategy.",
     siteName: "The Lacrosse Lab",
     images: [
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Female-First Lacrosse Training | The Lacrosse Lab | Richmond & Central Virginia",
+    title: "The Lacrosse Lab | Richmond Youth Lacrosse Training",
     description: "Richmond & central Virginia's premier girls lacrosse training program. Offseason training for middle and high school players. Skill development, stick work, shooting, and game strategy.",
     images: ['/web-bg.png'],
   },
@@ -125,7 +125,7 @@ export default function RootLayout({
                 "addressCountry": "US"
               },
               "sport": "Lacrosse",
-              "audience": ["Middle School", "High School"],
+              "audience": ["Middle School", "High School", "Elementary School"],
               "offers": {
                 "@type": "Offer",
                 "description": "female-first lacrosse training sessions",
