@@ -71,10 +71,11 @@ export default function AdminRosterPage() {
         return
       }
 
-      // Query all products (sessions)
+      // Query all active products (sessions) only
       const { data: products, error: productsError } = await supabase
         .from('products')
         .select('id, name, session_date, is_active, created_at')
+        .eq('is_active', true)
         .order('session_date', { ascending: true })
 
       if (productsError) throw productsError
@@ -119,8 +120,19 @@ export default function AdminRosterPage() {
       // Enrich product list
       const sessionsWithCounts = await enrichProductsWithCounts(supabase, products)
 
+      // Sort by proximity to today's date (closest first)
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Normalize to start of day
+      
+      const sortedSessions = sessionsWithCounts.sort((a, b) => {
+        const dateA = new Date(a.session_date)
+        const dateB = new Date(b.session_date)
+        const diffA = Math.abs(dateA.getTime() - today.getTime())
+        const diffB = Math.abs(dateB.getTime() - today.getTime())
+        return diffA - diffB // Closest date first
+      })
 
-      setSessions(sessionsWithCounts)
+      setSessions(sortedSessions)
     } catch (err) {
       console.error('Error loading sessions:', err)
       setError('Failed to load sessions')
