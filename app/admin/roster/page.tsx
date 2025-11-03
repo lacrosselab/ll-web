@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { logger } from '@/lib/utils'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Search, Calendar, Users, Eye } from 'lucide-react'
@@ -79,31 +80,45 @@ export default function AdminRosterPage() {
       if (productsError) throw productsError
 
       // For each product, count registered athletes with successful payments
-      const sessionsWithCounts = await Promise.all(
-        (products || []).map(async (product) => {
-          // Query payment_athletes and join to payments, then filter by status in JS
-          const { data: paymentAthletes, error: paymentsError } = await supabase
-            .from('payment_athletes')
-            .select(`
+
+      // Helper to get registered_count for a single product
+      const getRegisteredCountForProduct = async (supabase: any, productId: string) => {
+        const { data: paymentAthletes, error: paymentsError } = await supabase
+          .from('payment_athletes')
+          .select(`
+            id,
+            payment:payments!inner (
               id,
-              payment:payments!inner (
-                id,
-                status
-              )
-            `)
-            .eq('product_id', product.id)
+              status
+            )
+          `)
+          .eq('product_id', productId)
 
-          // Filter to only include successful payments
-          const successfulPayments = paymentsError 
-            ? [] 
-            : (paymentAthletes || []).filter((pa: any) => pa.payment?.status === 'succeeded')
+        if (paymentsError) {
+          logger.error('Error getting registered count for product:', paymentsError)
+        }
 
-          return {
+        // Filter only successful payments
+        const successfulPayments = (paymentAthletes || []).filter((pa: any) => pa.payment?.status === 'succeeded')
+        return successfulPayments.length
+      }
+
+      // Single function to enrich all products (serializes queries, but is safe)
+      async function enrichProductsWithCounts(supabase: any, products: Product[]) {
+        const result: SessionWithCount[] = []
+        for (const product of products) {
+          const registered_count = await getRegisteredCountForProduct(supabase, product.id)
+          result.push({
             ...product,
-            registered_count: successfulPayments.length
-          }
-        })
-      )
+            registered_count,
+          })
+        }
+        return result
+      }
+
+      // Enrich product list
+      const sessionsWithCounts = await enrichProductsWithCounts(supabase, products)
+
 
       setSessions(sessionsWithCounts)
     } catch (err) {
