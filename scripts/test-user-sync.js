@@ -1,7 +1,7 @@
 // Test script to check user sync status
 // Run this with: node scripts/test-user-sync.js
 
-const { createClient } = require('@supabase/supabase-js')
+import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SECRET_KEY

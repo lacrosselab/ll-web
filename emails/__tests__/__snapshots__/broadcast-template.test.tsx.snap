@@ -1,0 +1,1211 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`BroadcastEmail > should match snapshot with URL in body text 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Test preview
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Test Subject
+              </h1>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        Visit us at https://example.com for more info.
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                The Lacrosse Lab
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`BroadcastEmail > should match snapshot with default props 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Test preview
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Test Subject
+              </h1>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        Test body text
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                The Lacrosse Lab
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`BroadcastEmail > should match snapshot with empty body text 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Test preview
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Test Subject
+              </h1>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td />
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                The Lacrosse Lab
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`BroadcastEmail > should match snapshot with heading without space after hash 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Test preview
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Test Subject
+              </h1>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        #NoSpace
+                      </p>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        Regular text
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                The Lacrosse Lab
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`BroadcastEmail > should match snapshot with line breaks 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Test preview
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Test Subject
+              </h1>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        Line 1
+                        <br />
+                        Line 2
+                        <br />
+                        Line 3
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                The Lacrosse Lab
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`BroadcastEmail > should match snapshot with long subject line 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Test preview
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                This is a very long subject line that might wrap or cause layout issues in email clients
+              </h1>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        Test body text
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                The Lacrosse Lab
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`BroadcastEmail > should match snapshot with markdown headings 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Test preview
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Test Subject
+              </h1>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Main Heading
+                      </h1>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 18px; font-weight: bold; margin: 20px 0px 10px; padding: 0px;"
+                      >
+                        Sub Heading
+                      </h1>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        Regular text
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                The Lacrosse Lab
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`BroadcastEmail > should match snapshot with missing preview 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Test Subject
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Test Subject
+              </h1>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        Test body text
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                The Lacrosse Lab
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`BroadcastEmail > should match snapshot with mixed markdown elements 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Test preview
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Test Subject
+              </h1>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Main Title
+                      </h1>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        First paragraph with text.
+                      </p>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 18px; font-weight: bold; margin: 20px 0px 10px; padding: 0px;"
+                      >
+                        Section 1
+                      </h1>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        Some content here.
+                        <br />
+                        With a line break.
+                      </p>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 18px; font-weight: bold; margin: 20px 0px 10px; padding: 0px;"
+                      >
+                        Section 2
+                      </h1>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        More content.
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                The Lacrosse Lab
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`BroadcastEmail > should match snapshot with multiple paragraphs 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Test preview
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Test Subject
+              </h1>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        First paragraph
+                      </p>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        Second paragraph
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                The Lacrosse Lab
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`BroadcastEmail > should match snapshot with numbered list style text 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Test preview
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Test Subject
+              </h1>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        1. First item
+                        <br />
+                        2. Second item
+                        <br />
+                        3. Third item
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                The Lacrosse Lab
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`BroadcastEmail > should match snapshot with only whitespace in body 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Test preview
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Test Subject
+              </h1>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td />
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                The Lacrosse Lab
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`BroadcastEmail > should match snapshot with special characters in body 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Test preview
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Test Subject
+              </h1>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        Special chars: & &lt; &gt; " ' @ # $ %
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                The Lacrosse Lab
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`BroadcastEmail > should match snapshot with triple newlines 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Test preview
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Test Subject
+              </h1>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        Para 1
+                      </p>
+                      <p
+                        style="font-size: 14px; line-height: 24px; margin: 16px 0px;"
+                      >
+                        Para 2
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                The Lacrosse Lab
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;

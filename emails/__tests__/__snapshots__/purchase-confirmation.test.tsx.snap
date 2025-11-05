@@ -1,0 +1,3944 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PurchaseConfirmationEmail > should match snapshot with all optional fields missing 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Order Confirmation - LAB-123456
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Order Confirmation
+              </h1>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Dear Customer,
+              </p>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Thank you for your purchase! We've received your order and payment.
+              </p>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Order Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Number:
+                        </strong>
+                         
+                        LAB-123456
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Date:
+                        </strong>
+                         
+                        Monday, January 15, 2024
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Payment Status:
+                        </strong>
+                         
+                        <span
+                          style="color: rgb(40, 167, 69); font-weight: bold;"
+                        >
+                          Paid
+                        </span>
+                      </p>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 18px; font-weight: bold; margin: 20px 0px 10px; padding: 0px;"
+                      >
+                        Items Purchased
+                      </h1>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px 0px; border-bottom: 1px solid rgb(224, 224, 224);"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <table
+                                align="center"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                width="100%"
+                              >
+                                <tbody
+                                  style="width: 100%;"
+                                >
+                                  <tr
+                                    style="width: 100%;"
+                                  >
+                                    <td
+                                      data-id="__react-email-column"
+                                    >
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Test Session
+                                        </strong>
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Athlete: 
+                                        Test Athlete
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Quantity: 
+                                        1
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Price: 
+                                        $100.00
+                                         each
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Subtotal: 
+                                          $100.00
+                                        </strong>
+                                      </p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        width="100%"
+                      >
+                        <tbody
+                          style="width: 100%;"
+                        >
+                          <tr
+                            style="width: 100%;"
+                          >
+                            <td
+                              data-id="__react-email-column"
+                            >
+                              <p
+                                style="font-size: 18px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51); text-align: right;"
+                              >
+                                <strong>
+                                  Total Amount: 
+                                  $100.00
+                                </strong>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Registration Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        Your registration is confirmed! Here are the details for your sessions:
+                      </p>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px; background-color: rgb(249, 249, 249); border-radius: 4px; margin: 10px 0px;"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session: 
+                                  Test Session
+                                </strong>
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Registered Athlete:
+                                </strong>
+                                 
+                                Test Athlete
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Date:
+                                </strong>
+                                 
+                                Friday, January 19, 2024
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        We look forward to seeing you at the session!
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                If you have any questions, please don't hesitate to contact us.
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`PurchaseConfirmationEmail > should match snapshot with all optional fields present 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Order Confirmation - LAB-123456
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Order Confirmation
+              </h1>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Dear John Doe,
+              </p>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Thank you for your purchase! We've received your order and payment.
+              </p>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Order Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Number:
+                        </strong>
+                         
+                        LAB-123456
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Date:
+                        </strong>
+                         
+                        Monday, January 15, 2024
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Payment Status:
+                        </strong>
+                         
+                        <span
+                          style="color: rgb(40, 167, 69); font-weight: bold;"
+                        >
+                          Paid
+                        </span>
+                      </p>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 18px; font-weight: bold; margin: 20px 0px 10px; padding: 0px;"
+                      >
+                        Items Purchased
+                      </h1>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px 0px; border-bottom: 1px solid rgb(224, 224, 224);"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <table
+                                align="center"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                width="100%"
+                              >
+                                <tbody
+                                  style="width: 100%;"
+                                >
+                                  <tr
+                                    style="width: 100%;"
+                                  >
+                                    <td
+                                      data-id="__react-email-column"
+                                    >
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Test Session
+                                        </strong>
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Athlete: 
+                                        Test Athlete
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Quantity: 
+                                        1
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Price: 
+                                        $100.00
+                                         each
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Subtotal: 
+                                          $100.00
+                                        </strong>
+                                      </p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        width="100%"
+                      >
+                        <tbody
+                          style="width: 100%;"
+                        >
+                          <tr
+                            style="width: 100%;"
+                          >
+                            <td
+                              data-id="__react-email-column"
+                            >
+                              <p
+                                style="font-size: 18px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51); text-align: right;"
+                              >
+                                <strong>
+                                  Total Amount: 
+                                  $100.00
+                                </strong>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Registration Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        Your registration is confirmed! Here are the details for your sessions:
+                      </p>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px; background-color: rgb(249, 249, 249); border-radius: 4px; margin: 10px 0px;"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session: 
+                                  Test Session
+                                </strong>
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Registered Athlete:
+                                </strong>
+                                 
+                                Test Athlete
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Date:
+                                </strong>
+                                 
+                                Friday, January 19, 2024
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Time:
+                                </strong>
+                                 
+                                2:30 PM
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Location:
+                                </strong>
+                                 
+                                Test Location
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        We look forward to seeing you at the session!
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                If you have any questions, please don't hesitate to contact us.
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`PurchaseConfirmationEmail > should match snapshot with default props 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Order Confirmation - LAB-123456
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Order Confirmation
+              </h1>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Dear Test User,
+              </p>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Thank you for your purchase! We've received your order and payment.
+              </p>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Order Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Number:
+                        </strong>
+                         
+                        LAB-123456
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Date:
+                        </strong>
+                         
+                        Monday, January 15, 2024
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Payment Status:
+                        </strong>
+                         
+                        <span
+                          style="color: rgb(40, 167, 69); font-weight: bold;"
+                        >
+                          Paid
+                        </span>
+                      </p>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 18px; font-weight: bold; margin: 20px 0px 10px; padding: 0px;"
+                      >
+                        Items Purchased
+                      </h1>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px 0px; border-bottom: 1px solid rgb(224, 224, 224);"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <table
+                                align="center"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                width="100%"
+                              >
+                                <tbody
+                                  style="width: 100%;"
+                                >
+                                  <tr
+                                    style="width: 100%;"
+                                  >
+                                    <td
+                                      data-id="__react-email-column"
+                                    >
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Test Session
+                                        </strong>
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Athlete: 
+                                        Test Athlete
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Quantity: 
+                                        1
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Price: 
+                                        $100.00
+                                         each
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Subtotal: 
+                                          $100.00
+                                        </strong>
+                                      </p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        width="100%"
+                      >
+                        <tbody
+                          style="width: 100%;"
+                        >
+                          <tr
+                            style="width: 100%;"
+                          >
+                            <td
+                              data-id="__react-email-column"
+                            >
+                              <p
+                                style="font-size: 18px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51); text-align: right;"
+                              >
+                                <strong>
+                                  Total Amount: 
+                                  $100.00
+                                </strong>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Registration Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        Your registration is confirmed! Here are the details for your sessions:
+                      </p>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px; background-color: rgb(249, 249, 249); border-radius: 4px; margin: 10px 0px;"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session: 
+                                  Test Session
+                                </strong>
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Registered Athlete:
+                                </strong>
+                                 
+                                Test Athlete
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Date:
+                                </strong>
+                                 
+                                Friday, January 19, 2024
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Time:
+                                </strong>
+                                 
+                                2:30 PM
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Location:
+                                </strong>
+                                 
+                                Test Location
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        We look forward to seeing you at the session!
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                If you have any questions, please don't hesitate to contact us.
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`PurchaseConfirmationEmail > should match snapshot with different currency 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Order Confirmation - LAB-123456
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Order Confirmation
+              </h1>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Dear Test User,
+              </p>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Thank you for your purchase! We've received your order and payment.
+              </p>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Order Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Number:
+                        </strong>
+                         
+                        LAB-123456
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Date:
+                        </strong>
+                         
+                        Monday, January 15, 2024
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Payment Status:
+                        </strong>
+                         
+                        <span
+                          style="color: rgb(40, 167, 69); font-weight: bold;"
+                        >
+                          Paid
+                        </span>
+                      </p>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 18px; font-weight: bold; margin: 20px 0px 10px; padding: 0px;"
+                      >
+                        Items Purchased
+                      </h1>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px 0px; border-bottom: 1px solid rgb(224, 224, 224);"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <table
+                                align="center"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                width="100%"
+                              >
+                                <tbody
+                                  style="width: 100%;"
+                                >
+                                  <tr
+                                    style="width: 100%;"
+                                  >
+                                    <td
+                                      data-id="__react-email-column"
+                                    >
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Test Session
+                                        </strong>
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Athlete: 
+                                        Test Athlete
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Quantity: 
+                                        1
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Price: 
+                                        $100.00
+                                         each
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Subtotal: 
+                                          $100.00
+                                        </strong>
+                                      </p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        width="100%"
+                      >
+                        <tbody
+                          style="width: 100%;"
+                        >
+                          <tr
+                            style="width: 100%;"
+                          >
+                            <td
+                              data-id="__react-email-column"
+                            >
+                              <p
+                                style="font-size: 18px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51); text-align: right;"
+                              >
+                                <strong>
+                                  Total Amount: 
+                                  $100.00
+                                </strong>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Registration Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        Your registration is confirmed! Here are the details for your sessions:
+                      </p>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px; background-color: rgb(249, 249, 249); border-radius: 4px; margin: 10px 0px;"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session: 
+                                  Test Session
+                                </strong>
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Registered Athlete:
+                                </strong>
+                                 
+                                Test Athlete
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Date:
+                                </strong>
+                                 
+                                Friday, January 19, 2024
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Time:
+                                </strong>
+                                 
+                                2:30 PM
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Location:
+                                </strong>
+                                 
+                                Test Location
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        We look forward to seeing you at the session!
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                If you have any questions, please don't hesitate to contact us.
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`PurchaseConfirmationEmail > should match snapshot with missing customer name 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Order Confirmation - LAB-123456
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Order Confirmation
+              </h1>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Dear Customer,
+              </p>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Thank you for your purchase! We've received your order and payment.
+              </p>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Order Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Number:
+                        </strong>
+                         
+                        LAB-123456
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Date:
+                        </strong>
+                         
+                        Monday, January 15, 2024
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Payment Status:
+                        </strong>
+                         
+                        <span
+                          style="color: rgb(40, 167, 69); font-weight: bold;"
+                        >
+                          Paid
+                        </span>
+                      </p>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 18px; font-weight: bold; margin: 20px 0px 10px; padding: 0px;"
+                      >
+                        Items Purchased
+                      </h1>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px 0px; border-bottom: 1px solid rgb(224, 224, 224);"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <table
+                                align="center"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                width="100%"
+                              >
+                                <tbody
+                                  style="width: 100%;"
+                                >
+                                  <tr
+                                    style="width: 100%;"
+                                  >
+                                    <td
+                                      data-id="__react-email-column"
+                                    >
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Test Session
+                                        </strong>
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Athlete: 
+                                        Test Athlete
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Quantity: 
+                                        1
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Price: 
+                                        $100.00
+                                         each
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Subtotal: 
+                                          $100.00
+                                        </strong>
+                                      </p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        width="100%"
+                      >
+                        <tbody
+                          style="width: 100%;"
+                        >
+                          <tr
+                            style="width: 100%;"
+                          >
+                            <td
+                              data-id="__react-email-column"
+                            >
+                              <p
+                                style="font-size: 18px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51); text-align: right;"
+                              >
+                                <strong>
+                                  Total Amount: 
+                                  $100.00
+                                </strong>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Registration Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        Your registration is confirmed! Here are the details for your sessions:
+                      </p>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px; background-color: rgb(249, 249, 249); border-radius: 4px; margin: 10px 0px;"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session: 
+                                  Test Session
+                                </strong>
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Registered Athlete:
+                                </strong>
+                                 
+                                Test Athlete
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Date:
+                                </strong>
+                                 
+                                Friday, January 19, 2024
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Time:
+                                </strong>
+                                 
+                                2:30 PM
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Location:
+                                </strong>
+                                 
+                                Test Location
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        We look forward to seeing you at the session!
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                If you have any questions, please don't hesitate to contact us.
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`PurchaseConfirmationEmail > should match snapshot with missing location 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Order Confirmation - LAB-123456
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Order Confirmation
+              </h1>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Dear Test User,
+              </p>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Thank you for your purchase! We've received your order and payment.
+              </p>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Order Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Number:
+                        </strong>
+                         
+                        LAB-123456
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Date:
+                        </strong>
+                         
+                        Monday, January 15, 2024
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Payment Status:
+                        </strong>
+                         
+                        <span
+                          style="color: rgb(40, 167, 69); font-weight: bold;"
+                        >
+                          Paid
+                        </span>
+                      </p>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 18px; font-weight: bold; margin: 20px 0px 10px; padding: 0px;"
+                      >
+                        Items Purchased
+                      </h1>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px 0px; border-bottom: 1px solid rgb(224, 224, 224);"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <table
+                                align="center"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                width="100%"
+                              >
+                                <tbody
+                                  style="width: 100%;"
+                                >
+                                  <tr
+                                    style="width: 100%;"
+                                  >
+                                    <td
+                                      data-id="__react-email-column"
+                                    >
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Test Session
+                                        </strong>
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Athlete: 
+                                        Test Athlete
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Quantity: 
+                                        1
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Price: 
+                                        $100.00
+                                         each
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Subtotal: 
+                                          $100.00
+                                        </strong>
+                                      </p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        width="100%"
+                      >
+                        <tbody
+                          style="width: 100%;"
+                        >
+                          <tr
+                            style="width: 100%;"
+                          >
+                            <td
+                              data-id="__react-email-column"
+                            >
+                              <p
+                                style="font-size: 18px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51); text-align: right;"
+                              >
+                                <strong>
+                                  Total Amount: 
+                                  $100.00
+                                </strong>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Registration Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        Your registration is confirmed! Here are the details for your sessions:
+                      </p>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px; background-color: rgb(249, 249, 249); border-radius: 4px; margin: 10px 0px;"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session: 
+                                  Test Session
+                                </strong>
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Registered Athlete:
+                                </strong>
+                                 
+                                Test Athlete
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Date:
+                                </strong>
+                                 
+                                Friday, January 19, 2024
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Time:
+                                </strong>
+                                 
+                                2:30 PM
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        We look forward to seeing you at the session!
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                If you have any questions, please don't hesitate to contact us.
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`PurchaseConfirmationEmail > should match snapshot with missing session time 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Order Confirmation - LAB-123456
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Order Confirmation
+              </h1>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Dear Test User,
+              </p>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Thank you for your purchase! We've received your order and payment.
+              </p>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Order Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Number:
+                        </strong>
+                         
+                        LAB-123456
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Date:
+                        </strong>
+                         
+                        Monday, January 15, 2024
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Payment Status:
+                        </strong>
+                         
+                        <span
+                          style="color: rgb(40, 167, 69); font-weight: bold;"
+                        >
+                          Paid
+                        </span>
+                      </p>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 18px; font-weight: bold; margin: 20px 0px 10px; padding: 0px;"
+                      >
+                        Items Purchased
+                      </h1>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px 0px; border-bottom: 1px solid rgb(224, 224, 224);"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <table
+                                align="center"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                width="100%"
+                              >
+                                <tbody
+                                  style="width: 100%;"
+                                >
+                                  <tr
+                                    style="width: 100%;"
+                                  >
+                                    <td
+                                      data-id="__react-email-column"
+                                    >
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Test Session
+                                        </strong>
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Athlete: 
+                                        Test Athlete
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Quantity: 
+                                        1
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Price: 
+                                        $100.00
+                                         each
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Subtotal: 
+                                          $100.00
+                                        </strong>
+                                      </p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        width="100%"
+                      >
+                        <tbody
+                          style="width: 100%;"
+                        >
+                          <tr
+                            style="width: 100%;"
+                          >
+                            <td
+                              data-id="__react-email-column"
+                            >
+                              <p
+                                style="font-size: 18px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51); text-align: right;"
+                              >
+                                <strong>
+                                  Total Amount: 
+                                  $100.00
+                                </strong>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Registration Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        Your registration is confirmed! Here are the details for your sessions:
+                      </p>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px; background-color: rgb(249, 249, 249); border-radius: 4px; margin: 10px 0px;"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session: 
+                                  Test Session
+                                </strong>
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Registered Athlete:
+                                </strong>
+                                 
+                                Test Athlete
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Date:
+                                </strong>
+                                 
+                                Friday, January 19, 2024
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Location:
+                                </strong>
+                                 
+                                Test Location
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        We look forward to seeing you at the session!
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                If you have any questions, please don't hesitate to contact us.
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`PurchaseConfirmationEmail > should match snapshot with multiple items 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Order Confirmation - LAB-123456
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Order Confirmation
+              </h1>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Dear Test User,
+              </p>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Thank you for your purchase! We've received your order and payment.
+              </p>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Order Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Number:
+                        </strong>
+                         
+                        LAB-123456
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Date:
+                        </strong>
+                         
+                        Monday, January 15, 2024
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Payment Status:
+                        </strong>
+                         
+                        <span
+                          style="color: rgb(40, 167, 69); font-weight: bold;"
+                        >
+                          Paid
+                        </span>
+                      </p>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 18px; font-weight: bold; margin: 20px 0px 10px; padding: 0px;"
+                      >
+                        Items Purchased
+                      </h1>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px 0px; border-bottom: 1px solid rgb(224, 224, 224);"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <table
+                                align="center"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                width="100%"
+                              >
+                                <tbody
+                                  style="width: 100%;"
+                                >
+                                  <tr
+                                    style="width: 100%;"
+                                  >
+                                    <td
+                                      data-id="__react-email-column"
+                                    >
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Session 1
+                                        </strong>
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Athlete: 
+                                        Athlete 1
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Quantity: 
+                                        1
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Price: 
+                                        $100.00
+                                         each
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Subtotal: 
+                                          $100.00
+                                        </strong>
+                                      </p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px 0px; border-bottom: 1px solid rgb(224, 224, 224);"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <table
+                                align="center"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                width="100%"
+                              >
+                                <tbody
+                                  style="width: 100%;"
+                                >
+                                  <tr
+                                    style="width: 100%;"
+                                  >
+                                    <td
+                                      data-id="__react-email-column"
+                                    >
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Session 2
+                                        </strong>
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Athlete: 
+                                        Athlete 2
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Quantity: 
+                                        2
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Price: 
+                                        $50.00
+                                         each
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Subtotal: 
+                                          $100.00
+                                        </strong>
+                                      </p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        width="100%"
+                      >
+                        <tbody
+                          style="width: 100%;"
+                        >
+                          <tr
+                            style="width: 100%;"
+                          >
+                            <td
+                              data-id="__react-email-column"
+                            >
+                              <p
+                                style="font-size: 18px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51); text-align: right;"
+                              >
+                                <strong>
+                                  Total Amount: 
+                                  $200.00
+                                </strong>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Registration Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        Your registration is confirmed! Here are the details for your sessions:
+                      </p>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px; background-color: rgb(249, 249, 249); border-radius: 4px; margin: 10px 0px;"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session: 
+                                  Session 1
+                                </strong>
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Registered Athlete:
+                                </strong>
+                                 
+                                Athlete 1
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Date:
+                                </strong>
+                                 
+                                Friday, January 19, 2024
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Time:
+                                </strong>
+                                 
+                                2:30 PM
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Location:
+                                </strong>
+                                 
+                                Location 1
+                              </p>
+                              <hr
+                                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                              />
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px; background-color: rgb(249, 249, 249); border-radius: 4px; margin: 10px 0px;"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session: 
+                                  Session 2
+                                </strong>
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Registered Athlete:
+                                </strong>
+                                 
+                                Athlete 2
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Date:
+                                </strong>
+                                 
+                                Saturday, January 20, 2024
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Time:
+                                </strong>
+                                 
+                                3:00 PM
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Location:
+                                </strong>
+                                 
+                                Location 2
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        We look forward to seeing you at the session!
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                If you have any questions, please don't hesitate to contact us.
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`PurchaseConfirmationEmail > should match snapshot with single item quantity > 1 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Order Confirmation - LAB-123456
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Order Confirmation
+              </h1>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Dear Test User,
+              </p>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Thank you for your purchase! We've received your order and payment.
+              </p>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Order Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Number:
+                        </strong>
+                         
+                        LAB-123456
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Date:
+                        </strong>
+                         
+                        Monday, January 15, 2024
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Payment Status:
+                        </strong>
+                         
+                        <span
+                          style="color: rgb(40, 167, 69); font-weight: bold;"
+                        >
+                          Paid
+                        </span>
+                      </p>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 18px; font-weight: bold; margin: 20px 0px 10px; padding: 0px;"
+                      >
+                        Items Purchased
+                      </h1>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px 0px; border-bottom: 1px solid rgb(224, 224, 224);"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <table
+                                align="center"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                width="100%"
+                              >
+                                <tbody
+                                  style="width: 100%;"
+                                >
+                                  <tr
+                                    style="width: 100%;"
+                                  >
+                                    <td
+                                      data-id="__react-email-column"
+                                    >
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Test Session
+                                        </strong>
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Athlete: 
+                                        Test Athlete
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Quantity: 
+                                        3
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Price: 
+                                        $100.00
+                                         each
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Subtotal: 
+                                          $300.00
+                                        </strong>
+                                      </p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        width="100%"
+                      >
+                        <tbody
+                          style="width: 100%;"
+                        >
+                          <tr
+                            style="width: 100%;"
+                          >
+                            <td
+                              data-id="__react-email-column"
+                            >
+                              <p
+                                style="font-size: 18px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51); text-align: right;"
+                              >
+                                <strong>
+                                  Total Amount: 
+                                  $300.00
+                                </strong>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Registration Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        Your registration is confirmed! Here are the details for your sessions:
+                      </p>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px; background-color: rgb(249, 249, 249); border-radius: 4px; margin: 10px 0px;"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session: 
+                                  Test Session
+                                </strong>
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Registered Athlete:
+                                </strong>
+                                 
+                                Test Athlete
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Date:
+                                </strong>
+                                 
+                                Friday, January 19, 2024
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Time:
+                                </strong>
+                                 
+                                2:30 PM
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Location:
+                                </strong>
+                                 
+                                Test Location
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        We look forward to seeing you at the session!
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                If you have any questions, please don't hesitate to contact us.
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`PurchaseConfirmationEmail > should match snapshot with three items 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Order Confirmation - LAB-123456
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Order Confirmation
+              </h1>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Dear Test User,
+              </p>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Thank you for your purchase! We've received your order and payment.
+              </p>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Order Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Number:
+                        </strong>
+                         
+                        LAB-123456
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Date:
+                        </strong>
+                         
+                        Monday, January 15, 2024
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Payment Status:
+                        </strong>
+                         
+                        <span
+                          style="color: rgb(40, 167, 69); font-weight: bold;"
+                        >
+                          Paid
+                        </span>
+                      </p>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 18px; font-weight: bold; margin: 20px 0px 10px; padding: 0px;"
+                      >
+                        Items Purchased
+                      </h1>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px 0px; border-bottom: 1px solid rgb(224, 224, 224);"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <table
+                                align="center"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                width="100%"
+                              >
+                                <tbody
+                                  style="width: 100%;"
+                                >
+                                  <tr
+                                    style="width: 100%;"
+                                  >
+                                    <td
+                                      data-id="__react-email-column"
+                                    >
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Session 1
+                                        </strong>
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Athlete: 
+                                        Athlete 1
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Quantity: 
+                                        1
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Price: 
+                                        $100.00
+                                         each
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Subtotal: 
+                                          $100.00
+                                        </strong>
+                                      </p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px 0px; border-bottom: 1px solid rgb(224, 224, 224);"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <table
+                                align="center"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                width="100%"
+                              >
+                                <tbody
+                                  style="width: 100%;"
+                                >
+                                  <tr
+                                    style="width: 100%;"
+                                  >
+                                    <td
+                                      data-id="__react-email-column"
+                                    >
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Session 2
+                                        </strong>
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Athlete: 
+                                        Athlete 2
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Quantity: 
+                                        2
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Price: 
+                                        $50.00
+                                         each
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Subtotal: 
+                                          $100.00
+                                        </strong>
+                                      </p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px 0px; border-bottom: 1px solid rgb(224, 224, 224);"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <table
+                                align="center"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                width="100%"
+                              >
+                                <tbody
+                                  style="width: 100%;"
+                                >
+                                  <tr
+                                    style="width: 100%;"
+                                  >
+                                    <td
+                                      data-id="__react-email-column"
+                                    >
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Session 3
+                                        </strong>
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Athlete: 
+                                        Athlete 3
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Quantity: 
+                                        3
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Price: 
+                                        $75.00
+                                         each
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Subtotal: 
+                                          $225.00
+                                        </strong>
+                                      </p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        width="100%"
+                      >
+                        <tbody
+                          style="width: 100%;"
+                        >
+                          <tr
+                            style="width: 100%;"
+                          >
+                            <td
+                              data-id="__react-email-column"
+                            >
+                              <p
+                                style="font-size: 18px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51); text-align: right;"
+                              >
+                                <strong>
+                                  Total Amount: 
+                                  $425.00
+                                </strong>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Registration Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        Your registration is confirmed! Here are the details for your sessions:
+                      </p>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px; background-color: rgb(249, 249, 249); border-radius: 4px; margin: 10px 0px;"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session: 
+                                  Session 1
+                                </strong>
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Registered Athlete:
+                                </strong>
+                                 
+                                Athlete 1
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Date:
+                                </strong>
+                                 
+                                Friday, January 19, 2024
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Time:
+                                </strong>
+                                 
+                                2:30 PM
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Location:
+                                </strong>
+                                 
+                                Location 1
+                              </p>
+                              <hr
+                                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                              />
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px; background-color: rgb(249, 249, 249); border-radius: 4px; margin: 10px 0px;"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session: 
+                                  Session 2
+                                </strong>
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Registered Athlete:
+                                </strong>
+                                 
+                                Athlete 2
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Date:
+                                </strong>
+                                 
+                                Saturday, January 20, 2024
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Time:
+                                </strong>
+                                 
+                                3:00 PM
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Location:
+                                </strong>
+                                 
+                                Location 2
+                              </p>
+                              <hr
+                                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                              />
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px; background-color: rgb(249, 249, 249); border-radius: 4px; margin: 10px 0px;"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session: 
+                                  Session 3
+                                </strong>
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Registered Athlete:
+                                </strong>
+                                 
+                                Athlete 3
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Date:
+                                </strong>
+                                 
+                                Sunday, January 21, 2024
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Time:
+                                </strong>
+                                 
+                                4:00 PM
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Location:
+                                </strong>
+                                 
+                                Location 3
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        We look forward to seeing you at the session!
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                If you have any questions, please don't hesitate to contact us.
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;
+
+exports[`PurchaseConfirmationEmail > should match snapshot with zero session time (00:00:00) 1`] = `
+<div>
+  <html
+    dir="ltr"
+    lang="en"
+  >
+    <head>
+      <meta
+        content="text/html; charset=UTF-8"
+        http-equiv="Content-Type"
+      />
+      <meta
+        name="x-apple-disable-message-reformatting"
+      />
+    </head>
+    <div
+      style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;"
+    >
+      Order Confirmation - LAB-123456
+      <div>
+         ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
+      </div>
+    </div>
+    <body
+      style="background-color: rgb(246, 249, 252); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;"
+    >
+      <table
+        align="center"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="max-width: 37.5em; background-color: rgb(255, 255, 255); margin: 0px auto 64px auto; padding: 20px 0px 48px;"
+        width="100%"
+      >
+        <tbody>
+          <tr
+            style="width: 100%;"
+          >
+            <td>
+              <h1
+                style="color: rgb(51, 51, 51); font-size: 24px; font-weight: bold; margin: 40px 0px; padding: 0px;"
+              >
+                Order Confirmation
+              </h1>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Dear Test User,
+              </p>
+              <p
+                style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+              >
+                Thank you for your purchase! We've received your order and payment.
+              </p>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Order Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Number:
+                        </strong>
+                         
+                        LAB-123456
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Order Date:
+                        </strong>
+                         
+                        Monday, January 15, 2024
+                      </p>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        <strong>
+                          Payment Status:
+                        </strong>
+                         
+                        <span
+                          style="color: rgb(40, 167, 69); font-weight: bold;"
+                        >
+                          Paid
+                        </span>
+                      </p>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 18px; font-weight: bold; margin: 20px 0px 10px; padding: 0px;"
+                      >
+                        Items Purchased
+                      </h1>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px 0px; border-bottom: 1px solid rgb(224, 224, 224);"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <table
+                                align="center"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                width="100%"
+                              >
+                                <tbody
+                                  style="width: 100%;"
+                                >
+                                  <tr
+                                    style="width: 100%;"
+                                  >
+                                    <td
+                                      data-id="__react-email-column"
+                                    >
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Test Session
+                                        </strong>
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Athlete: 
+                                        Test Athlete
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Quantity: 
+                                        1
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        Price: 
+                                        $100.00
+                                         each
+                                      </p>
+                                      <p
+                                        style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                                      >
+                                        <strong>
+                                          Subtotal: 
+                                          $100.00
+                                        </strong>
+                                      </p>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <hr
+                        style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+                      />
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        width="100%"
+                      >
+                        <tbody
+                          style="width: 100%;"
+                        >
+                          <tr
+                            style="width: 100%;"
+                          >
+                            <td
+                              data-id="__react-email-column"
+                            >
+                              <p
+                                style="font-size: 18px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51); text-align: right;"
+                              >
+                                <strong>
+                                  Total Amount: 
+                                  $100.00
+                                </strong>
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table
+                align="center"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="padding: 20px 0px;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1
+                        style="color: rgb(51, 51, 51); font-size: 20px; font-weight: bold; margin: 30px 0px 20px; padding: 0px;"
+                      >
+                        Registration Details
+                      </h1>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        Your registration is confirmed! Here are the details for your sessions:
+                      </p>
+                      <table
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="padding: 15px; background-color: rgb(249, 249, 249); border-radius: 4px; margin: 10px 0px;"
+                        width="100%"
+                      >
+                        <tbody>
+                          <tr>
+                            <td>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session: 
+                                  Test Session
+                                </strong>
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Registered Athlete:
+                                </strong>
+                                 
+                                Test Athlete
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Session Date:
+                                </strong>
+                                 
+                                Friday, January 19, 2024
+                              </p>
+                              <p
+                                style="font-size: 14px; line-height: 22px; margin: 5px 0px; color: rgb(51, 51, 51);"
+                              >
+                                <strong>
+                                  Location:
+                                </strong>
+                                 
+                                Test Location
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <p
+                        style="font-size: 16px; line-height: 26px; margin: 16px 0px; color: rgb(51, 51, 51);"
+                      >
+                        We look forward to seeing you at the session!
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr
+                style="width: 100%; border-top: 1px solid rgb(234, 234, 234); border-color: rgb(224, 224, 224); margin: 20px 0px;"
+              />
+              <p
+                style="font-size: 12px; line-height: 16px; margin: 20px 0px 16px 0px; color: rgb(136, 152, 170);"
+              >
+                If you have any questions, please don't hesitate to contact us.
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+  </html>
+</div>
+`;

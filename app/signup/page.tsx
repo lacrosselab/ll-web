@@ -42,6 +42,18 @@ export default function SignupPage() {
       if (error) {
         setError(error.message)
       } else {
+        // Add contact to Resend (non-blocking)
+        try {
+          await fetch('/api/resend/add-contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, name: fullName }),
+          })
+        } catch (err) {
+          // Silently fail - email addition shouldn't block signup
+          console.error('Failed to add contact to Resend:', err)
+        }
+
         // Redirect to dashboard instead of showing confirmation
         router.push('/member/dashboard')
       }
