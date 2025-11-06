@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import { render } from '@testing-library/react'
+import React from 'react'
 import { PurchaseConfirmationEmail } from '../purchase-confirmation'
+import { renderEmailTemplate } from '@/lib/email/utils'
 
 describe('PurchaseConfirmationEmail', () => {
   const defaultProps = {
@@ -24,8 +25,8 @@ describe('PurchaseConfirmationEmail', () => {
 
   // Base rendering tests
   it('should match snapshot with default props', () => {
-    const { container } = render(<PurchaseConfirmationEmail {...defaultProps} />)
-    expect(container).toMatchSnapshot()
+    const html = renderEmailTemplate(<PurchaseConfirmationEmail {...defaultProps} />)
+    expect(html).toMatchSnapshot()
   })
 
   // Multiple items tests
@@ -55,8 +56,8 @@ describe('PurchaseConfirmationEmail', () => {
       totalAmountCents: 20000,
     }
 
-    const { container } = render(<PurchaseConfirmationEmail {...props} />)
-    expect(container).toMatchSnapshot()
+    const html = renderEmailTemplate(<PurchaseConfirmationEmail {...props} />)
+    expect(html).toMatchSnapshot()
   })
 
   it('should match snapshot with three items', () => {
@@ -94,8 +95,8 @@ describe('PurchaseConfirmationEmail', () => {
       totalAmountCents: 42500,
     }
 
-    const { container } = render(<PurchaseConfirmationEmail {...props} />)
-    expect(container).toMatchSnapshot()
+    const html = renderEmailTemplate(<PurchaseConfirmationEmail {...props} />)
+    expect(html).toMatchSnapshot()
   })
 
   it('should match snapshot with single item quantity > 1', () => {
@@ -115,8 +116,8 @@ describe('PurchaseConfirmationEmail', () => {
       totalAmountCents: 30000,
     }
 
-    const { container } = render(<PurchaseConfirmationEmail {...props} />)
-    expect(container).toMatchSnapshot()
+    const html = renderEmailTemplate(<PurchaseConfirmationEmail {...props} />)
+    expect(html).toMatchSnapshot()
   })
 
   // Missing optional fields tests
@@ -126,8 +127,8 @@ describe('PurchaseConfirmationEmail', () => {
       customerName: undefined,
     }
 
-    const { container } = render(<PurchaseConfirmationEmail {...props} />)
-    expect(container).toMatchSnapshot()
+    const html = renderEmailTemplate(<PurchaseConfirmationEmail {...props} />)
+    expect(html).toMatchSnapshot()
   })
 
   it('should match snapshot with missing session time', () => {
@@ -141,8 +142,8 @@ describe('PurchaseConfirmationEmail', () => {
       ],
     }
 
-    const { container } = render(<PurchaseConfirmationEmail {...props} />)
-    expect(container).toMatchSnapshot()
+    const html = renderEmailTemplate(<PurchaseConfirmationEmail {...props} />)
+    expect(html).toMatchSnapshot()
   })
 
   it('should match snapshot with missing location', () => {
@@ -156,8 +157,8 @@ describe('PurchaseConfirmationEmail', () => {
       ],
     }
 
-    const { container } = render(<PurchaseConfirmationEmail {...props} />)
-    expect(container).toMatchSnapshot()
+    const html = renderEmailTemplate(<PurchaseConfirmationEmail {...props} />)
+    expect(html).toMatchSnapshot()
   })
 
   it('should match snapshot with all optional fields missing', () => {
@@ -173,8 +174,8 @@ describe('PurchaseConfirmationEmail', () => {
       ],
     }
 
-    const { container } = render(<PurchaseConfirmationEmail {...props} />)
-    expect(container).toMatchSnapshot()
+    const html = renderEmailTemplate(<PurchaseConfirmationEmail {...props} />)
+    expect(html).toMatchSnapshot()
   })
 
   it('should match snapshot with zero session time (00:00:00)', () => {
@@ -188,8 +189,8 @@ describe('PurchaseConfirmationEmail', () => {
       ],
     }
 
-    const { container } = render(<PurchaseConfirmationEmail {...props} />)
-    expect(container).toMatchSnapshot()
+    const html = renderEmailTemplate(<PurchaseConfirmationEmail {...props} />)
+    expect(html).toMatchSnapshot()
   })
 
   // Complete data tests
@@ -211,8 +212,8 @@ describe('PurchaseConfirmationEmail', () => {
       currency: 'USD',
     }
 
-    const { container } = render(<PurchaseConfirmationEmail {...props} />)
-    expect(container).toMatchSnapshot()
+    const html = renderEmailTemplate(<PurchaseConfirmationEmail {...props} />)
+    expect(html).toMatchSnapshot()
   })
 
   // Currency tests
@@ -222,8 +223,8 @@ describe('PurchaseConfirmationEmail', () => {
       currency: 'EUR',
     }
 
-    const { container } = render(<PurchaseConfirmationEmail {...props} />)
-    expect(container).toMatchSnapshot()
+    const html = renderEmailTemplate(<PurchaseConfirmationEmail {...props} />)
+    expect(html).toMatchSnapshot()
   })
 })
 

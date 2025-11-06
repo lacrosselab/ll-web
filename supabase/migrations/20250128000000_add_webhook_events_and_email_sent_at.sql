@@ -98,9 +98,6 @@ BEGIN
     END IF;
   END LOOP;
 
-  -- Clear cart items for the user
-  DELETE FROM cart_items WHERE user_id = p_user_id;
-
   RETURN v_payment_id;
 END;
 $$;

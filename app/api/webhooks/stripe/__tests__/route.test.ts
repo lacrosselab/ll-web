@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { POST } from '../route'
 import {
   createMockSupabaseClient,
   createMockNextRequest,
@@ -13,50 +12,63 @@ import {
 } from '@/lib/email/__tests__/test-utils'
 import type Stripe from 'stripe'
 
-// Mock Stripe
-const mockStripeClient = {
-  webhooks: {
-    constructEvent: vi.fn(),
-  },
-  customers: {
-    retrieve: vi.fn(),
-  },
-  paymentIntents: {
-    retrieve: vi.fn(),
-  },
-  checkout: {
-    sessions: {
-      listLineItems: vi.fn(),
+// Use vi.hoisted to create mocks that can be referenced in vi.mock factories
+const mocks = vi.hoisted(() => {
+  return {
+    mockStripeClient: {
+      webhooks: {
+        constructEvent: vi.fn(),
+      },
+      customers: {
+        retrieve: vi.fn(),
+      },
+      paymentIntents: {
+        retrieve: vi.fn(),
+      },
+      checkout: {
+        sessions: {
+          listLineItems: vi.fn(),
+        },
+      },
     },
-  },
-}
+    mockSupabaseClient: createMockSupabaseClient(),
+    mockSendPurchaseConfirmation: vi.fn().mockResolvedValue(undefined),
+    logger: {
+      debug: vi.fn(),
+      error: vi.fn(),
+    },
+  }
+})
 
+// Mock Stripe
 vi.mock('@/lib/stripe', () => ({
-  stripe: mockStripeClient,
+  stripe: mocks.mockStripeClient,
 }))
 
 // Mock Supabase Service
-const mockSupabaseClient = createMockSupabaseClient()
 vi.mock('@/lib/supabase/service', () => ({
-  getSupabaseService: vi.fn().mockReturnValue(mockSupabaseClient),
+  getSupabaseService: vi.fn().mockReturnValue(mocks.mockSupabaseClient),
 }))
 
 // Mock Email Service
-const mockSendPurchaseConfirmation = vi.fn().mockResolvedValue(undefined)
 vi.mock('@/lib/email/service', () => ({
-  sendPurchaseConfirmation: mockSendPurchaseConfirmation,
+  sendPurchaseConfirmation: mocks.mockSendPurchaseConfirmation,
 }))
 
 // Mock Logger
 vi.mock('@/lib/utils', () => ({
-  logger: {
-    debug: vi.fn(),
-    error: vi.fn(),
-  },
+  logger: mocks.logger,
 }))
 
+// Import after mocking
+import { POST } from '../route'
 import { sendPurchaseConfirmation } from '@/lib/email/service'
 import { logger } from '@/lib/utils'
+
+// Reference the hoisted mocks
+const mockStripeClient = mocks.mockStripeClient
+const mockSupabaseClient = mocks.mockSupabaseClient
+const mockSendPurchaseConfirmation = mocks.mockSendPurchaseConfirmation
 
 describe('POST /api/webhooks/stripe', () => {
   beforeEach(() => {

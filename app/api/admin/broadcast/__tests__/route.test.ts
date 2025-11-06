@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { POST } from '../route'
 import {
   createMockSupabaseClient,
   createMockNextRequest,
@@ -8,28 +7,41 @@ import {
   mockPayment,
 } from '@/lib/email/__tests__/test-utils'
 
+// Use vi.hoisted to create mocks that can be referenced in vi.mock factories
+const mocks = vi.hoisted(() => {
+  return {
+    mockSupabaseClient: createMockSupabaseClient(),
+    mockSendBroadcastEmail: vi.fn().mockResolvedValue({ sent: 0, failed: 0 }),
+    logger: {
+      debug: vi.fn(),
+      error: vi.fn(),
+    },
+  }
+})
+
 // Mock Supabase Server
-const mockSupabaseClient = createMockSupabaseClient()
 vi.mock('@/lib/supabase/server', () => ({
-  getSupabaseServer: vi.fn().mockResolvedValue(mockSupabaseClient),
+  getSupabaseServer: vi.fn().mockResolvedValue(mocks.mockSupabaseClient),
 }))
 
 // Mock Email Service
-const mockSendBroadcastEmail = vi.fn().mockResolvedValue({ sent: 0, failed: 0 })
 vi.mock('@/lib/email/service', () => ({
-  sendBroadcastEmail: mockSendBroadcastEmail,
+  sendBroadcastEmail: mocks.mockSendBroadcastEmail,
 }))
 
 // Mock Logger
 vi.mock('@/lib/utils', () => ({
-  logger: {
-    debug: vi.fn(),
-    error: vi.fn(),
-  },
+  logger: mocks.logger,
 }))
 
+// Import after mocking
+import { POST } from '../route'
 import { sendBroadcastEmail } from '@/lib/email/service'
 import { logger } from '@/lib/utils'
+
+// Reference the hoisted mocks
+const mockSupabaseClient = mocks.mockSupabaseClient
+const mockSendBroadcastEmail = mocks.mockSendBroadcastEmail
 
 describe('POST /api/admin/broadcast', () => {
   beforeEach(() => {

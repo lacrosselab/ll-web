@@ -1,9 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import React from 'react'
-import { addContactToResend, sendPurchaseConfirmation, sendBroadcastEmail } from '../service'
-import { renderEmailTemplate } from '../utils'
-import { PurchaseConfirmationEmail } from '@/emails/purchase-confirmation'
-import { BroadcastEmail } from '@/emails/broadcast-template'
 import {
   createMockResendClient,
   mockEmailData,
@@ -13,24 +9,36 @@ import {
   mockErrorResponse,
 } from './test-utils'
 
-// Create mock Resend client before mocking the module
-const mockResendClient = createMockResendClient()
+// Use vi.hoisted to create mocks that can be referenced in vi.mock factories
+const mocks = vi.hoisted(() => {
+  return {
+    mockResendClient: createMockResendClient(),
+    logger: {
+      debug: vi.fn(),
+      error: vi.fn(),
+    },
+  }
+})
 
 // Mock the resend client
 vi.mock('../resend-client', () => ({
-  resend: mockResendClient,
+  resend: mocks.mockResendClient,
 }))
 
 // Mock logger
 vi.mock('@/lib/utils', () => ({
-  logger: {
-    debug: vi.fn(),
-    error: vi.fn(),
-  },
+  logger: mocks.logger,
 }))
 
-// Import logger after mocking
+// Import after mocking
+import { addContactToResend, sendPurchaseConfirmation, sendBroadcastEmail } from '../service'
+import { renderEmailTemplate } from '../utils'
+import { PurchaseConfirmationEmail } from '@/emails/purchase-confirmation'
+import { BroadcastEmail } from '@/emails/broadcast-template'
 import { logger } from '@/lib/utils'
+
+// Reference the hoisted mocks
+const mockResendClient = mocks.mockResendClient
 
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'noreply@thelacrosselab.com'
 
@@ -279,7 +287,11 @@ describe('Email Service', () => {
         bodyText: 'Test body',
       })
 
-      // Advance timers to allow all batches to complete (2 batches: 10 + 5, 1 delay between)
+      // Process first batch (10 emails)
+      await vi.runAllTimersAsync()
+      expect(mockResendClient.emails.send).toHaveBeenCalledTimes(10)
+
+      // Advance past first delay (1000ms) and run timers for second batch
       vi.advanceTimersByTime(1000)
       await vi.runAllTimersAsync()
 
@@ -306,12 +318,12 @@ describe('Email Service', () => {
       await vi.runAllTimersAsync()
       expect(mockResendClient.emails.send).toHaveBeenCalledTimes(10)
 
-      // Advance past first delay (1000ms) and run timers
+      // Advance past first delay (1000ms) and run timers for second batch
       vi.advanceTimersByTime(1000)
       await vi.runAllTimersAsync()
       expect(mockResendClient.emails.send).toHaveBeenCalledTimes(20)
 
-      // Advance past second delay (another 1000ms) and run timers
+      // Advance past second delay (another 1000ms) and run timers for third batch
       vi.advanceTimersByTime(1000)
       await vi.runAllTimersAsync()
       expect(mockResendClient.emails.send).toHaveBeenCalledTimes(25)
