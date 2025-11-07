@@ -4,7 +4,7 @@ import type { ReactElement } from 'react'
 /**
  * Renders a React Email template to HTML
  */
-export function renderEmailTemplate(template: ReactElement): string {
+export async function renderEmailTemplate(template: ReactElement): Promise<string> {
   return render(template)
 }
 

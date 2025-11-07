@@ -78,7 +78,14 @@ export const BroadcastEmail = ({
           <Hr style={hr} />
 
           <Text style={footer}>
-            The Lacrosse Lab
+            The Lacrosse Lab ®
+            <br />
+            <span>
+              <a target="_blank" href="https://thelacrosselab.com">Website</a>
+              <span> | </span>
+              <a target="_blank" href="https://instagram.com/lacrosse.lab">Instagram</a>
+            </span>
+            <br />
           </Text>
         </Container>
       </Body>

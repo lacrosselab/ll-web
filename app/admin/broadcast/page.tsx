@@ -11,6 +11,7 @@ import { useToast } from '@/components/ui/toast'
 import { Mail, Eye, Send } from 'lucide-react'
 import { BroadcastEmail } from '@/emails/broadcast-template'
 import { renderEmailTemplate } from '@/lib/email/utils'
+import { logger } from '@/lib/utils'
 
 interface Product {
   id: string
@@ -77,14 +78,22 @@ export default function AdminBroadcastPage() {
     }
   }
 
-  const handlePreview = () => {
+  const handlePreview = async () => {
     if (!subject || !bodyText) {
       showToast('Please enter a subject and body text', 'error')
       return
     }
 
     try {
-      const html = renderEmailTemplate(
+      logger.debug('Trying to re-render email template')
+      // Reset preview state to force React to re-render
+      setShowPreview(false)
+      setPreviewHtml(null)
+      
+      // Use setTimeout to ensure state reset completes before setting new content
+      await new Promise(resolve => setTimeout(resolve, 0))
+      
+      const html = await renderEmailTemplate(
         <BroadcastEmail
           subject={subject}
           bodyText={bodyText}
