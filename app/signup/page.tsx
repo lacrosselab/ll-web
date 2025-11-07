@@ -51,6 +51,8 @@ export default function SignupPage() {
           })
         } catch (err) {
           // Silently fail - email addition shouldn't block signup
+          // Note: logger is not available in client components, so we keep console.error here
+          // The API route will handle proper logging
           console.error('Failed to add contact to Resend:', err)
         }
 

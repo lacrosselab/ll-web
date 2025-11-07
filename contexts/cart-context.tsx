@@ -344,18 +344,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   // Clear entire cart
   const clearCart = async () => {
     try {
-      const supabase = getSupabaseClient()
+      const response = await fetch('/api/cart/clear', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
 
-      // Get current user
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-
-      const { error } = await supabase
-        .from('cart_items')
-        .delete()
-        .eq('user_id', user.id)
-
-      if (error) throw error
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to clear cart' }))
+        throw new Error(errorData.error || 'Failed to clear cart')
+      }
 
       dispatch({ type: 'CLEAR_CART' })
     } catch (error) {

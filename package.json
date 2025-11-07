@@ -10,7 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
-    "stripe": "stripe listen --forward-to localhost:3000/api/webhooks/stripe"
+    "stripe": "node scripts/stripe-listen-with-env-update.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

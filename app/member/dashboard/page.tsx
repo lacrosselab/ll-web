@@ -82,7 +82,7 @@ function DashboardContent() {
   const router = useRouter()
   const addAthlete = searchParams.get('addAthlete') === 'true'
   const paymentSuccess = searchParams.get('success') === 'true'
-  const { refreshCart } = useCart()
+  const { clearCart } = useCart()
   const { showToast } = useToast()
 
   useEffect(() => {
@@ -118,16 +118,16 @@ function DashboardContent() {
     }
   }, [addAthlete])
 
-  // Refresh cart when returning from successful payment
+  // Clear cart when returning from successful payment
   useEffect(() => {
     if (paymentSuccess) {
-      refreshCart()
+      clearCart()
       // Clean up URL parameter
       const url = new URL(window.location.href)
       url.searchParams.delete('success')
       window.history.replaceState({}, '', url.toString())
     }
-  }, [paymentSuccess, refreshCart])
+  }, [paymentSuccess, clearCart])
 
   const fetchUserProfile = async (userId: string) => {
     try {

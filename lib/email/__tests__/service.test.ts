@@ -16,18 +16,22 @@ const mocks = vi.hoisted(() => {
     logger: {
       debug: vi.fn(),
       error: vi.fn(),
+      warn: vi.fn(),
+      info: vi.fn(),
     },
+    maskEmail: vi.fn((email: string) => email),
   }
 })
 
 // Mock the resend client
 vi.mock('../resend-client', () => ({
-  resend: mocks.mockResendClient,
+  getResend: vi.fn(() => mocks.mockResendClient),
 }))
 
-// Mock logger
+// Mock logger and utilities
 vi.mock('@/lib/utils', () => ({
   logger: mocks.logger,
+  maskEmail: mocks.maskEmail,
 }))
 
 // Import after mocking
@@ -35,7 +39,6 @@ import { addContactToResend, sendPurchaseConfirmation, sendBroadcastEmail } from
 import { renderEmailTemplate } from '../utils'
 import { PurchaseConfirmationEmail } from '@/emails/purchase-confirmation'
 import { BroadcastEmail } from '@/emails/broadcast-template'
-import { logger } from '@/lib/utils'
 
 // Reference the hoisted mocks
 const mockResendClient = mocks.mockResendClient
@@ -55,24 +58,26 @@ describe('Email Service', () => {
     it('should add contact to Resend successfully', async () => {
       mockResendClient.contacts.create.mockResolvedValue(mockSuccessResponse({ id: '123' }))
 
-      await addContactToResend(mockContactData.email, mockContactData.name)
+      await addContactToResend(mockContactData.email, { traceId: 'test-trace-id' })
 
       expect(mockResendClient.contacts.create).toHaveBeenCalledWith({
         email: mockContactData.email,
-        firstName: 'Test',
-        lastName: 'User',
+        audienceId: 'default',
       })
+      expect(mocks.logger.debug).toHaveBeenCalledWith(
+        'contact.added',
+        expect.objectContaining({ traceId: 'test-trace-id' })
+      )
     })
 
-    it('should handle contact without name', async () => {
+    it('should handle contact without context', async () => {
       mockResendClient.contacts.create.mockResolvedValue(mockSuccessResponse({ id: '123' }))
 
       await addContactToResend(mockContactData.email)
 
       expect(mockResendClient.contacts.create).toHaveBeenCalledWith({
         email: mockContactData.email,
-        firstName: undefined,
-        lastName: undefined,
+        audienceId: 'default',
       })
     })
 
@@ -82,14 +87,22 @@ describe('Email Service', () => {
       mockResendClient.contacts.create.mockRejectedValue(error)
 
       // Should not throw
-      await expect(addContactToResend(mockContactData.email, mockContactData.name)).resolves.not.toThrow()
+      await expect(addContactToResend(mockContactData.email, { traceId: 'test-trace-id' })).resolves.not.toThrow()
+      expect(mocks.logger.debug).toHaveBeenCalledWith(
+        'contact.exists',
+        expect.objectContaining({ traceId: 'test-trace-id' })
+      )
     })
 
     it('should handle errors gracefully', async () => {
       mockResendClient.contacts.create.mockRejectedValue(new Error('Network error'))
 
       // Should not throw
-      await expect(addContactToResend(mockContactData.email, mockContactData.name)).resolves.not.toThrow()
+      await expect(addContactToResend(mockContactData.email, { traceId: 'test-trace-id' })).resolves.not.toThrow()
+      expect(mocks.logger.error).toHaveBeenCalledWith(
+        'contact.add_failed',
+        expect.objectContaining({ traceId: 'test-trace-id' })
+      )
     })
   })
 
@@ -97,7 +110,7 @@ describe('Email Service', () => {
     it('should send purchase confirmation email', async () => {
       mockResendClient.emails.send.mockResolvedValue(mockSuccessResponse({ id: '123' }))
 
-      await sendPurchaseConfirmation(mockEmailData)
+      await sendPurchaseConfirmation({ ...mockEmailData, context: { traceId: 'test-trace-id' } })
 
       expect(mockResendClient.emails.send).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -131,7 +144,7 @@ describe('Email Service', () => {
         totalAmountCents: 10000,
       }
 
-      await sendPurchaseConfirmation(testData)
+      await sendPurchaseConfirmation({ ...testData, context: { traceId: 'test-trace-id' } })
 
       const callArgs = mockResendClient.emails.send.mock.calls[0][0]
       expect(callArgs.html).toBeTruthy()
@@ -159,7 +172,7 @@ describe('Email Service', () => {
         ],
       }
 
-      await sendPurchaseConfirmation(testData)
+      await sendPurchaseConfirmation({ ...testData, context: { traceId: 'test-trace-id' } })
 
       const callArgs = mockResendClient.emails.send.mock.calls[0][0]
       expect(callArgs.html).toBeTruthy()
@@ -219,7 +232,7 @@ describe('Email Service', () => {
         totalAmountCents: 60000,
       }
 
-      await sendPurchaseConfirmation(testData)
+      await sendPurchaseConfirmation({ ...testData, context: { traceId: 'test-trace-id' } })
 
       expect(mockResendClient.emails.send).toHaveBeenCalledTimes(1)
       const callArgs = mockResendClient.emails.send.mock.calls[0][0]
@@ -246,7 +259,7 @@ describe('Email Service', () => {
         totalAmountCents: 10000,
       }
 
-      await sendPurchaseConfirmation(testData)
+      await sendPurchaseConfirmation({ ...testData, context: { traceId: 'test-trace-id' } })
 
       expect(mockResendClient.emails.send).toHaveBeenCalledTimes(1)
       const callArgs = mockResendClient.emails.send.mock.calls[0][0]
@@ -258,9 +271,54 @@ describe('Email Service', () => {
     it('should handle errors gracefully', async () => {
       mockResendClient.emails.send.mockRejectedValue(new Error('Network error'))
 
-      await expect(sendPurchaseConfirmation(mockEmailData)).resolves.not.toThrow()
+      await expect(sendPurchaseConfirmation({ ...mockEmailData, context: { traceId: 'test-trace-id' } })).resolves.not.toThrow()
 
-      expect(logger.error).toHaveBeenCalled()
+      expect(mocks.logger.error).toHaveBeenCalledWith(
+        'purchase_confirmation.send_failed',
+        expect.objectContaining({ traceId: 'test-trace-id' })
+      )
+    })
+
+    it('should validate email address', async () => {
+      await sendPurchaseConfirmation({ ...mockEmailData, to: '', context: { traceId: 'test-trace-id' } })
+
+      expect(mockResendClient.emails.send).not.toHaveBeenCalled()
+      expect(mocks.logger.warn).toHaveBeenCalledWith(
+        'purchase_confirmation.validation_failed',
+        expect.objectContaining({ traceId: 'test-trace-id' })
+      )
+    })
+
+    it('should validate orderNumber and orderDate', async () => {
+      await sendPurchaseConfirmation({ ...mockEmailData, orderNumber: '', context: { traceId: 'test-trace-id' } })
+
+      expect(mockResendClient.emails.send).not.toHaveBeenCalled()
+      expect(mocks.logger.warn).toHaveBeenCalledWith(
+        'purchase_confirmation.validation_failed',
+        expect.objectContaining({ traceId: 'test-trace-id' })
+      )
+    })
+
+    it('should validate items array', async () => {
+      await sendPurchaseConfirmation({ ...mockEmailData, items: [], context: { traceId: 'test-trace-id' } })
+
+      expect(mockResendClient.emails.send).not.toHaveBeenCalled()
+      expect(mocks.logger.warn).toHaveBeenCalledWith(
+        'purchase_confirmation.validation_failed',
+        expect.objectContaining({ traceId: 'test-trace-id' })
+      )
+    })
+
+    it('should handle template rendering errors', async () => {
+      vi.spyOn(require('../utils'), 'renderEmailTemplate').mockRejectedValue(new Error('Template render failed'))
+
+      await sendPurchaseConfirmation({ ...mockEmailData, context: { traceId: 'test-trace-id' } })
+
+      expect(mockResendClient.emails.send).not.toHaveBeenCalled()
+      expect(mocks.logger.error).toHaveBeenCalledWith(
+        'purchase_confirmation.render_failed',
+        expect.objectContaining({ traceId: 'test-trace-id', templateName: 'PurchaseConfirmationEmail' })
+      )
     })
   })
 
@@ -268,11 +326,15 @@ describe('Email Service', () => {
     it('should send broadcast emails to multiple recipients', async () => {
       mockResendClient.emails.send.mockResolvedValue(mockSuccessResponse({ id: '123' }))
 
-      const result = await sendBroadcastEmail(mockBroadcastData)
+      const result = await sendBroadcastEmail({ ...mockBroadcastData, context: { traceId: 'test-trace-id' } })
 
       expect(mockResendClient.emails.send).toHaveBeenCalledTimes(2)
       expect(result.sent).toBe(2)
       expect(result.failed).toBe(0)
+      expect(mocks.logger.info).toHaveBeenCalledWith(
+        'broadcast.done',
+        expect.objectContaining({ traceId: 'test-trace-id', sent: 2, failed: 0 })
+      )
     })
 
     it('should handle batch sending with rate limiting', async () => {
@@ -285,6 +347,7 @@ describe('Email Service', () => {
         to: recipients,
         subject: 'Test Subject',
         bodyText: 'Test body',
+        context: { traceId: 'test-trace-id' },
       })
 
       // Process first batch (10 emails)
@@ -312,6 +375,7 @@ describe('Email Service', () => {
         to: recipients,
         subject: 'Test Subject',
         bodyText: 'Test body',
+        context: { traceId: 'test-trace-id' },
       })
 
       // Process first batch (10 emails) - run pending timers to let first batch complete
@@ -344,11 +408,12 @@ describe('Email Service', () => {
         to: ['test1@example.com', 'test2@example.com', 'test3@example.com'],
         subject: 'Test Subject',
         bodyText: 'Test body',
+        context: { traceId: 'test-trace-id' },
       })
 
       expect(result.sent).toBe(2)
       expect(result.failed).toBe(1)
-      expect(logger.error).toHaveBeenCalled()
+      expect(mocks.logger.error).toHaveBeenCalled()
     })
 
     it('should handle batch processing with all failures', async () => {
@@ -364,11 +429,98 @@ describe('Email Service', () => {
         ],
         subject: 'Test Subject',
         bodyText: 'Test body',
+        context: { traceId: 'test-trace-id' },
       })
 
       expect(result.sent).toBe(0)
       expect(result.failed).toBe(5)
-      expect(logger.error).toHaveBeenCalledTimes(5)
+      expect(mocks.logger.error).toHaveBeenCalledTimes(5)
+    })
+
+    it('should filter invalid email addresses', async () => {
+      mockResendClient.emails.send.mockResolvedValue(mockSuccessResponse({ id: '123' }))
+
+      const result = await sendBroadcastEmail({
+        to: ['valid@example.com', 'invalid-email', 'another@example.com'],
+        subject: 'Test Subject',
+        bodyText: 'Test body',
+        context: { traceId: 'test-trace-id' },
+      })
+
+      expect(mockResendClient.emails.send).toHaveBeenCalledTimes(2)
+      expect(result.sent).toBe(2)
+      expect(result.failed).toBe(0)
+      expect(mocks.logger.warn).toHaveBeenCalledWith(
+        'broadcast.validation',
+        expect.objectContaining({ invalidCount: 1, traceId: 'test-trace-id' })
+      )
+    })
+
+    it('should return early if no valid recipients', async () => {
+      const result = await sendBroadcastEmail({
+        to: ['invalid-email', 'also-invalid'],
+        subject: 'Test Subject',
+        bodyText: 'Test body',
+        context: { traceId: 'test-trace-id' },
+      })
+
+      expect(mockResendClient.emails.send).not.toHaveBeenCalled()
+      expect(result.sent).toBe(0)
+      expect(result.failed).toBe(0)
+      expect(mocks.logger.warn).toHaveBeenCalledWith(
+        'broadcast.no_valid_recipients',
+        expect.objectContaining({ traceId: 'test-trace-id' })
+      )
+    })
+
+    it('should handle template rendering errors', async () => {
+      vi.spyOn(require('../utils'), 'renderEmailTemplate').mockRejectedValue(new Error('Template render failed'))
+
+      const result = await sendBroadcastEmail({
+        ...mockBroadcastData,
+        context: { traceId: 'test-trace-id' },
+      })
+
+      expect(mockResendClient.emails.send).not.toHaveBeenCalled()
+      expect(result.sent).toBe(0)
+      expect(result.failed).toBe(2)
+      expect(mocks.logger.error).toHaveBeenCalledWith(
+        'broadcast.render_failed',
+        expect.objectContaining({ traceId: 'test-trace-id', templateName: 'BroadcastEmail' })
+      )
+    })
+
+    it('should retry failed sends with exponential backoff', async () => {
+      vi.useFakeTimers()
+      // First two attempts fail, third succeeds
+      mockResendClient.emails.send
+        .mockRejectedValueOnce(new Error('Network error'))
+        .mockRejectedValueOnce(new Error('Network error'))
+        .mockResolvedValueOnce(mockSuccessResponse({ id: '123' }))
+
+      const promise = sendBroadcastEmail({
+        to: ['test@example.com'],
+        subject: 'Test Subject',
+        bodyText: 'Test body',
+        context: { traceId: 'test-trace-id' },
+      })
+
+      // Advance timers to allow retries
+      await vi.runAllTimersAsync()
+      vi.advanceTimersByTime(1000)
+      await vi.runAllTimersAsync()
+      vi.advanceTimersByTime(600)
+      await vi.runAllTimersAsync()
+
+      const result = await promise
+
+      expect(mockResendClient.emails.send).toHaveBeenCalledTimes(3)
+      expect(result.sent).toBe(1)
+      expect(result.failed).toBe(0)
+      expect(mocks.logger.warn).toHaveBeenCalledWith(
+        'Email send retry',
+        expect.objectContaining({ attempt: 1, traceId: 'test-trace-id' })
+      )
     })
   })
 

@@ -169,11 +169,8 @@ export const PurchaseConfirmationEmail = ({
                 {index < items.length - 1 && <Hr style={hr} />}
               </Section>
             ))}
-
-            <Text style={text}>
-              We look forward to seeing you at the session!
-            </Text>
           </Section>
+          
 
           <Hr style={hr} />
 
@@ -194,14 +191,15 @@ const main = {
 }
 
 const container = {
-  backgroundColor: '#ffffff',
+  backgroundColor: 'hsl(30 25% 95%)', // Cream
   margin: '0 auto',
   padding: '20px 0 48px',
   marginBottom: '64px',
+  color: 'hsl(250 100% 13%)' // Navy
 }
 
 const h1 = {
-  color: '#333',
+  color: 'hsl(350 89% 50%)', // Strawberry
   fontSize: '24px',
   fontWeight: 'bold',
   margin: '40px 0',
@@ -209,7 +207,6 @@ const h1 = {
 }
 
 const h2 = {
-  color: '#333',
   fontSize: '20px',
   fontWeight: 'bold',
   margin: '30px 0 20px',
@@ -217,7 +214,6 @@ const h2 = {
 }
 
 const h3 = {
-  color: '#333',
   fontSize: '18px',
   fontWeight: 'bold',
   margin: '20px 0 10px',
@@ -225,7 +221,6 @@ const h3 = {
 }
 
 const text = {
-  color: '#333',
   fontSize: '16px',
   lineHeight: '26px',
 }
@@ -241,7 +236,6 @@ const itemSection = {
 
 const registrationSection = {
   padding: '15px',
-  backgroundColor: '#f9f9f9',
   borderRadius: '4px',
   margin: '10px 0',
 }
@@ -254,7 +248,6 @@ const itemText = {
 }
 
 const totalText = {
-  color: '#333',
   fontSize: '18px',
   lineHeight: '26px',
   textAlign: 'right' as const,
@@ -271,7 +264,6 @@ const success = {
 }
 
 const footer = {
-  color: '#8898aa',
   fontSize: '12px',
   lineHeight: '16px',
   marginTop: '20px',

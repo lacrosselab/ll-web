@@ -113,6 +113,7 @@ If issues occur after deployment:
 - `STRIPE_SECRET_KEY`: Production Stripe secret key (sk_live_...)
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`: Production Stripe publishable key (pk_live_...)
 - `STRIPE_WEBHOOK_SECRET`: Production Stripe webhook secret
+- `RESEND_API_KEY`: Resend API key for sending emails
 - `NEXT_PUBLIC_SITE_URL`: Production site URL
 - `NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL`: Production auth callback URL
 
@@ -120,6 +121,25 @@ If issues occur after deployment:
 - `GOOGLE_SITE_VERIFICATION`: Google Search Console verification
 - `SENTRY_DSN`: Error monitoring service DSN
 - `NODE_ENV`: Set to "production"
+- `RESEND_FROM_EMAIL`: Email address to send from (defaults to `noreply@thelacrosselab.com`)
+- `ENABLE_DEBUG_LOGS`: Set to `"true"` to enable debug logging in production (defaults to development only)
+- `ENABLE_PII_LOGS`: Set to `"true"` to include full email addresses in logs (defaults to masked emails for privacy)
+
+## Email Service Configuration
+
+### Required Environment Variables
+- `RESEND_API_KEY`: Resend API key for sending emails
+- `RESEND_FROM_EMAIL`: (Optional) Email address to send from. Defaults to `noreply@thelacrosselab.com` if not set.
+
+### Logging Configuration
+- `ENABLE_DEBUG_LOGS`: Set to `"true"` to enable debug-level logging in production. By default, debug logs are only enabled in development mode.
+- `ENABLE_PII_LOGS`: Set to `"true"` to include full email addresses in logs. By default, email addresses are masked (e.g., `t**t@example.com`) to protect privacy. Only enable this for debugging purposes.
+
+### Operational Notes
+- **Retry Behavior**: Email sends use exponential backoff retry with 3 attempts, 300ms base delay, and 8 second timeout per request.
+- **Rate Limiting**: Broadcast emails are sent in batches of 10 with 1 second delay between batches to respect Resend rate limits.
+- **Error Handling**: Email failures are logged but do not block payment processing or user signup flows.
+- **Structured Logging**: All email operations use structured logging with trace IDs for observability. Logs include masked email addresses, batch information, and error details.
 
 ## Security Notes
 
@@ -127,3 +147,4 @@ If issues occur after deployment:
 - Security headers are configured in `next.config.mjs`
 - Environment variables are properly secured
 - No dangerous build settings are enabled
+- Email addresses in logs are masked by default to protect user privacy

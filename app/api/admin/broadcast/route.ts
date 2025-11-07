@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import { sendBroadcastEmail } from '@/lib/email/service'
 import { logger } from '@/lib/utils'
+import { randomUUID } from 'crypto'
 
 interface BroadcastRequest {
   audienceType: 'all' | 'session' | 'dateRange'
@@ -13,6 +14,9 @@ interface BroadcastRequest {
 }
 
 export async function POST(request: NextRequest) {
+  const traceId = randomUUID()
+  logger.info('broadcast.init', { traceId })
+  
   try {
     const supabase = await getSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -47,7 +51,7 @@ export async function POST(request: NextRequest) {
         .eq('status', 'succeeded')
 
       if (paymentsError) {
-        logger.error('Error fetching payments for broadcast', paymentsError)
+        logger.error('broadcast.audience_fetch_failed', { error: paymentsError.message, traceId })
         return NextResponse.json(
           { error: 'Failed to fetch audience' },
           { status: 500 }
@@ -79,7 +83,7 @@ export async function POST(request: NextRequest) {
         .eq('payment.status', 'succeeded')
 
       if (paError) {
-        logger.error('Error fetching payment athletes for broadcast', paError)
+        logger.error('broadcast.audience_fetch_failed', { error: paError.message, traceId })
         return NextResponse.json(
           { error: 'Failed to fetch audience' },
           { status: 500 }
@@ -115,7 +119,7 @@ export async function POST(request: NextRequest) {
         .lte('product.session_date', endDate)
 
       if (paError) {
-        logger.error('Error fetching payment athletes for broadcast', paError)
+        logger.error('broadcast.audience_fetch_failed', { error: paError.message, traceId })
         return NextResponse.json(
           { error: 'Failed to fetch audience' },
           { status: 500 }
@@ -144,13 +148,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    logger.debug(`Sending broadcast email to ${userEmails.length} recipients`)
+    logger.info('broadcast.start', {
+      totalRecipients: userEmails.length,
+      subject,
+      traceId,
+    })
 
     // Send broadcast emails
     const result = await sendBroadcastEmail({
       to: userEmails,
       subject,
       bodyText,
+      context: { traceId },
     })
 
     return NextResponse.json({
@@ -160,7 +169,10 @@ export async function POST(request: NextRequest) {
       total: userEmails.length,
     })
   } catch (error) {
-    logger.error('Error sending broadcast email', error)
+    logger.error('broadcast.error', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      traceId,
+    })
     return NextResponse.json(
       { error: 'Failed to send broadcast email', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

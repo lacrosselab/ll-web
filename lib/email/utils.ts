@@ -50,3 +50,17 @@ export function formatDateTime(date: string | Date, time?: string): string {
   return dateStr
 }
 
+/**
+ * Validates email address format using a simple regex
+ * This is a basic validation - Resend will do more thorough validation
+ */
+export function isValidEmail(email: string): boolean {
+  if (!email || typeof email !== 'string') {
+    return false
+  }
+  
+  // Simple email regex: local@domain
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email.trim())
+}
+

@@ -4,33 +4,34 @@ import { getSupabaseService } from "@/lib/supabase/service"
 import type Stripe from "stripe"
 import { logger } from '@/lib/utils'
 import { sendPurchaseConfirmation } from '@/lib/email/service'
+import { randomUUID } from 'crypto'
 
 export async function POST(request: NextRequest) {
-  logger.debug("Webhook endpoint hit")
-  logger.debug("Request method:", request.method)
+  const traceId = randomUUID()
+  logger.info('webhook.init', { traceId, method: request.method })
   
   try {
     const body = await request.text()
     const signature = request.headers.get("stripe-signature")!
 
-    logger.debug("Webhook debug info:", {
+    logger.debug('webhook.request', {
       webhookSecretExists: !!process.env.STRIPE_WEBHOOK_SECRET,
       signatureExists: !!signature,
-      bodyLength: body.length
+      bodyLength: body.length,
+      traceId,
     })
 
     let event: Stripe.Event
 
     try {
       event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!)
-      logger.debug("Webhook signature verified successfully")
+      logger.debug('webhook.signature_verified', { traceId })
     } catch (err) {
-      logger.error("Webhook signature verification failed", err)
+      logger.error('webhook.signature_failed', { error: err instanceof Error ? err.message : 'Unknown error', traceId })
       return NextResponse.json({ error: "Invalid signature" }, { status: 400 })
     }
 
-    logger.debug("Processing webhook event:", event.type)
-    logger.debug("Event ID:", event.id)
+    logger.debug('webhook.event', { eventType: event.type, eventId: event.id, traceId })
 
     const supabase = getSupabaseService()
 
@@ -42,13 +43,13 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (webhookEventError && webhookEventError.code !== 'PGRST116') {
-      logger.error('Error checking webhook event', webhookEventError)
+      logger.error('webhook.event_check_failed', { error: webhookEventError.message, traceId })
       throw webhookEventError
     }
 
     // If event already processed, return early
     if (existingWebhookEvent?.processed_at) {
-      logger.debug('Webhook event already processed, skipping')
+      logger.debug('webhook.event_already_processed', { eventId: event.id, traceId })
       return NextResponse.json({ received: true, message: 'Event already processed' })
     }
 
@@ -64,7 +65,7 @@ export async function POST(request: NextRequest) {
       })
 
     if (upsertWebhookError) {
-      logger.error('Error upserting webhook event', upsertWebhookError)
+      logger.error('webhook.upsert_failed', { error: upsertWebhookError.message, traceId })
       throw upsertWebhookError
     }
 
@@ -72,24 +73,24 @@ export async function POST(request: NextRequest) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session
         
-        // For one-time payments, record the payment and process cart items
+          // For one-time payments, record the payment and process cart items
         if (session.payment_status === 'paid') {
-          logger.debug('Processing checkout.session.completed for session:', session.id)
+          logger.debug('webhook.checkout_processing', { sessionId: session.id, traceId })
           
           // Get the customer to access its metadata
           const customer = await stripe.customers.retrieve(session.customer as string) as Stripe.Customer
-          logger.debug('Retrieved customer info')
+          logger.debug('webhook.customer_retrieved', { traceId })
           
           // Get the payment intent to get more details
           const paymentIntent = await stripe.paymentIntents.retrieve(session.payment_intent as string)
-          logger.debug('Retrieved payment intent')
+          logger.debug('webhook.payment_intent_retrieved', { traceId })
           
           // Record the payment - try multiple ways to get userId
           let userId = customer.metadata?.userId || session.metadata?.userId
           
           // If we still don't have userId, try to find it by email
           if (!userId && customer.email) {
-            logger.debug('Looking up user by email')
+            logger.debug('webhook.user_lookup_by_email', { traceId })
             const { data: userByEmail, error: emailError } = await supabase
               .from('users')
               .select('id')
@@ -97,24 +98,24 @@ export async function POST(request: NextRequest) {
               .single()
             
             if (emailError && emailError.code !== 'PGRST116') {
-              logger.error('Error looking up user by email', emailError)
+              logger.error('webhook.user_lookup_failed', { error: emailError.message, traceId })
             } else if (userByEmail) {
               userId = userByEmail.id
-              logger.debug('Found user by email')
+              logger.debug('webhook.user_found', { traceId })
             }
           }
           
           if (!userId) {
-            logger.error('Could not determine userId for payment processing')
+            logger.error('webhook.user_id_missing', { traceId })
             throw new Error('Could not determine userId for payment processing')
           }
           
-          logger.debug('Using userId for payment')
+          logger.debug('webhook.user_id_resolved', { traceId })
 
           // Fetch line items from session
-          logger.debug('Fetching line items from session')
+          logger.debug('webhook.fetching_line_items', { traceId })
           const lineItems = await stripe.checkout.sessions.listLineItems(session.id)
-          logger.debug('Processing line items:', lineItems.data.length)
+          logger.debug('webhook.line_items_count', { count: lineItems.data.length, traceId })
 
           // Prepare line items data for RPC function
           const lineItemsData = []
@@ -126,7 +127,7 @@ export async function POST(request: NextRequest) {
             const productId = session.metadata?.[`athlete_${i}_product_id`]
             
             if (!athleteId) {
-              logger.error(`No athlete_id in session metadata for index ${i}`)
+              logger.error('webhook.athlete_id_missing', { index: i, traceId })
               continue
             }
 
@@ -135,7 +136,7 @@ export async function POST(request: NextRequest) {
             let productError
             
             if (productId) {
-              logger.debug(`Looking up product by ID`)
+              logger.debug('webhook.product_lookup_by_id', { index: i, traceId })
               const result = await supabase
                 .from('products')
                 .select('id, price_cents, stripe_price_id')
@@ -144,7 +145,7 @@ export async function POST(request: NextRequest) {
               product = result.data
               productError = result.error
             } else {
-              logger.debug(`Looking up product by stripe_price_id`)
+              logger.debug('webhook.product_lookup_by_price_id', { index: i, traceId })
               const result = await supabase
                 .from('products')
                 .select('id, price_cents, stripe_price_id')
@@ -155,11 +156,11 @@ export async function POST(request: NextRequest) {
             }
 
             if (productError || !product) {
-              logger.error(`Error finding product`, productError)
+              logger.error('webhook.product_lookup_failed', { index: i, error: productError?.message, traceId })
               continue
             }
             
-            logger.debug(`Found product for line item ${i}`)
+            logger.debug('webhook.product_found', { index: i, traceId })
 
             lineItemsData.push({
               product_id: product.id,
@@ -170,12 +171,12 @@ export async function POST(request: NextRequest) {
           }
 
           if (lineItemsData.length === 0) {
-            logger.error('No valid line items found')
+            logger.error('webhook.no_line_items', { traceId })
             throw new Error('No valid line items found')
           }
 
           // Call RPC function to process payment in a transaction
-          logger.debug('Calling process_payment_webhook RPC function')
+          logger.debug('webhook.rpc_call', { traceId })
           const { data: paymentId, error: rpcError } = await supabase
             .rpc('process_payment_webhook', {
               p_stripe_payment_intent_id: paymentIntent.id,
@@ -186,11 +187,11 @@ export async function POST(request: NextRequest) {
             })
 
           if (rpcError) {
-            logger.error('Error processing payment via RPC', rpcError)
+            logger.error('webhook.rpc_failed', { error: rpcError.message, traceId })
             throw rpcError
           }
 
-          logger.debug('Payment processed successfully via RPC, payment_id:', paymentId)
+          logger.debug('webhook.payment_processed', { paymentId, traceId })
 
           // Update webhook_events.processed_at after successful transaction
           const { error: updateWebhookError } = await supabase
@@ -199,7 +200,7 @@ export async function POST(request: NextRequest) {
             .eq('stripe_event_id', event.id)
 
           if (updateWebhookError) {
-            logger.error('Error updating webhook_events.processed_at', updateWebhookError)
+            logger.error('webhook.update_processed_at_failed', { error: updateWebhookError.message, traceId })
             // Don't throw - transaction already committed
           }
 
@@ -214,7 +215,7 @@ export async function POST(request: NextRequest) {
               .single()
 
             if (paymentFetchError) {
-              logger.error('Error fetching payment for email check', paymentFetchError)
+              logger.error('webhook.payment_fetch_failed', { error: paymentFetchError.message, traceId })
             } else if (payment && !payment.email_sent_at) {
               // Email not sent yet, proceed with sending
               // Get user details
@@ -225,7 +226,7 @@ export async function POST(request: NextRequest) {
                 .single()
 
               if (userError || !userData) {
-                logger.error('Error fetching user data for email', userError)
+                logger.error('webhook.user_fetch_failed', { error: userError?.message, traceId })
               } else {
                 // Get payment details with athlete and product info
                 const { data: paymentAthletes, error: paymentAthletesError } = await supabase
@@ -248,7 +249,7 @@ export async function POST(request: NextRequest) {
                   .eq('payment_id', payment.id)
 
                 if (paymentAthletesError) {
-                  logger.error('Error fetching payment details for email', paymentAthletesError)
+                  logger.error('webhook.payment_details_fetch_failed', { error: paymentAthletesError.message, traceId })
                 } else if (paymentAthletes && paymentAthletes.length > 0) {
                   // Format items for email
                   const emailItems = paymentAthletes.map((pa: any) => ({
@@ -265,6 +266,12 @@ export async function POST(request: NextRequest) {
                   const orderNumber = `LAB-${payment.id.slice(0, 8).toUpperCase()}`
 
                   // Send confirmation email
+                  logger.info('purchase_confirmation.init', {
+                    to: userData.email,
+                    orderNumber,
+                    traceId,
+                  })
+                  
                   await sendPurchaseConfirmation({
                     to: userData.email,
                     customerName: userData.full_name || undefined,
@@ -273,6 +280,7 @@ export async function POST(request: NextRequest) {
                     items: emailItems,
                     totalAmountCents: paymentIntent.amount,
                     currency: paymentIntent.currency,
+                    context: { traceId },
                   })
 
                   // Update email_sent_at to ensure email is sent only once
@@ -282,17 +290,15 @@ export async function POST(request: NextRequest) {
                     .eq('id', payment.id)
 
                   if (updateEmailError) {
-                    logger.error('Error updating email_sent_at', updateEmailError)
-                  } else {
-                    logger.debug(`Sent purchase confirmation email to: ${userData.email}`)
+                    logger.error('webhook.email_sent_at_update_failed', { error: updateEmailError.message, traceId })
                   }
                 }
               }
             } else if (payment?.email_sent_at) {
-              logger.debug('Email already sent for this payment, skipping')
+              logger.debug('webhook.email_already_sent', { traceId })
             }
           } catch (emailError) {
-            logger.error('Error sending purchase confirmation email', emailError)
+            logger.error('webhook.email_error', { error: emailError instanceof Error ? emailError.message : 'Unknown error', traceId })
             // Don't throw - email failures shouldn't block payment processing
           }
         }
@@ -301,7 +307,7 @@ export async function POST(request: NextRequest) {
 
       case "payment_intent.succeeded": {
         // Skip this event - we handle payments in checkout.session.completed
-        logger.debug("payment_intent.succeeded - Skipping (handled in checkout.session.completed)")
+        logger.debug('webhook.payment_intent_succeeded_skipped', { traceId })
         break
       }
 
@@ -320,20 +326,20 @@ export async function POST(request: NextRequest) {
       }
 
       case "charge.succeeded": {
-        logger.debug("Processing charge.succeeded event")
+        logger.debug('webhook.charge_succeeded', { traceId })
         const charge = event.data.object as Stripe.Charge
         
         if (charge.payment_intent) {
           const paymentIntent = await stripe.paymentIntents.retrieve(charge.payment_intent as string)
-          logger.debug("Payment intent metadata retrieved")
+          logger.debug('webhook.payment_intent_retrieved', { traceId })
           
           if (paymentIntent.metadata.checkout_session_id) {
             const session = await stripe.checkout.sessions.retrieve(paymentIntent.metadata.checkout_session_id)
-            logger.debug("Found checkout session from charge.succeeded")
+            logger.debug('webhook.checkout_session_found', { traceId })
             
             // Process the session as if it was checkout.session.completed
             if (session.payment_status === 'paid') {
-              logger.debug("Processing charge.succeeded as checkout.session.completed")
+              logger.debug('webhook.charge_processing', { traceId })
               // We'll need to call the same processing logic here
             }
           }
@@ -342,12 +348,12 @@ export async function POST(request: NextRequest) {
       }
 
       default:
-        logger.debug(`Unhandled event type: ${event.type}`)
+        logger.debug('webhook.unhandled_event', { eventType: event.type, traceId })
     }
 
     return NextResponse.json({ received: true })
   } catch (error) {
-    logger.error("Webhook error", error)
+    logger.error('webhook.error', { error: error instanceof Error ? error.message : 'Unknown error', traceId })
     return NextResponse.json({ error: "Webhook handler failed" }, { status: 500 })
   }
 }

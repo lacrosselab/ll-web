@@ -13,6 +13,20 @@ ALTER TABLE payments ADD COLUMN IF NOT EXISTS email_sent_at TIMESTAMP WITH TIME 
 -- Create index on stripe_event_id for faster lookups
 CREATE INDEX IF NOT EXISTS idx_webhook_events_stripe_event_id ON webhook_events(stripe_event_id);
 
+-- Enable Row Level Security on webhook_events table
+-- This aligns with the codebase pattern where all tables have RLS enabled
+-- Service role (used by getSupabaseService()) bypasses RLS automatically
+-- Authenticated users will be denied access via the explicit deny-all policy
+ALTER TABLE webhook_events ENABLE ROW LEVEL SECURITY;
+
+-- Explicit deny-all policy for authenticated users
+-- This makes it clear that only service role should access this table
+-- Service role bypasses RLS by design in Supabase, so webhook handler continues to work
+CREATE POLICY "Deny all access to webhook_events" 
+ON webhook_events 
+FOR ALL 
+USING (false);
+
 -- Create RPC function to process payment in a transaction
 CREATE OR REPLACE FUNCTION process_payment_webhook(
   p_stripe_payment_intent_id TEXT,
