@@ -24,7 +24,12 @@ export async function GET() {
       return response
     }
 
-    logger.info(`[API] Fetched ${products?.length || 0} products from database`)
+    logger.info(
+      `[API] Fetched ${products?.length || 0} products from database`,
+      products
+        ? `Active states: ${products.map(p => `${p.id}:${(p.is_active)}`).join(', ')}`
+        : "No products"
+    )
 
     // Consolidate active/inactive filtering on server
     const now = new Date()
