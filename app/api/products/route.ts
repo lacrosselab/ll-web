@@ -51,32 +51,37 @@ export async function GET() {
     logger.info(`[API] Stripe verification complete: ${verifiedProducts.length} of ${products?.length || 0} products verified and will be returned`)
 
     // Transform database products to match the expected format
-    const transformedProducts = verifiedProducts.map(product => ({
-      id: product.id,
-      name: product.name,
-      description: product.description,
-      images: [], // We can add images later if needed
-      metadata: {
-        // Use database fields instead of Stripe metadata
-        'ends-on': formatDateForMetadata(product.session_date),
-        'features': product.description || '', // Use description as features for now
-      },
-      prices: [{
-        id: product.stripe_price_id,
-        unit_amount: product.price_cents,
-        currency: product.currency,
-        interval: null, // These are one-time payments
-        interval_count: null,
-        type: 'one_time',
-        metadata: {}
-      }],
-      // Add our new fields
-      session_date: product.session_date,
-      end_date: product.end_date,
-      stock_quantity: product.stock_quantity,
-      is_active: Boolean(product.is_active), // Explicitly ensure boolean type
-      is_high_school: product.is_high_school
-    }))
+    const transformedProducts = verifiedProducts.map((product) => {
+      
+      logger.debug('Transforming product with active status:', product.is_active, 'type:', typeof product.is_active, 'value:', product.is_active)
+      return (
+        {
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        images: [], // We can add images later if needed
+        metadata: {
+          // Use database fields instead of Stripe metadata
+          'ends-on': formatDateForMetadata(product.session_date),
+          'features': product.description || '', // Use description as features for now
+        },
+        prices: [{
+          id: product.stripe_price_id,
+          unit_amount: product.price_cents,
+          currency: product.currency,
+          interval: null, // These are one-time payments
+          interval_count: null,
+          type: 'one_time',
+          metadata: {}
+        }],
+        // Add our new fields 
+        session_date: product.session_date,
+        end_date: product.end_date,
+        stock_quantity: product.stock_quantity,
+        is_active: product.is_active, // Explicitly ensure boolean type
+        is_high_school: product.is_high_school
+    })
+    })
 
     logger.info(`[API] Returning ${transformedProducts.length} transformed products to client`)
 
