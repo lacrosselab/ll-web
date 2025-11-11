@@ -53,7 +53,7 @@ export async function GET() {
     // Transform database products to match the expected format
     const transformedProducts = verifiedProducts.map((product) => {
       
-      logger.debug('Transforming product with active status:', product.is_active, 'type:', typeof product.is_active, 'value:', product.is_active)
+      logger.info('Transforming product with active status:', product.is_active, 'type:', typeof product.is_active, 'value:', product.is_active)
       return (
         {
         id: product.id,
