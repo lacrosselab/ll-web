@@ -40,19 +40,20 @@ interface ProductsResponse {
 // Date utility functions - simplified for database-first approach
 function isProductActive(product: Product): boolean {
   logger.warn('Checking active status on stripe product ID:', product?.stripe_product_id, 'active status type:', typeof product.is_active, 'active status value:', product.is_active)
-  // Check if product is active in database - use strict boolean check to avoid type coercion issues
-  if (product.is_active !== true) {
-    logger.warn(`[PAGE] Product "${product.name}" (ID: ${product.id}) filtered: is_active is not true. Value: ${product.is_active}, Type: ${typeof product.is_active}`)
+  
+  // Coerce is_active to boolean before evaluation
+  // Handle cases where is_active might be string/number despite interface saying boolean
+  const isActiveValue: unknown = product.is_active
+  const active = isActiveValue === true || isActiveValue === 'true' || isActiveValue === 't' || isActiveValue === 1;
+  logger.warn(`[PAGE] Product "${product.name}" (ID: ${product.id}) is_active normalization: raw=${isActiveValue} (${typeof isActiveValue}), normalized=${active}`)
+  
+  if (!active) {
+    logger.warn(`[PAGE] Product "${product.name}" (ID: ${product.id}) filtered: is_active is not true. Value: ${product.is_active}, Type: ${typeof product.is_active}, Normalized: ${active}`)
     return false
   }
   
   // Check if session date has passed using UTC to avoid timezone issues
-  const parseDate = (dateString: string) => {
-    const [year, month, day] = dateString.split('-').map(Number)
-    return new Date(Date.UTC(year, month - 1, day))
-  }
-  
-  const sessionDate = parseDate(product.session_date)
+  const sessionDate = parseDateOnlyUTC(product.session_date)
   const now = new Date()
   
   // Compare dates at start of day to include the full session day
@@ -63,7 +64,7 @@ function isProductActive(product: Product): boolean {
   if (!isActive) {
     logger.debug(`[PAGE] Product "${product.name}" (ID: ${product.id}) filtered: session_date (${product.session_date}) has passed. Now: ${nowStartOfDay.toISOString()}, Session: ${sessionStartOfDay.toISOString()}`)
   } else {
-    logger.debug(`[PAGE] Product "${product.name}" (ID: ${product.id}) active check passed: session_date=${product.session_date}, is_active=true`)
+    logger.debug(`[PAGE] Product "${product.name}" (ID: ${product.id}) active check passed: session_date=${product.session_date}, is_active=${active}`)
   }
   
   return isActive
@@ -153,24 +154,24 @@ async function fetchProducts(): Promise<Product[]> {
       ).join(', ')}, Active statuses: ${data.products.map((p) => `${p.id}:${(p.is_active ? 'true' : 'false')}`).join(', ')})`
     )
     
-    // Filter products based on new logic
-    const activeProducts = data.products.filter(product => {
+    // Server already filters products, so we trust the response
+    // Keep minimal defensive checks for display purposes only
+    const displayProducts = data.products.filter(product => {
+      // Minimal safety check - server should have already filtered
       const isActive = isProductActive(product)
       const inStock = isProductInStock(product)
-      const passesFilter = isActive && inStock
       
-      if (!passesFilter) {
-        logger.warn(`[PAGE] Product "${product.name}" (ID: ${product.id}) filtered out: isActive=${isActive}, inStock=${inStock}`)
-      } else {
-        logger.debug(`[PAGE] Product "${product.name}" (ID: ${product.id}) passed all filters`)
+      if (!isActive || !inStock) {
+        logger.warn(`[PAGE] Product "${product.name}" (ID: ${product.id}) failed defensive check (should have been filtered by server): isActive=${isActive}, inStock=${inStock}`)
+        return false
       }
       
-      return passesFilter
+      return true
     })
     
-    logger.info(`[PAGE] Filtering complete: ${activeProducts.length} of ${data.products.length} products will be displayed`)
+    logger.info(`[PAGE] Display check complete: ${displayProducts.length} of ${data.products.length} products will be displayed`)
     
-    return activeProducts
+    return displayProducts
   } catch (error) {
     logger.error(`[PAGE] Error fetching products:`, error)
     return []

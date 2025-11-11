@@ -66,56 +66,23 @@ export default function AdminProductsPage() {
 
   const toggleProductStatus = async (product: Product) => {
     try {
-      const supabase = getSupabaseClient()
-      
-      // Update both database and Stripe to keep them in sync
+      // Use atomic endpoint that updates both DB and Stripe
       const newActiveStatus = !product.is_active
       
-      // Update database first - use any to bypass TypeScript issues
-      // @ts-ignore - Supabase TypeScript types not properly generated
-      const { error: dbError } = await supabase
-        .from('products')
-        // @ts-ignore - Supabase TypeScript types not properly generated
-        .update({ is_active: newActiveStatus })
-        .eq('id', product.id)
+      const response = await fetch('/api/admin/products/toggle-stripe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId: product.stripe_product_id,
+          isActive: newActiveStatus
+        }),
+      })
 
-      if (dbError) throw dbError
-
-      // Update Stripe product to match database status
-      try {
-        const response = await fetch('/api/admin/products/toggle-stripe', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            productId: product.stripe_product_id,
-            isActive: newActiveStatus
-          }),
-        })
-
-        if (!response.ok) {
-          const errorData = await response.json()
-          console.error('Stripe update failed:', errorData)
-          // Revert database change if Stripe update fails
-          // @ts-ignore - Supabase TypeScript types not properly generated
-          await supabase
-            .from('products')
-            // @ts-ignore - Supabase TypeScript types not properly generated
-            .update({ is_active: product.is_active })
-            .eq('id', product.id)
-          throw new Error('Failed to sync with Stripe')
-        }
-      } catch (stripeError) {
-        console.error('Error updating Stripe product:', stripeError)
-        // Revert database change if Stripe update fails
-        // @ts-ignore - Supabase TypeScript types not properly generated
-        await supabase
-          .from('products')
-          // @ts-ignore - Supabase TypeScript types not properly generated
-          .update({ is_active: product.is_active })
-          .eq('id', product.id)
-        throw new Error('Failed to sync with Stripe')
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to update session status')
       }
 
       await loadProducts()
