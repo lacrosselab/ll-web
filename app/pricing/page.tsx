@@ -3,7 +3,7 @@
 import { PricingCard } from "@/components/pricing-card"
 import { createCheckoutSession } from "@/lib/checkout"
 import { useEffect, useState } from "react"
-import { formatDateOnly, formatDateRange, parseDateOnlyUTC } from "@/lib/utils"
+import { formatDateOnly, formatDateRange, logger, parseDateOnlyUTC } from "@/lib/utils"
 
 // Types for our database product data
 interface ProductPrice {
@@ -39,7 +39,10 @@ interface ProductsResponse {
 // Date utility functions - simplified for database-first approach
 function isProductActive(product: Product): boolean {
   // Check if product is active in database
-  if (!product.is_active) return false
+  if (!product.is_active) {
+    logger.debug(`[PAGE] Product "${product.name}" (ID: ${product.id}) filtered: is_active=false`)
+    return false
+  }
   
   // Check if session date has passed using UTC to avoid timezone issues
   const parseDate = (dateString: string) => {
@@ -54,11 +57,24 @@ function isProductActive(product: Product): boolean {
   const sessionStartOfDay = new Date(Date.UTC(sessionDate.getUTCFullYear(), sessionDate.getUTCMonth(), sessionDate.getUTCDate()))
   const nowStartOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
   
-  return nowStartOfDay <= sessionStartOfDay
+  const isActive = nowStartOfDay <= sessionStartOfDay
+  if (!isActive) {
+    logger.debug(`[PAGE] Product "${product.name}" (ID: ${product.id}) filtered: session_date (${product.session_date}) has passed. Now: ${nowStartOfDay.toISOString()}, Session: ${sessionStartOfDay.toISOString()}`)
+  } else {
+    logger.debug(`[PAGE] Product "${product.name}" (ID: ${product.id}) active check passed: session_date=${product.session_date}, is_active=true`)
+  }
+  
+  return isActive
 }
 
 function isProductInStock(product: Product): boolean {
-  return product.stock_quantity > 0
+  const inStock = product.stock_quantity > 0
+  if (!inStock) {
+    logger.debug(`[PAGE] Product "${product.name}" (ID: ${product.id}) filtered: out of stock (stock_quantity=${product.stock_quantity})`)
+  } else {
+    logger.debug(`[PAGE] Product "${product.name}" (ID: ${product.id}) stock check passed: stock_quantity=${product.stock_quantity}`)
+  }
+  return inStock
 }
 
 function getDaysUntilSession(sessionDate: string): number {
@@ -124,20 +140,33 @@ async function fetchProducts(): Promise<Product[]> {
     })
     
     if (!response.ok) {
-      console.error('Failed to fetch products:', response.status, response.statusText)
+      logger.error(`[PAGE] Failed to fetch products: ${response.status} ${response.statusText}`)
       return []
     }
     
     const data: ProductsResponse = await response.json()
+    logger.info(`[PAGE] Received ${data.products.length} products from API (IDs: ${data.products.map(p => p.id).join(', ')})`)
     
     // Filter products based on new logic
-    const activeProducts = data.products.filter(product => 
-      isProductActive(product) && isProductInStock(product)
-    )
+    const activeProducts = data.products.filter(product => {
+      const isActive = isProductActive(product)
+      const inStock = isProductInStock(product)
+      const passesFilter = isActive && inStock
+      
+      if (!passesFilter) {
+        logger.warn(`[PAGE] Product "${product.name}" (ID: ${product.id}) filtered out: isActive=${isActive}, inStock=${inStock}`)
+      } else {
+        logger.debug(`[PAGE] Product "${product.name}" (ID: ${product.id}) passed all filters`)
+      }
+      
+      return passesFilter
+    })
+    
+    logger.info(`[PAGE] Filtering complete: ${activeProducts.length} of ${data.products.length} products will be displayed`)
     
     return activeProducts
   } catch (error) {
-    console.error('Error fetching products:', error)
+    logger.error(`[PAGE] Error fetching products:`, error)
     return []
   }
 }
@@ -192,9 +221,10 @@ export default function PricingPage() {
         setLoading(true)
         setError(null)
         const fetchedProducts = await fetchProducts()
+        logger.info(`[PAGE] Setting ${fetchedProducts.length} products for display`)
         setProducts(fetchedProducts)
       } catch (err) {
-        console.error('Error loading products:', err)
+        logger.error(`[PAGE] Error loading products:`, err)
         setError('Failed to load products. Please try again later.')
       } finally {
         setLoading(false)

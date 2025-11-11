@@ -15,7 +15,7 @@ export async function GET() {
       .order('session_date', { ascending: true })
 
     if (error) {
-      logger.error("Error fetching products from database:", error)
+      logger.error("[API] Error fetching products from database:", error)
       const response = NextResponse.json(
         { error: "Failed to fetch products", details: error.message }, 
         { status: 500 }
@@ -24,26 +24,31 @@ export async function GET() {
       return response
     }
 
+    logger.info(`[API] Fetched ${products?.length || 0} active products from database`)
+
     // Verify Stripe sync for each product
     const verifiedProducts = []
-    for (const product of products) {
+    for (const product of products || []) {
       try {
         // Check if Stripe product is also active
         const stripeProduct = await stripe.products.retrieve(product.stripe_product_id)
         
         // If database says active but Stripe says inactive, skip this product
         if (!stripeProduct.active) {
-          logger.warn(`Product is active in DB but inactive in Stripe - skipping`)
+          logger.warn(`[API] Product "${product.name}" (ID: ${product.id}) is active in DB but inactive in Stripe - skipping`)
           continue
         }
         
+        logger.info(`[API] Product "${product.name}" (ID: ${product.id}) verified: active in DB and Stripe, session_date: ${product.session_date}, stock: ${product.stock_quantity}`)
         verifiedProducts.push(product)
       } catch (stripeError) {
-        logger.error(`Error verifying Stripe product`, stripeError)
+        logger.error(`[API] Error verifying Stripe product "${product.name}" (ID: ${product.id}, Stripe ID: ${product.stripe_product_id}):`, stripeError)
         // If we can't verify with Stripe, skip this product to be safe
         continue
       }
     }
+
+    logger.info(`[API] Stripe verification complete: ${verifiedProducts.length} of ${products?.length || 0} products verified and will be returned`)
 
     // Transform database products to match the expected format
     const transformedProducts = verifiedProducts.map(product => ({
@@ -73,13 +78,15 @@ export async function GET() {
       is_high_school: product.is_high_school
     }))
 
+    logger.info(`[API] Returning ${transformedProducts.length} transformed products to client`)
+
     return NextResponse.json({
       products: transformedProducts,
       count: transformedProducts.length
     })
 
   } catch (error) {
-    logger.error("Error fetching products:", error)
+    logger.error("[API] Error fetching products:", error)
     return NextResponse.json(
       { error: "Failed to fetch products", details: error instanceof Error ? error.message : 'Unknown error' }, 
       { status: 500 }

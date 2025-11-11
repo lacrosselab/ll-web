@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation'
 import { ProductCard } from '@/components/product-card'
 import { useToast } from '@/components/ui/toast'
 import { stripe } from '@/lib/stripe'
-import { formatDateOnly } from '@/lib/utils'
+import { formatDateOnly, logger } from '@/lib/utils'
 
 interface Product {
   id: string
