@@ -147,7 +147,11 @@ async function fetchProducts(): Promise<Product[]> {
     }
     
     const data: ProductsResponse = await response.json()
-    logger.info(`[PAGE] Received ${data.products.length} products from API (IDs: ${data.products.map(p => p.id).join(', ')})`)
+    logger.info(
+      `[PAGE] Received ${data.products.length} products from API (IDs: ${data.products.map(
+        (p) => p.id
+      ).join(', ')}, Active statuses: ${data.products.map((p) => `${p.id}:${isProductActive(p)}`).join(', ')})`
+    )
     
     // Filter products based on new logic
     const activeProducts = data.products.filter(product => {
