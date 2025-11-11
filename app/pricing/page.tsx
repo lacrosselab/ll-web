@@ -38,47 +38,6 @@ interface ProductsResponse {
 }
 
 // Date utility functions - simplified for database-first approach
-function isProductActive(product: Product): boolean {
-  logger.warn('Checking active status on stripe product ID:', product?.stripe_product_id, 'active status type:', typeof product.is_active, 'active status value:', product.is_active)
-  
-  // Coerce is_active to boolean before evaluation
-  // Handle cases where is_active might be string/number despite interface saying boolean
-  const isActiveValue: unknown = product.is_active
-  const active = isActiveValue === true || isActiveValue === 'true' || isActiveValue === 't' || isActiveValue === 1;
-  logger.warn(`[PAGE] Product "${product.name}" (ID: ${product.id}) is_active normalization: raw=${isActiveValue} (${typeof isActiveValue}), normalized=${active}`)
-  
-  if (!active) {
-    logger.warn(`[PAGE] Product "${product.name}" (ID: ${product.id}) filtered: is_active is not true. Value: ${product.is_active}, Type: ${typeof product.is_active}, Normalized: ${active}`)
-    return false
-  }
-  
-  // Check if session date has passed using UTC to avoid timezone issues
-  const sessionDate = parseDateOnlyUTC(product.session_date)
-  const now = new Date()
-  
-  // Compare dates at start of day to include the full session day
-  const sessionStartOfDay = new Date(Date.UTC(sessionDate.getUTCFullYear(), sessionDate.getUTCMonth(), sessionDate.getUTCDate()))
-  const nowStartOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
-  
-  const isActive = nowStartOfDay <= sessionStartOfDay
-  if (!isActive) {
-    logger.debug(`[PAGE] Product "${product.name}" (ID: ${product.id}) filtered: session_date (${product.session_date}) has passed. Now: ${nowStartOfDay.toISOString()}, Session: ${sessionStartOfDay.toISOString()}`)
-  } else {
-    logger.debug(`[PAGE] Product "${product.name}" (ID: ${product.id}) active check passed: session_date=${product.session_date}, is_active=${active}`)
-  }
-  
-  return isActive
-}
-
-function isProductInStock(product: Product): boolean {
-  const inStock = product.stock_quantity > 0
-  if (!inStock) {
-    logger.debug(`[PAGE] Product "${product.name}" (ID: ${product.id}) filtered: out of stock (stock_quantity=${product.stock_quantity})`)
-  } else {
-    logger.debug(`[PAGE] Product "${product.name}" (ID: ${product.id}) stock check passed: stock_quantity=${product.stock_quantity}`)
-  }
-  return inStock
-}
 
 function getDaysUntilSession(sessionDate: string): number {
   const session = parseDateOnlyUTC(sessionDate)
@@ -155,21 +114,10 @@ async function fetchProducts(): Promise<Product[]> {
     )
     
     // Server already filters products, so we trust the response
-    // Keep minimal defensive checks for display purposes only
-    const displayProducts = data.products.filter(product => {
-      // Minimal safety check - server should have already filtered
-      const isActive = isProductActive(product)
-      const inStock = isProductInStock(product)
-      
-      if (!isActive || !inStock) {
-        logger.warn(`[PAGE] Product "${product.name}" (ID: ${product.id}) failed defensive check (should have been filtered by server): isActive=${isActive}, inStock=${inStock}`)
-        return false
-      }
-      
-      return true
-    })
+    // Set displayProducts directly without re-filtering
+    const displayProducts = data.products
     
-    logger.info(`[PAGE] Display check complete: ${displayProducts.length} of ${data.products.length} products will be displayed`)
+    logger.info(`[PAGE] Display products set: ${displayProducts.length} products will be displayed`)
     
     return displayProducts
   } catch (error) {
