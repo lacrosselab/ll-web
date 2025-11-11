@@ -39,7 +39,7 @@ interface ProductsResponse {
 
 // Date utility functions - simplified for database-first approach
 function isProductActive(product: Product): boolean {
-  logger.warn('Checking active status on stripe product ID:', product?.stripe_product_id)
+  logger.warn('Checking active status on stripe product ID:', product?.stripe_product_id, 'active status type:', typeof product.is_active, 'active status value:', product.is_active)
   // Check if product is active in database - use strict boolean check to avoid type coercion issues
   if (product.is_active !== true) {
     logger.warn(`[PAGE] Product "${product.name}" (ID: ${product.id}) filtered: is_active is not true. Value: ${product.is_active}, Type: ${typeof product.is_active}`)
