@@ -150,7 +150,7 @@ async function fetchProducts(): Promise<Product[]> {
     logger.info(
       `[PAGE] Received ${data.products.length} products from API (IDs: ${data.products.map(
         (p) => p.id
-      ).join(', ')}, Active statuses: ${data.products.map((p) => `${p.id}:${isProductActive(p)}`).join(', ')})`
+      ).join(', ')}, Active statuses: ${data.products.map((p) => `${p.id}:${(p.is_active ? 'true' : 'false')}`).join(', ')})`
     )
     
     // Filter products based on new logic
