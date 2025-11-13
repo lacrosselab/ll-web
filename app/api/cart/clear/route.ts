@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     logger.debug(`Cart cleared successfully for user: ${user.id}`)
     return NextResponse.json({ success: true })
   } catch (error) {
-    logger.error('Unexpected error clearing cart', error)
+    logger.error('Unexpected error clearing cart', { error: error instanceof Error ? error.message : 'Unknown error' })
     return NextResponse.json(
       { 
         error: 'Failed to clear cart',

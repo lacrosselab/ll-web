@@ -1,5 +1,7 @@
 "use client"
 import { ProductCard } from "@/components/product-card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface ProductPrice {
   id: string
@@ -67,5 +69,30 @@ export function PricingCard({
       stockQuantity={stockQuantity}
       isHighSchool={isHighSchool}
     />
+  )
+}
+
+export function PricingCardSkeleton() {
+  return (
+    <Card className="relative">
+      <CardHeader>
+        <Skeleton className="h-8 w-3/4 mb-4" />
+        <Skeleton className="h-6 w-24 mb-2" />
+        <div className="flex items-center gap-2 py-2">
+          <Skeleton className="h-5 w-5" />
+          <Skeleton className="h-5 w-32" />
+        </div>
+        <Skeleton className="h-9 w-32 mb-4" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-5/6" />
+        </div>
+        <Skeleton className="h-4 w-24 mt-4" />
+      </CardHeader>
+      <CardFooter>
+        <Skeleton className="h-10 w-full" />
+      </CardFooter>
+    </Card>
   )
 }

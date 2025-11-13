@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { PurchaseConfirmationEmail } from '@/emails/purchase-confirmation'
 import { BroadcastEmail } from '@/emails/broadcast-template'
 
@@ -11,10 +11,16 @@ import { BroadcastEmail } from '@/emails/broadcast-template'
  * No server-only APIs (like Resend client) are imported here.
  */
 export default function EmailPreviewPage() {
+  const [orderDate, setOrderDate] = useState<string>('')
+  
+  useEffect(() => {
+    setOrderDate(new Date().toISOString())
+  }, [])
+
   // Mock data for PurchaseConfirmationEmail
   const mockPurchaseData = {
     orderNumber: 'LAB-123456',
-    orderDate: new Date().toISOString(),
+    orderDate: orderDate || '2024-01-01T00:00:00.000Z',
     customerName: 'John Doe',
     items: [
       {

@@ -90,10 +90,40 @@ export function ProductCard(props: ProductCardProps) {
   })
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
   const [showExpandButton, setShowExpandButton] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const [sessionDateColor, setSessionDateColor] = useState<string>('text-gray-500')
+  const [formattedDates, setFormattedDates] = useState<{ startDate: string, endDate?: string }>({ startDate: '' })
+  const [adminFormattedDate, setAdminFormattedDate] = useState<string>('')
   const descriptionRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const { addToCart } = useCart()
   const { showToast } = useToast()
+
+  // Track when component has mounted (client-side only)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Compute session date color only after mount to avoid hydration errors
+  useEffect(() => {
+    if (mounted && props.mode === 'user') {
+      const color = getSessionDateColor(props.sessionDate)
+      setSessionDateColor(color)
+    }
+  }, [mounted, props.sessionDate, props.mode])
+
+  // Format dates only after mount to avoid hydration errors
+  useEffect(() => {
+    if (mounted) {
+      if (props.mode === 'user') {
+        const dates = formatSessionDate(props.sessionDate, props.endDate)
+        setFormattedDates(dates)
+      } else {
+        const adminDate = formatDate(props.sessionDate)
+        setAdminFormattedDate(adminDate)
+      }
+    }
+  }, [mounted, props.sessionDate, props.endDate, props.mode])
 
   // Check if description text overflows the 4-line limit
   useEffect(() => {
@@ -423,37 +453,36 @@ export function ProductCard(props: ProductCardProps) {
           <div className="flex items-center gap-2 text-base font-medium py-2 rounded-lg">
             <Calendar className="h-5 w-5" />
             <div className="flex flex-col">
-              {(() => {
-                const formattedDates = props.mode === 'user' 
-                  ? formatSessionDate(props.sessionDate, props.endDate)
-                  : { startDate: formatDate(props.sessionDate) }
-                
-                
-                return (
-                  <>
-                    {props.mode === 'user' && formattedDates.endDate ? (
-                      <>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-muted-foreground">Start:</span>
-                          <span className={getSessionDateColor(props.sessionDate)}>
-                            {formattedDates.startDate}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-muted-foreground">End:</span>
-                          <span className="text-base font-medium text-muted-foreground">
-                            {formattedDates.endDate}
-                          </span>
-                        </div>
-                      </>
-                    ) : (
-                      <span className={props.mode === 'user' ? getSessionDateColor(props.sessionDate) : 'text-primary'}>
-                        {formattedDates.startDate}
-                      </span>
-                    )}
-                  </>
+              {props.mode === 'user' ? (
+                mounted ? (
+                  formattedDates.endDate ? (
+                    <>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-muted-foreground">Start:</span>
+                        <span className={sessionDateColor}>
+                          {formattedDates.startDate}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-muted-foreground">End:</span>
+                        <span className="text-base font-medium text-muted-foreground">
+                          {formattedDates.endDate}
+                        </span>
+                      </div>
+                    </>
+                  ) : (
+                    <span className={sessionDateColor}>
+                      {formattedDates.startDate}
+                    </span>
+                  )
+                ) : (
+                  <span className="text-gray-500">Loading date...</span>
                 )
-              })()}
+              ) : (
+                <span className="text-primary">
+                  {mounted ? adminFormattedDate : 'Loading date...'}
+                </span>
+              )}
             </div>
           </div>
           
