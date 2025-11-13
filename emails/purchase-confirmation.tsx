@@ -10,8 +10,16 @@ import {
   Hr,
   Row,
   Column,
+  Link,
 } from '@react-email/components'
 import * as React from 'react'
+import { 
+  getGoogleMapsLink, 
+  formatTime, 
+  formatDate, 
+  formatCurrency,
+  emailStyles 
+} from './shared'
 
 interface PurchaseConfirmationEmailProps {
   orderNumber: string
@@ -38,86 +46,61 @@ export const PurchaseConfirmationEmail = ({
   totalAmountCents,
   currency = 'USD',
 }: PurchaseConfirmationEmailProps) => {
-  const formatCurrency = (cents: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(cents / 100)
-  }
-
-  const formatDate = (date: string) => {
-    return new Intl.DateTimeFormat('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }).format(new Date(date))
-  }
-
-  const formatTime = (time?: string) => {
-    if (!time || time === '00:00:00') return null
-    const [hours, minutes] = time.split(':')
-    const hour = parseInt(hours, 10)
-    const ampm = hour >= 12 ? 'PM' : 'AM'
-    const displayHour = hour % 12 || 12
-    return `${displayHour}:${minutes} ${ampm}`
-  }
-
-  const totalAmount = formatCurrency(totalAmountCents)
+  const totalAmount = formatCurrency(totalAmountCents, currency)
 
   return (
     <Html>
       <Head />
       <Preview>Order Confirmation - {orderNumber}</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          <Heading style={h1}>Order Confirmation</Heading>
+      <Body style={emailStyles.main}>
+        <Container style={emailStyles.container}>
+          <Heading style={emailStyles.h1}>Order Confirmation</Heading>
           
-          <Text style={text}>
+          <Text style={emailStyles.text}>
             {customerName ? `Dear ${customerName},` : 'Dear Customer,'}
           </Text>
           
-          <Text style={text}>
+          <Text style={emailStyles.text}>
             Thank you for your purchase! We've received your order and payment.
           </Text>
 
           {/* Purchase/Pricing Section */}
-          <Section style={section}>
-            <Heading style={h2}>Order Details</Heading>
+          <Section style={emailStyles.section}>
+            <Heading style={emailStyles.h2}>Order Details</Heading>
             
-            <Text style={text}>
+            <Text style={emailStyles.text}>
               <strong>Order Number:</strong> {orderNumber}
             </Text>
-            <Text style={text}>
+            <Text style={emailStyles.text}>
               <strong>Order Date:</strong> {formatDate(orderDate)}
             </Text>
-            <Text style={text}>
-              <strong>Payment Status:</strong> <span style={success}>Paid</span>
+            <Text style={emailStyles.text}>
+              <strong>Payment Status:</strong> <span style={emailStyles.success}>Paid</span>
             </Text>
 
-            <Hr style={hr} />
+            <Hr style={emailStyles.hr} />
 
-            <Heading style={h3}>Items Purchased</Heading>
+            <Heading style={emailStyles.h3}>Items Purchased</Heading>
             
             {items.map((item, index) => {
-              const itemTotal = formatCurrency(item.unitPriceCents * item.quantity)
+              const itemTotal = formatCurrency(item.unitPriceCents * item.quantity, currency)
               return (
-                <Section key={index} style={itemSection}>
+                <Section key={index} style={emailStyles.itemSection}>
                   <Row>
                     <Column>
-                      <Text style={itemText}>
+                      <Text style={emailStyles.itemText}>
                         <strong>{item.productName}</strong>
                       </Text>
-                      <Text style={itemText}>
+                      <Text style={emailStyles.itemText}>
                         Athlete: {item.athleteName}
                       </Text>
-                      <Text style={itemText}>
+                      <Text style={emailStyles.itemText}>
                         Quantity: {item.quantity}
                       </Text>
-                      <Text style={itemText}>
-                        Price: {formatCurrency(item.unitPriceCents)} each
+                      <Text style={emailStyles.itemText}>
+                        Price: {formatCurrency(item.unitPriceCents, currency)} each
                       </Text>
-                      <Text style={itemText}>
+                      <Text style={emailStyles.itemText}>
                         <strong>Subtotal: {itemTotal}</strong>
                       </Text>
                     </Column>
@@ -126,11 +109,11 @@ export const PurchaseConfirmationEmail = ({
               )
             })}
 
-            <Hr style={hr} />
+            <Hr style={emailStyles.hr} />
 
             <Row>
               <Column>
-                <Text style={totalText}>
+                <Text style={emailStyles.totalText}>
                   <strong>Total Amount: {totalAmount}</strong>
                 </Text>
               </Column>
@@ -138,43 +121,49 @@ export const PurchaseConfirmationEmail = ({
           </Section>
 
           {/* Registration Details Section */}
-          <Section style={section}>
-            <Heading style={h2}>Registration Details</Heading>
+          <Section style={emailStyles.section}>
+            <Heading style={emailStyles.h2}>Registration Details</Heading>
             
-            <Text style={text}>
+            <Text style={emailStyles.text}>
               Your registration is confirmed! Here are the details for your sessions:
             </Text>
 
             {items.map((item, index) => (
-              <Section key={index} style={registrationSection}>
-                <Text style={itemText}>
+              <Section key={index} style={emailStyles.registrationSection}>
+                <Text style={emailStyles.itemText}>
                   <strong>Session: {item.productName}</strong>
                 </Text>
-                <Text style={itemText}>
+                <Text style={emailStyles.itemText}>
                   <strong>Registered Athlete:</strong> {item.athleteName}
                 </Text>
-                <Text style={itemText}>
+                <Text style={emailStyles.itemText}>
                   <strong>Session Date:</strong> {formatDate(item.sessionDate)}
                 </Text>
                 {item.sessionTime && formatTime(item.sessionTime) && (
-                  <Text style={itemText}>
+                  <Text style={emailStyles.itemText}>
                     <strong>Session Time:</strong> {formatTime(item.sessionTime)}
                   </Text>
                 )}
                 {item.location && (
-                  <Text style={itemText}>
-                    <strong>Location:</strong> {item.location}
+                  <Text style={emailStyles.itemText}>
+                    <strong>Location:</strong>{' '}
+                    <Link 
+                      href={getGoogleMapsLink(item.location)}
+                      style={emailStyles.linkStyle}
+                    >
+                      {item.location}
+                    </Link>
                   </Text>
                 )}
-                {index < items.length - 1 && <Hr style={hr} />}
+                {index < items.length - 1 && <Hr style={emailStyles.hr} />}
               </Section>
             ))}
           </Section>
           
 
-          <Hr style={hr} />
+          <Hr style={emailStyles.hr} />
 
-          <Text style={footer}>
+          <Text style={emailStyles.footer}>
             If you have any questions, please don't hesitate to contact us.
           </Text>
         </Container>
@@ -184,88 +173,4 @@ export const PurchaseConfirmationEmail = ({
 }
 
 export default PurchaseConfirmationEmail
-
-const main = {
-  backgroundColor: '#f6f9fc',
-  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
-}
-
-const container = {
-  backgroundColor: 'hsl(30 25% 95%)', // Cream
-  margin: '0 auto',
-  padding: '20px 0 48px',
-  marginBottom: '64px',
-  color: 'hsl(250 100% 13%)' // Navy
-}
-
-const h1 = {
-  color: 'hsl(350 89% 50%)', // Strawberry
-  fontSize: '24px',
-  fontWeight: 'bold',
-  margin: '40px 0',
-  padding: '0',
-}
-
-const h2 = {
-  fontSize: '20px',
-  fontWeight: 'bold',
-  margin: '30px 0 20px',
-  padding: '0',
-}
-
-const h3 = {
-  fontSize: '18px',
-  fontWeight: 'bold',
-  margin: '20px 0 10px',
-  padding: '0',
-}
-
-const text = {
-  fontSize: '16px',
-  lineHeight: '26px',
-}
-
-const section = {
-  padding: '20px 0',
-}
-
-const itemSection = {
-  padding: '15px 0',
-  borderBottom: '1px solid #e0e0e0',
-}
-
-const registrationSection = {
-  padding: '15px',
-  borderRadius: '4px',
-  margin: '10px 0',
-}
-
-const itemText = {
-  color: '#333',
-  fontSize: '14px',
-  lineHeight: '22px',
-  margin: '5px 0',
-}
-
-const totalText = {
-  fontSize: '18px',
-  lineHeight: '26px',
-  textAlign: 'right' as const,
-}
-
-const hr = {
-  borderColor: '#e0e0e0',
-  margin: '20px 0',
-}
-
-const success = {
-  color: '#28a745',
-  fontWeight: 'bold',
-}
-
-const footer = {
-  fontSize: '12px',
-  lineHeight: '16px',
-  marginTop: '20px',
-}
 

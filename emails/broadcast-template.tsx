@@ -8,8 +8,14 @@ import {
   Section,
   Text,
   Hr,
+  Link,
 } from '@react-email/components'
 import * as React from 'react'
+import { 
+  DEFAULT_SESSION_LOCATION, 
+  getGoogleMapsLink, 
+  emailStyles 
+} from './shared'
 
 interface BroadcastEmailProps {
   subject: string
@@ -34,7 +40,7 @@ export const BroadcastEmail = ({
       // Check if it's a heading (starts with #)
       if (trimmed.startsWith('# ')) {
         return (
-          <Heading key={index} style={h2}>
+          <Heading key={index} style={emailStyles.h2}>
             {trimmed.substring(2)}
           </Heading>
         )
@@ -42,7 +48,7 @@ export const BroadcastEmail = ({
       
       if (trimmed.startsWith('## ')) {
         return (
-          <Heading key={index} style={h3}>
+          <Heading key={index} style={emailStyles.h3}>
             {trimmed.substring(3)}
           </Heading>
         )
@@ -51,7 +57,7 @@ export const BroadcastEmail = ({
       // Regular paragraph - preserve line breaks
       const lines = trimmed.split('\n')
       return (
-        <Text key={index} style={text}>
+        <Text key={index} style={emailStyles.text}>
           {lines.map((line, lineIndex) => (
             <React.Fragment key={lineIndex}>
               {line}
@@ -67,25 +73,34 @@ export const BroadcastEmail = ({
     <Html>
       <Head />
       <Preview>{preview || subject}</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          <Heading style={h1}>{subject}</Heading>
+      <Body style={emailStyles.main}>
+        <Container style={emailStyles.container}>
+          <Heading style={emailStyles.h1}>{subject}</Heading>
           
-          <Section style={section}>
+          <Section style={emailStyles.section}>
             {formatBodyText(bodyText)}
           </Section>
 
-          <Hr style={hr} />
+          <Hr style={emailStyles.hr} />
 
-          <Text style={footer}>
+          <Text style={emailStyles.footer}>
             The Lacrosse Lab ®
             <br />
             <span>
-              <a target="_blank" href="https://thelacrosselab.com">Website</a>
+              <Link target="_blank" href="https://thelacrosselab.com" style={emailStyles.linkStyle}>Website</Link>
               <span> | </span>
-              <a target="_blank" href="https://instagram.com/lacrosse.lab">Instagram</a>
+              <Link target="_blank" href="https://instagram.com/lacrosse.lab" style={emailStyles.linkStyle}>Instagram</Link>
             </span>
             <br />
+            <br />
+            <span style={emailStyles.locationText}>
+              <Link 
+                href={getGoogleMapsLink(DEFAULT_SESSION_LOCATION)}
+                style={emailStyles.linkStyle}
+              >
+                {DEFAULT_SESSION_LOCATION}
+              </Link>
+            </span>
           </Text>
         </Container>
       </Body>
@@ -94,63 +109,4 @@ export const BroadcastEmail = ({
 }
 
 export default BroadcastEmail
-
-const main = {
-  backgroundColor: '#f6f9fc',
-  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
-}
-
-const container = {
-  backgroundColor: '#ffffff',
-  margin: '0 auto',
-  padding: '20px 0 48px',
-  marginBottom: '64px',
-}
-
-const h1 = {
-  color: '#333',
-  fontSize: '24px',
-  fontWeight: 'bold',
-  margin: '40px 0',
-  padding: '0',
-}
-
-const h2 = {
-  color: '#333',
-  fontSize: '20px',
-  fontWeight: 'bold',
-  margin: '30px 0 20px',
-  padding: '0',
-}
-
-const h3 = {
-  color: '#333',
-  fontSize: '18px',
-  fontWeight: 'bold',
-  margin: '20px 0 10px',
-  padding: '0',
-}
-
-const text = {
-  color: '#333',
-  fontSize: '16px',
-  lineHeight: '26px',
-  margin: '10px 0',
-}
-
-const section = {
-  padding: '20px 0',
-}
-
-const hr = {
-  borderColor: '#e0e0e0',
-  margin: '20px 0',
-}
-
-const footer = {
-  color: '#8898aa',
-  fontSize: '12px',
-  lineHeight: '16px',
-  marginTop: '20px',
-}
 

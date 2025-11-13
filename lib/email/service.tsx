@@ -143,6 +143,87 @@ async function sendWithRetry(
 }
 
 /**
+ * Get the Resend audience/segment ID
+ * Returns the audience ID (UUID)
+ * 
+ * First checks RESEND_AUDIENCE_ID environment variable.
+ * If not set, tries to list segments and uses the first/only one.
+ */
+async function getDefaultSegment(context?: { traceId?: string }): Promise<string> {
+  // First, check if audience ID is set in environment variable
+  const envAudienceId = process.env.RESEND_AUDIENCE_ID
+  if (envAudienceId) {
+    logger.debug('audience.from_env', {
+      audienceId: envAudienceId,
+      traceId: context?.traceId,
+    })
+    return envAudienceId
+  }
+  
+  const resend = getResend()
+  
+  try {
+    // Try to list segments - there should only be one
+    // Use type assertion since segments API may not be in TypeScript definitions yet
+    const resendWithSegments = resend as any
+    if (typeof resendWithSegments.segments?.list === 'function') {
+      const listResponse = await resendWithSegments.segments.list({
+        limit: 10,
+      }) as { data: Array<{ id: string; name: string }> | null; error: any }
+      
+      if (listResponse.error) {
+        logger.error('segment.list_failed', {
+          error: listResponse.error,
+          traceId: context?.traceId,
+        })
+        throw new Error(`Failed to list segments: ${listResponse.error}`)
+      }
+      
+      if (!listResponse.data || listResponse.data.length === 0) {
+        throw new Error(
+          'No segments found in Resend and RESEND_AUDIENCE_ID is not set. ' +
+          'Please set RESEND_AUDIENCE_ID environment variable to your Resend audience/segment UUID. ' +
+          'You can find this in your Resend dashboard.'
+        )
+      }
+      
+      // Use the first segment (there should only be one)
+      const segment = listResponse.data[0]
+      
+      logger.debug('segment.found', {
+        segmentId: segment.id,
+        name: segment.name,
+        totalSegments: listResponse.data.length,
+        traceId: context?.traceId,
+      })
+      
+      if (listResponse.data.length > 1) {
+        logger.warn('segment.multiple_found', {
+          totalSegments: listResponse.data.length,
+          usingSegmentId: segment.id,
+          traceId: context?.traceId,
+        })
+      }
+      
+      return segment.id
+    }
+    
+    // If SDK doesn't support segments API, throw helpful error
+    throw new Error(
+      'RESEND_AUDIENCE_ID environment variable is required. ' +
+      'Please set it to your Resend audience/segment UUID (e.g., RESEND_AUDIENCE_ID=43a6084d-7071-46dd-8eae-357f96ed66f0). ' +
+      'You can find this in your Resend dashboard.'
+    )
+  } catch (error) {
+    logger.error('audience.get_failed', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      traceId: context?.traceId,
+    })
+    throw error
+  }
+}
+
+/**
  * Add or update a contact in Resend
  */
 export async function addContactToResend(
@@ -151,9 +232,11 @@ export async function addContactToResend(
 ): Promise<void> {
   try {
     const resend = getResend()
+    const segmentId = await getDefaultSegment(context)
+    
     await resend.contacts.create({
       email,
-      audienceId: 'default',
+      audienceId: segmentId,
     })
     logger.debug('contact.added', {
       to: maskEmail(email),
@@ -315,7 +398,115 @@ export async function sendPurchaseConfirmation(data: {
 }
 
 /**
+ * Send a broadcast email to Resend audience using Broadcasts API
+ */
+export async function sendBroadcastToAudience(data: {
+  audienceId: string
+  subject: string
+  bodyText: string
+  context?: { traceId?: string }
+}): Promise<{ broadcastId: string }> {
+  const { context } = data
+  
+  // Render email template
+  let html: string
+  try {
+    html = await renderEmailTemplate(
+      <BroadcastEmail
+        subject={data.subject}
+        bodyText={data.bodyText}
+        preview={data.subject}
+      />
+    )
+    
+    logger.debug('broadcast.render_ok', {
+      subject: data.subject,
+      traceId: context?.traceId,
+    })
+  } catch (error) {
+    logger.error('broadcast.render_failed', {
+      templateName: 'BroadcastEmail',
+      subject: data.subject,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      traceId: context?.traceId,
+    })
+    throw new Error('Failed to render email template')
+  }
+
+  try {
+    const resend = getResend()
+    
+    // Get the default segment if audienceId is 'default'
+    let segmentId = data.audienceId
+    if (segmentId === 'default') {
+      segmentId = await getDefaultSegment(context)
+    }
+    
+    // Create broadcast with a small delay to avoid rate limits
+    // Resend allows only 2 requests per second
+    await new Promise(resolve => setTimeout(resolve, 500))
+    
+    // Create broadcast
+    const createResponse = await resend.broadcasts.create({
+      audienceId: segmentId,
+      from: FROM_EMAIL,
+      subject: data.subject,
+      html,
+    }) as { data: { id: string } | null; error: any }
+
+    if (createResponse.error) {
+      logger.error('broadcast.create_failed', {
+        subject: data.subject,
+        error: createResponse.error,
+        traceId: context?.traceId,
+      })
+      throw new Error(`Failed to create broadcast: ${createResponse.error}`)
+    }
+
+    if (!createResponse.data?.id) {
+      logger.error('broadcast.create_no_id', {
+        subject: data.subject,
+        traceId: context?.traceId,
+      })
+      throw new Error('Broadcast created but no ID returned')
+    }
+
+    const broadcastId = createResponse.data.id
+
+    // Send broadcast
+    const sendResponse = await resend.broadcasts.send(broadcastId) as { data: any; error: any }
+
+    if (sendResponse.error) {
+      logger.error('broadcast.send_failed', {
+        broadcastId,
+        subject: data.subject,
+        error: sendResponse.error,
+        traceId: context?.traceId,
+      })
+      throw new Error(`Failed to send broadcast: ${sendResponse.error}`)
+    }
+
+    logger.info('broadcast.sent', {
+      broadcastId,
+      subject: data.subject,
+      segmentId,
+      traceId: context?.traceId,
+    })
+
+    return { broadcastId }
+  } catch (error) {
+    logger.error('broadcast.error', {
+      subject: data.subject,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      traceId: context?.traceId,
+    })
+    throw error
+  }
+}
+
+/**
  * Send a broadcast email to multiple recipients
+ * @deprecated Use sendBroadcastToAudience instead for better performance and reliability
  */
 export async function sendBroadcastEmail(data: {
   to: string[]

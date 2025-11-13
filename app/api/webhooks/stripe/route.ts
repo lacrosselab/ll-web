@@ -252,6 +252,9 @@ export async function POST(request: NextRequest) {
                   logger.error('webhook.payment_details_fetch_failed', { error: paymentAthletesError.message, traceId })
                 } else if (paymentAthletes && paymentAthletes.length > 0) {
                   // Format items for email
+                  // Default location - can be overridden via environment variable or stored in DB
+                  const defaultLocation = process.env.SESSION_LOCATION || 'Richmond Field, Richmond, VA'
+                  
                   const emailItems = paymentAthletes.map((pa: any) => ({
                     productName: pa.product.name,
                     athleteName: pa.athlete.name,
@@ -259,7 +262,7 @@ export async function POST(request: NextRequest) {
                     unitPriceCents: pa.unit_price_cents,
                     sessionDate: pa.product.session_date,
                     sessionTime: pa.product.session_time,
-                    location: undefined, // Location not stored in DB currently
+                    location: defaultLocation,
                   }))
 
                   // Generate order number from payment ID
