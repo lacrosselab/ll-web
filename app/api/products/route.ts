@@ -39,7 +39,7 @@ export async function GET() {
         
         verifiedProducts.push(product)
       } catch (stripeError) {
-        logger.error(`Error verifying Stripe product`, stripeError)
+        logger.error(`Error verifying Stripe product`, { error: stripeError instanceof Error ? stripeError.message : 'Unknown error' })
         // If we can't verify with Stripe, skip this product to be safe
         continue
       }
@@ -79,7 +79,7 @@ export async function GET() {
     })
 
   } catch (error) {
-    logger.error("Error fetching products:", error)
+    logger.error("Error fetching products:", { error: error instanceof Error ? error.message : 'Unknown error' })
     return NextResponse.json(
       { error: "Failed to fetch products", details: error instanceof Error ? error.message : 'Unknown error' }, 
       { status: 500 }
