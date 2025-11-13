@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       .eq('user_id', user.id)
 
     if (deleteError) {
-      logger.error('Error clearing cart items', deleteError)
+      logger.error('Error clearing cart items', { error: deleteError.message || 'Unknown error' })
       return NextResponse.json(
         { 
           error: 'Failed to clear cart',

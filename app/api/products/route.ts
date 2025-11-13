@@ -15,7 +15,7 @@ export async function GET() {
       .order('session_date', { ascending: true })
 
     if (error) {
-      logger.error("Error fetching products from database:", error)
+      logger.error("Error fetching products from database:", { error: error.message || 'Unknown error' })
       const response = NextResponse.json(
         { error: "Failed to fetch products", details: error.message }, 
         { status: 500 }

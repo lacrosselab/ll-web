@@ -160,7 +160,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
       dispatch({ type: 'SET_ITEMS', payload: cartItems })
     } catch (error) {
-      logger.error('Error loading cart', error)
+      logger.error('Error loading cart', { error: error instanceof Error ? error.message : 'Unknown error' })
       dispatch({ type: 'SET_ITEMS', payload: [] })
     }
   }
@@ -188,7 +188,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         .single()
 
       if (cartError && cartError.code !== 'PGRST116') {
-        logger.error('Failed to check existing cart items', cartError)
+        logger.error('Failed to check existing cart items', { error: cartError.message || 'Unknown error' })
         return { success: false, error: 'Failed to check cart status' }
       }
 
@@ -205,7 +205,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         .single()
 
       if (purchaseError && purchaseError.code !== 'PGRST116') {
-        logger.error('Failed to check existing purchases', purchaseError)
+        logger.error('Failed to check existing purchases', { error: purchaseError.message || 'Unknown error' })
         return { success: false, error: 'Failed to check purchase history' }
       }
 
@@ -221,7 +221,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         .single()
 
       if (productError) {
-        logger.error('Failed to fetch product', productError)
+        logger.error('Failed to fetch product', { error: productError.message || 'Unknown error' })
         return { success: false, error: 'Failed to load session details' }
       }
 
@@ -243,7 +243,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         .eq('product_id', productId)
 
       if (cartError2) {
-        logger.error('Failed to check user cart', cartError2)
+        logger.error('Failed to check user cart', { error: cartError2.message || 'Unknown error' })
         return { success: false, error: 'Failed to check cart contents' }
       }
 
@@ -272,7 +272,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         })
 
       if (insertError) {
-        logger.error('Failed to add to cart', insertError)
+        logger.error('Failed to add to cart', { error: insertError.message || 'Unknown error' })
         return { success: false, error: 'Failed to add to cart' }
       }
 
@@ -280,7 +280,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       await refreshCart()
       return { success: true }
     } catch (error) {
-      logger.error('Unexpected error adding to cart', error)
+      logger.error('Unexpected error adding to cart', { error: error instanceof Error ? error.message : 'Unknown error' })
       return { success: false, error: 'An unexpected error occurred' }
     }
   }
@@ -311,7 +311,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
       dispatch({ type: 'UPDATE_ITEM', payload: { productId, athleteId, quantity } })
     } catch (error) {
-      logger.error('Error updating cart item', error)
+      logger.error('Error updating cart item', { error: error instanceof Error ? error.message : 'Unknown error' })
       dispatch({ type: 'SET_ERROR', payload: 'Failed to update cart item' })
     }
   }
@@ -336,7 +336,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
       dispatch({ type: 'REMOVE_ITEM', payload: { productId, athleteId } })
     } catch (error) {
-      logger.error('Error removing from cart', error)
+      logger.error('Error removing from cart', { error: error instanceof Error ? error.message : 'Unknown error' })
       dispatch({ type: 'SET_ERROR', payload: 'Failed to remove item from cart' })
     }
   }
@@ -358,7 +358,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
       dispatch({ type: 'CLEAR_CART' })
     } catch (error) {
-      logger.error('Error clearing cart', error)
+      logger.error('Error clearing cart', { error: error instanceof Error ? error.message : 'Unknown error' })
       dispatch({ type: 'SET_ERROR', payload: 'Failed to clear cart' })
     }
   }
@@ -444,7 +444,7 @@ const hasAthletePurchasedSession = async (athleteId: string, productId: string):
       .single()
 
     if (error && error.code !== 'PGRST116') {
-      logger.error('Error checking purchase history', error)
+      logger.error('Error checking purchase history', { error: error.message || 'Unknown error' })
       return false // Assume not purchased if we can't check
     }
 
@@ -452,7 +452,7 @@ const hasAthletePurchasedSession = async (athleteId: string, productId: string):
     logger.debug('Purchase check result:', hasPurchased)
     return hasPurchased
   } catch (error) {
-    logger.error('Exception checking purchase history', error)
+    logger.error('Exception checking purchase history', { error: error instanceof Error ? error.message : 'Unknown error' })
     return false // Assume not purchased if there's an exception
   }
 }

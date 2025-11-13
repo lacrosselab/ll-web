@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
         .single()
 
       if (profileError && profileError.code !== 'PGRST116') {
-        logger.error('Error fetching user profile', profileError)
+        logger.error('Error fetching user profile', { error: profileError.message || 'Unknown error' })
         throw profileError
       }
 
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
           })
 
         if (updateError) {
-          logger.error('Error saving Stripe customer ID', updateError)
+          logger.error('Error saving Stripe customer ID', { error: updateError.message || 'Unknown error' })
           // Don't throw here - we can still proceed with the checkout
         } else {
           logger.debug('Saved Stripe customer ID to user profile')

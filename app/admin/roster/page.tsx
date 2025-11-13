@@ -96,7 +96,7 @@ export default function AdminRosterPage() {
           .eq('product_id', productId)
 
         if (paymentsError) {
-          logger.error('Error getting registered count for product:', paymentsError)
+          logger.error('Error getting registered count for product:', { error: paymentsError.message || 'Unknown error' })
         }
 
         // Filter only successful payments

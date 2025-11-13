@@ -178,7 +178,7 @@ export function ProductCard(props: ProductCardProps) {
       
       return { startDate: startFormatted }
     } catch (error) {
-      logger.debug('formatSessionDate error:', error)
+      logger.debug('formatSessionDate error:', { error: error instanceof Error ? error.message : 'Unknown error' })
       return { startDate: '' }
     }
   }
