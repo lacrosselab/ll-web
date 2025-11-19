@@ -243,7 +243,17 @@ export async function POST(request: NextRequest) {
                       name,
                       session_date,
                       session_time,
-                      description
+                      description,
+                      gender,
+                      min_grade,
+                      max_grade,
+                      skill_level,
+                      product_sessions (
+                        id,
+                        session_date,
+                        session_time,
+                        location
+                      )
                     )
                   `)
                   .eq('payment_id', payment.id)
@@ -253,17 +263,38 @@ export async function POST(request: NextRequest) {
                 } else if (paymentAthletes && paymentAthletes.length > 0) {
                   // Format items for email
                   // Default location - can be overridden via environment variable or stored in DB
-                  const defaultLocation = process.env.SESSION_LOCATION || 'Richmond Field, Richmond, VA'
+                  const defaultLocation = process.env.SESSION_LOCATION || '3006 Impala Place, Unit B, Henrico, VA 23228'
                   
-                  const emailItems = paymentAthletes.map((pa: any) => ({
-                    productName: pa.product.name,
-                    athleteName: pa.athlete.name,
-                    quantity: pa.quantity,
-                    unitPriceCents: pa.unit_price_cents,
-                    sessionDate: pa.product.session_date,
-                    sessionTime: pa.product.session_time,
-                    location: defaultLocation,
-                  }))
+                  const emailItems = paymentAthletes.map((pa: any) => {
+                    // Use product_sessions if available, otherwise fall back to legacy fields
+                    const sessions = pa.product.product_sessions && pa.product.product_sessions.length > 0
+                      ? pa.product.product_sessions.sort((a: any, b: any) => {
+                          const dateA = new Date(`${a.session_date}T${a.session_time}`)
+                          const dateB = new Date(`${b.session_date}T${b.session_time}`)
+                          return dateA.getTime() - dateB.getTime()
+                        })
+                      : pa.product.session_date 
+                        ? [{ session_date: pa.product.session_date, session_time: pa.product.session_time || '00:00:00' }]
+                        : []
+
+                    // Get location from first session if available, otherwise use default
+                    const sessionLocation = sessions.length > 0 && sessions[0].location 
+                      ? sessions[0].location 
+                      : defaultLocation
+
+                    return {
+                      productName: pa.product.name,
+                      athleteName: pa.athlete.name,
+                      quantity: pa.quantity,
+                      unitPriceCents: pa.unit_price_cents,
+                      sessions: sessions,
+                      gender: pa.product.gender,
+                      minGrade: pa.product.min_grade,
+                      maxGrade: pa.product.max_grade,
+                      skillLevel: pa.product.skill_level,
+                      location: sessionLocation,
+                    }
+                  })
 
                   // Generate order number from payment ID
                   const orderNumber = `LAB-${payment.id.slice(0, 8).toUpperCase()}`

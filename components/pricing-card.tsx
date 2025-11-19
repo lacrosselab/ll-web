@@ -13,6 +13,13 @@ interface ProductPrice {
   metadata: Record<string, string>
 }
 
+interface ProductSession {
+  id?: string
+  session_date: string
+  session_time: string
+  location?: string | null
+}
+
 interface PricingCardProps {
   productId: string
   title: string
@@ -24,12 +31,14 @@ interface PricingCardProps {
   popular?: boolean
   image?: string
   allPrices: ProductPrice[]
-  endsOn?: string
   endDateUrgency?: 'normal' | 'ending-soon' | 'ending-very-soon'
   stockQuantity?: number
   sessionDate?: string
-  endDate?: string
-  isHighSchool?: boolean | null
+  gender?: string | null
+  minGrade?: string | null
+  maxGrade?: string | null
+  skillLevel?: string | null
+  sessions?: ProductSession[]
 }
 
 export function PricingCard({
@@ -43,12 +52,14 @@ export function PricingCard({
   popular = false,
   image,
   allPrices,
-  endsOn,
   endDateUrgency = 'normal',
   stockQuantity = 0,
   sessionDate = '',
-  endDate,
-  isHighSchool,
+  gender,
+  minGrade,
+  maxGrade,
+  skillLevel,
+  sessions,
 }: PricingCardProps) {
   return (
     <ProductCard
@@ -65,9 +76,12 @@ export function PricingCard({
       allPrices={allPrices}
       endDateUrgency={endDateUrgency}
       sessionDate={sessionDate}
-      endDate={endDate}
       stockQuantity={stockQuantity}
-      isHighSchool={isHighSchool}
+      gender={gender}
+      minGrade={minGrade}
+      maxGrade={maxGrade}
+      skillLevel={skillLevel}
+      sessions={sessions}
     />
   )
 }

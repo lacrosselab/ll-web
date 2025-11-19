@@ -109,9 +109,8 @@ export default function CartPage() {
     }).format(cents / 100)
   }
 
-  const formatSessionDate = (sessionDate: string, endDate?: string): string => {
-    const range = formatDateRange(sessionDate, endDate, 'en-US', { month: 'short', day: 'numeric' })
-    return range.end ? `${range.start} - ${range.end}` : formatDateOnly(sessionDate)
+  const formatSessionDate = (sessionDate: string): string => {
+    return formatDateOnly(sessionDate)
   }
 
   const handleCheckout = async () => {
@@ -232,7 +231,7 @@ export default function CartPage() {
                 {/* Session Date */}
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="h-4 w-4" />
-                  <span>Session: {formatSessionDate(item.product.session_date, item.product.end_date)}</span>
+                  <span>Session: {formatSessionDate(item.product.session_date)}</span>
                 </div>
 
                 {/* Athlete Display */}

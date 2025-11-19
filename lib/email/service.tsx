@@ -273,8 +273,13 @@ export async function sendPurchaseConfirmation(data: {
     athleteName: string
     quantity: number
     unitPriceCents: number
-    sessionDate: string
-    sessionTime?: string
+    sessionDate?: string // Legacy field, kept for backward compatibility
+    sessionTime?: string // Legacy field, kept for backward compatibility
+    sessions?: Array<{ session_date: string; session_time: string }> // New field for multiple sessions
+    gender?: string | null
+    minGrade?: string | null
+    maxGrade?: string | null
+    skillLevel?: string | null
     location?: string
   }>
   totalAmountCents: number

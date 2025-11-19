@@ -84,23 +84,21 @@ export const BroadcastEmail = ({
           <Hr style={emailStyles.hr} />
 
           <Text style={emailStyles.footer}>
-            The Lacrosse Lab ®
+            The Lacrosse Lab
             <br />
             <span>
               <Link target="_blank" href="https://thelacrosselab.com" style={emailStyles.linkStyle}>Website</Link>
               <span> | </span>
               <Link target="_blank" href="https://instagram.com/lacrosse.lab" style={emailStyles.linkStyle}>Instagram</Link>
             </span>
+            
             <br />
             <br />
-            <span style={emailStyles.locationText}>
-              <Link 
-                href={getGoogleMapsLink(DEFAULT_SESSION_LOCATION)}
-                style={emailStyles.linkStyle}
-              >
-                {DEFAULT_SESSION_LOCATION}
-              </Link>
-            </span>
+            If you have any questions, please reach out to:{' '}
+            <Link href="mailto:carter@thelacrosselab.com" style={emailStyles.linkStyle}>
+              carter@thelacrosselab.com
+            </Link>
+            .
           </Text>
         </Container>
       </Body>

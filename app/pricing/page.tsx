@@ -16,6 +16,13 @@ interface ProductPrice {
   metadata: Record<string, string>
 }
 
+interface ProductSession {
+  id?: string
+  session_date: string
+  session_time: string
+  location?: string | null
+}
+
 interface Product {
   id: string
   name: string
@@ -25,10 +32,13 @@ interface Product {
   prices: ProductPrice[]
   // New fields from our database
   session_date: string
-  end_date?: string
   stock_quantity: number
   is_active: boolean
-  is_high_school?: boolean | null
+  gender?: string | null
+  min_grade?: string | null
+  max_grade?: string | null
+  skill_level?: string | null
+  sessions?: ProductSession[]
 }
 
 interface ProductsResponse {
@@ -74,34 +84,12 @@ function getDaysUntilSession(sessionDate: string, now?: Date): number {
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 }
 
-function formatSessionDate(sessionDate: string, endDate?: string, now?: Date): string {
+function formatSessionDate(sessionDate: string, now?: Date): string {
   if (!now) return 'Session date' // Default during SSR
   
   const session = parseDateOnlyUTC(sessionDate)
   const daysUntilSession = getDaysUntilSession(sessionDate, now)
   
-  // If we have an end date, show the date range
-  if (endDate) {
-    const end = parseDateOnlyUTC(endDate)
-    const startFormatted = session.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      timeZone: 'UTC'
-    })
-    const endFormatted = end.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      timeZone: 'UTC'
-    })
-    
-    if (daysUntilSession <= 0) return `Session ${startFormatted} - ${endFormatted} (has passed)`
-    if (daysUntilSession === 1) return `Session ${startFormatted} - ${endFormatted} (soon)`
-    if (daysUntilSession <= 7) return `Session ${startFormatted} - ${endFormatted} (in ${daysUntilSession} days)`
-    
-    return `Session ${startFormatted} - ${endFormatted}`
-  }
-  
-  // Original single date logic
   if (daysUntilSession <= 0) return 'Session has passed'
   if (daysUntilSession === 1) return 'Session soon'
   if (daysUntilSession <= 7) return `Session in ${daysUntilSession} days`
@@ -263,7 +251,6 @@ export default function PricingPage() {
                 
                 // Only compute date-dependent values after mount
                 const sessionUrgency = mounted ? getSessionUrgency(product.session_date, now) : 'normal'
-                const formattedEndsOn = mounted ? formatSessionDate(product.session_date, product.end_date, now) : 'Session date'
                 
                 return (
                   <PricingCard
@@ -278,14 +265,15 @@ export default function PricingPage() {
                     popular={isPopular(product)}
                     image={product.images[0]}
                     allPrices={product.prices}
-                    // Use session date for display
-                    endsOn={formattedEndsOn}
                     endDateUrgency={sessionUrgency}
                     // Add new props for stock and session info
                     stockQuantity={product.stock_quantity}
                     sessionDate={product.session_date}
-                    endDate={product.end_date}
-                    isHighSchool={product.is_high_school}
+                    gender={product.gender}
+                    minGrade={product.min_grade}
+                    maxGrade={product.max_grade}
+                    skillLevel={product.skill_level}
+                    sessions={product.sessions}
                   />
                 )
               })}

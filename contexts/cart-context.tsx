@@ -17,7 +17,6 @@ interface CartItem {
     description: string | null
     price_cents: number
     session_date: string
-    end_date?: string
     stock_quantity: number
     stripe_product_id: string
     stripe_price_id: string

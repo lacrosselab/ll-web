@@ -14,12 +14,20 @@ import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/toast'
 import { formatDateOnly } from '@/lib/utils'
 
+interface ProductSession {
+  id: string
+  session_date: string
+  session_time: string
+  location?: string | null
+}
+
 interface Product {
   id: string
   name: string
   session_date: string
   is_active: boolean
   created_at: string
+  product_sessions?: ProductSession[]
 }
 
 interface RegisteredAthlete {
@@ -35,8 +43,15 @@ interface RegisteredAthlete {
   } | null
 }
 
-interface SessionWithCount extends Product {
+interface SessionWithCount {
+  id: string
+  product_id: string
+  product_name: string
+  session_date: string
+  session_time: string
+  is_active: boolean
   registered_count: number
+  location?: string | null
 }
 
 export default function AdminRosterPage() {
@@ -44,7 +59,7 @@ export default function AdminRosterPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedSession, setSelectedSession] = useState<Product | null>(null)
+  const [selectedSession, setSelectedSession] = useState<SessionWithCount | null>(null)
   const [registeredAthletes, setRegisteredAthletes] = useState<RegisteredAthlete[]>([])
   const [loadingAthletes, setLoadingAthletes] = useState(false)
   const router = useRouter()
@@ -71,16 +86,26 @@ export default function AdminRosterPage() {
         return
       }
 
-      // Query all active products (sessions) only
+      // Query all active products with their product_sessions
       const { data: products, error: productsError } = await supabase
         .from('products')
-        .select('id, name, session_date, is_active, created_at')
+        .select(`
+          id,
+          name,
+          session_date,
+          is_active,
+          created_at,
+          product_sessions (
+            id,
+            session_date,
+            session_time,
+            location
+          )
+        `)
         .eq('is_active', true)
         .order('session_date', { ascending: true })
 
       if (productsError) throw productsError
-
-      // For each product, count registered athletes with successful payments
 
       // Helper to get registered_count for a single product
       const getRegisteredCountForProduct = async (supabase: any, productId: string) => {
@@ -104,32 +129,51 @@ export default function AdminRosterPage() {
         return successfulPayments.length
       }
 
-      // Single function to enrich all products (serializes queries, but is safe)
-      async function enrichProductsWithCounts(supabase: any, products: Product[]) {
-        const result: SessionWithCount[] = []
-        for (const product of products) {
+      // Expand products into individual sessions (one row per product_session)
+      const allSessions: SessionWithCount[] = []
+      
+      for (const product of (products || []) as Product[]) {
+        // If product has product_sessions, use those
+        if (product.product_sessions && product.product_sessions.length > 0) {
           const registered_count = await getRegisteredCountForProduct(supabase, product.id)
-          result.push({
-            ...product,
+          
+          for (const session of product.product_sessions) {
+            allSessions.push({
+              id: session.id,
+              product_id: product.id,
+              product_name: product.name,
+              session_date: session.session_date,
+              session_time: session.session_time,
+              is_active: product.is_active,
+              registered_count,
+              location: session.location || null,
+            })
+          }
+        } else {
+          // Fallback to legacy session_date if no product_sessions exist
+          const registered_count = await getRegisteredCountForProduct(supabase, product.id)
+          allSessions.push({
+            id: `${product.id}-legacy`,
+            product_id: product.id,
+            product_name: product.name,
+            session_date: product.session_date,
+            session_time: '00:00:00',
+            is_active: product.is_active,
             registered_count,
           })
         }
-        return result
       }
 
-      // Enrich product list
-      const sessionsWithCounts = await enrichProductsWithCounts(supabase, products)
-
-      // Sort by proximity to today's date (closest first)
+      // Sort by session date and time (closest first)
       const today = new Date()
-      today.setHours(0, 0, 0, 0) // Normalize to start of day
+      today.setHours(0, 0, 0, 0)
       
-      const sortedSessions = sessionsWithCounts.sort((a, b) => {
-        const dateA = new Date(a.session_date)
-        const dateB = new Date(b.session_date)
-        const diffA = Math.abs(dateA.getTime() - today.getTime())
-        const diffB = Math.abs(dateB.getTime() - today.getTime())
-        return diffA - diffB // Closest date first
+      const sortedSessions = allSessions.sort((a, b) => {
+        const dateTimeA = new Date(`${a.session_date}T${a.session_time}`)
+        const dateTimeB = new Date(`${b.session_date}T${b.session_time}`)
+        const diffA = Math.abs(dateTimeA.getTime() - today.getTime())
+        const diffB = Math.abs(dateTimeB.getTime() - today.getTime())
+        return diffA - diffB // Closest date/time first
       })
 
       setSessions(sortedSessions)
@@ -195,17 +239,26 @@ export default function AdminRosterPage() {
     }
   }
 
-  const handleViewAthletes = (session: Product) => {
+  const handleViewAthletes = (session: SessionWithCount) => {
     setSelectedSession(session)
-    loadAthletesForSession(session.id)
+    loadAthletesForSession(session.product_id)
   }
 
   const formatDate = (dateString: string): string => {
     return formatDateOnly(dateString)
   }
 
+  const formatTime = (timeString: string): string => {
+    if (!timeString || timeString === '00:00:00') return ''
+    const [hours, minutes] = timeString.split(':')
+    const hour = parseInt(hours, 10)
+    const ampm = hour >= 12 ? 'PM' : 'AM'
+    const displayHour = hour % 12 || 12
+    return `${displayHour}:${minutes} ${ampm}`
+  }
+
   const filteredSessions = sessions.filter(session =>
-    session.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    session.product_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     formatDate(session.session_date).toLowerCase().includes(searchTerm.toLowerCase())
   )
 
@@ -259,7 +312,7 @@ export default function AdminRosterPage() {
       </div>
 
       {/* Sessions Table */}
-      <Card className="max-w-[500px] lg:max-w-[80vw] overflow-x-scroll">
+      <Card className="overflow-x-scroll">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
@@ -279,8 +332,9 @@ export default function AdminRosterPage() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="min-w-[200px]">Roster</TableHead>
-                    <TableHead className="min-w-[120px]">Title</TableHead>
-                    <TableHead className="min-w-[100px]">Date</TableHead>
+                    <TableHead className="min-w-[200px]">Session Name</TableHead>
+                    <TableHead className="min-w-[120px]">Date</TableHead>
+                    <TableHead className="min-w-[100px]">Time</TableHead>
                     <TableHead className="min-w-[120px]">Status</TableHead>
                     <TableHead className="min-w-[120px]">Total</TableHead>
                   </TableRow>
@@ -288,7 +342,7 @@ export default function AdminRosterPage() {
                 <TableBody>
                   {filteredSessions.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center text-muted-foreground">
+                      <TableCell colSpan={6} className="text-center text-muted-foreground">
                         No sessions found
                       </TableCell>
                     </TableRow>
@@ -306,10 +360,13 @@ export default function AdminRosterPage() {
                           </Button>
                         </TableCell>
                         <TableCell className="whitespace-nowrap">
-                          <div className="font-medium">{session.name}</div>
+                          <div className="font-medium">{session.product_name}</div>
                         </TableCell>
                         <TableCell className="whitespace-nowrap">
                           {formatDate(session.session_date)}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">
+                          {formatTime(session.session_time) || '-'}
                         </TableCell>
                         <TableCell className="whitespace-nowrap">
                           <Badge variant={session.is_active ? 'default' : 'secondary'}>
@@ -338,10 +395,26 @@ export default function AdminRosterPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                {selectedSession.name} - Registered Athletes
+                {selectedSession.product_name} - Registered Athletes
               </CardTitle>
               <CardDescription>
-                Session Date: {formatDate(selectedSession.session_date)}
+                <div>
+                  Session: {formatDate(selectedSession.session_date)}
+                  {formatTime(selectedSession.session_time) && ` at ${formatTime(selectedSession.session_time)}`}
+                </div>
+                {selectedSession.location && (
+                  <div className="mt-2">
+                    <span className="font-medium">Location: </span>
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedSession.location)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      {selectedSession.location}
+                    </a>
+                  </div>
+                )}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">

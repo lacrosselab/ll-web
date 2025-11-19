@@ -7,12 +7,19 @@ export async function GET() {
   try {
     const supabase = await getSupabaseServer()
     
-    // Fetch active products from database
+    // Fetch active products from database with product_sessions
     const { data: products, error } = await supabase
       .from('products')
-      .select('*')
+      .select(`
+        *,
+        product_sessions (
+          id,
+          session_date,
+          session_time,
+          location
+        )
+      `)
       .eq('is_active', true)
-      .order('session_date', { ascending: true })
 
     if (error) {
       logger.error("Error fetching products from database:", { error: error.message || 'Unknown error' })
@@ -24,6 +31,7 @@ export async function GET() {
       return response
     }
 
+    logger.info("Products fetched from database:", { products: products })
     // Verify Stripe sync for each product
     const verifiedProducts = []
     for (const product of products) {
@@ -46,32 +54,47 @@ export async function GET() {
     }
 
     // Transform database products to match the expected format
-    const transformedProducts = verifiedProducts.map(product => ({
-      id: product.id,
-      name: product.name,
-      description: product.description,
-      images: [], // We can add images later if needed
-      metadata: {
-        // Use database fields instead of Stripe metadata
-        'ends-on': formatDateForMetadata(product.session_date),
-        'features': product.description || '', // Use description as features for now
-      },
-      prices: [{
-        id: product.stripe_price_id,
-        unit_amount: product.price_cents,
-        currency: product.currency,
-        interval: null, // These are one-time payments
-        interval_count: null,
-        type: 'one_time',
-        metadata: {}
-      }],
-      // Add our new fields
-      session_date: product.session_date,
-      end_date: product.end_date,
-      stock_quantity: product.stock_quantity,
-      is_active: product.is_active,
-      is_high_school: product.is_high_school
-    }))
+    const transformedProducts = verifiedProducts.map(product => {
+      // Sort sessions by date and time
+      const sessions = (product.product_sessions || []).sort((a: any, b: any) => {
+        const dateA = new Date(`${a.session_date}T${a.session_time}`)
+        const dateB = new Date(`${b.session_date}T${b.session_time}`)
+        return dateA.getTime() - dateB.getTime()
+      })
+
+      // Use first session date for metadata compatibility (if sessions exist)
+      const firstSessionDate = sessions.length > 0 ? sessions[0].session_date : product.session_date
+
+      return {
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        images: [], // We can add images later if needed
+        metadata: {
+          // Use database fields instead of Stripe metadata
+          'ends-on': formatDateForMetadata(firstSessionDate),
+          'features': product.description || '', // Use description as features for now
+        },
+        prices: [{
+          id: product.stripe_price_id,
+          unit_amount: product.price_cents,
+          currency: product.currency,
+          interval: null, // These are one-time payments
+          interval_count: null,
+          type: 'one_time',
+          metadata: {}
+        }],
+        // Add our new fields
+        session_date: product.session_date, // Keep for backward compatibility
+        stock_quantity: product.stock_quantity,
+        is_active: product.is_active,
+        gender: product.gender,
+        min_grade: product.min_grade,
+        max_grade: product.max_grade,
+        skill_level: product.skill_level,
+        sessions: sessions // Array of all session times
+      }
+    })
 
     return NextResponse.json({
       products: transformedProducts,
