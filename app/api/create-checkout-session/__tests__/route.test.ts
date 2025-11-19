@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import {
-  createMockSupabaseClient,
   createMockNextRequest,
   mockAuthUser,
   mockProduct,
@@ -22,7 +21,12 @@ const mocks = vi.hoisted(() => {
         retrieve: vi.fn(),
       },
     },
-    mockSupabaseClient: createMockSupabaseClient(),
+    mockSupabaseClient: {
+      from: vi.fn(),
+      auth: {
+        getUser: vi.fn(),
+      },
+    },
     logger: {
       debug: vi.fn(),
       error: vi.fn(),

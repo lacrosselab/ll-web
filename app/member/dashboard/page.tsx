@@ -8,11 +8,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { UserIcon, Plus, Edit, Trash2, Settings, Clock, Users } from 'lucide-react'
+import { UserIcon, Plus, Edit, Trash2, Settings, Calendar, MapPin, ChevronDown, ChevronUp } from 'lucide-react'
 import type { User } from '@supabase/supabase-js'
 import { useCart } from '@/contexts/cart-context'
-import { formatDateOnly } from '@/lib/utils'
+import { formatDateOnly, logger } from '@/lib/utils'
 import { useToast } from '@/components/ui/toast'
+import { getGoogleMapsLink, formatTime, DEFAULT_SESSION_LOCATION } from '@/emails/shared'
+
+interface ProductSession {
+  id?: string
+  session_date: string
+  session_time: string
+  location?: string | null
+}
 
 interface PaymentAthlete {
   id: string
@@ -30,6 +38,11 @@ interface PaymentAthlete {
     name: string
     session_date: string
     description?: string
+    gender?: string | null
+    min_grade?: string | null
+    max_grade?: string | null
+    skill_level?: string | null
+    product_sessions?: ProductSession[]
   }
 }
 
@@ -70,6 +83,7 @@ function DashboardContent() {
   const [showAthleteForm, setShowAthleteForm] = useState(false)
   const [editingAthlete, setEditingAthlete] = useState<Athlete | null>(null)
   const [athleteFormLoading, setAthleteFormLoading] = useState(false)
+  const [expandedSessions, setExpandedSessions] = useState<Record<string, boolean>>({})
   const [newAthlete, setNewAthlete] = useState({
     name: '',
     age: '',
@@ -141,7 +155,7 @@ function DashboardContent() {
       if (error) throw error
       setUserProfile(data)
     } catch (error) {
-      console.error('Error fetching user profile:', error)
+      logger.error('Error fetching user profile', { error })
     }
   }
 
@@ -170,7 +184,17 @@ function DashboardContent() {
               name,
               session_date,
               description,
-              is_active
+              is_active,
+              gender,
+              min_grade,
+              max_grade,
+              skill_level,
+              product_sessions (
+                id,
+                session_date,
+                session_time,
+                location
+              )
             )
           )
         `)
@@ -180,7 +204,7 @@ function DashboardContent() {
         .limit(5) // Only show recent 5 payments on dashboard
 
       if (error) {
-        console.error('Error fetching detailed payments:', error)
+        logger.error('Error fetching detailed payments', { error })
         // Fallback to basic payments if detailed query fails
         const { data: basicData, error: basicError } = await supabase
           .from('payments')
@@ -196,7 +220,7 @@ function DashboardContent() {
 
       setRecentPayments(data || [])
     } catch (error) {
-      console.error('Error fetching payments:', error)
+      logger.error('Error fetching payments', { error })
     }
   }
 
@@ -212,7 +236,7 @@ function DashboardContent() {
       if (error) throw error
       setAthletes(data || [])
     } catch (error) {
-      console.error('Error fetching athletes:', error)
+      logger.error('Error fetching athletes', { error })
     } finally {
       setLoading(false)
     }
@@ -254,7 +278,7 @@ function DashboardContent() {
         })
 
       if (error) {
-        console.error('Database error creating athlete:', error)
+        logger.error('Database error creating athlete', { error })
         throw error
       }
 
@@ -265,7 +289,7 @@ function DashboardContent() {
       await fetchAthletes(user.id)
       showToast('Athlete created successfully!', 'success')
     } catch (error) {
-      console.error('Error creating athlete:', error)
+      logger.error('Error creating athlete', { error })
       const errorMessage = error instanceof Error ? error.message : 'There was an error adding your athlete.'
       showToast(errorMessage, 'error')
     } finally {
@@ -315,7 +339,7 @@ function DashboardContent() {
         .eq('id', editingAthlete.id)
 
       if (error) {
-        console.error('Database error updating athlete:', error)
+        logger.error('Database error updating athlete', { error })
         throw error
       }
 
@@ -326,7 +350,7 @@ function DashboardContent() {
       await fetchAthletes(user.id)
       showToast('Athlete updated successfully!', 'success')
     } catch (error) {
-      console.error('Error updating athlete:', error)
+      logger.error('Error updating athlete', { error })
       const errorMessage = error instanceof Error ? error.message : 'There was an error updating your athlete.'
       showToast(errorMessage, 'error')
     } finally {
@@ -350,7 +374,7 @@ function DashboardContent() {
       await fetchAthletes(user!.id)
       showToast('Athlete deleted successfully', 'success')
     } catch (error) {
-      console.error('Error deleting athlete:', error)
+      logger.error('Error deleting athlete', { error })
       showToast('Failed to delete athlete', 'error')
     }
   }
@@ -501,43 +525,138 @@ function DashboardContent() {
                     
                     {/* Show detailed payment info if available */}
                     {payment.payment_athletes && payment.payment_athletes.length > 0 ? (
-                      <div className="space-y-2 pt-3 border-t">
-                        {payment.payment_athletes.map((paymentAthlete) => (
-                          <div key={paymentAthlete.id} className="flex items-center justify-between text-sm">
-                            <div className="flex-1">
-                              <div className="font-medium">
-                                {paymentAthlete.product?.name || 'Product not found'}
-                              </div>
-                              <div className="text-muted-foreground">
-                                {paymentAthlete.athlete?.name || 'Athlete not found'}
-                                {paymentAthlete.athlete?.age && ` (Age ${paymentAthlete.athlete.age})`}
-                                {paymentAthlete.athlete?.school && ` - ${paymentAthlete.athlete.school}`}
-                              </div>
-                              {paymentAthlete.product?.session_date && (
-                                <div className="text-muted-foreground">
-                                  {(() => {
-                                    const formatted = formatDateOnly(
-                                      paymentAthlete.product.session_date,
-                                      'en-US',
-                                      { weekday: 'short', month: 'short', day: 'numeric' }
-                                    )
-                                    return `Session: ${formatted}`
-                                  })()}
+                      <div className="space-y-4 pt-3 border-t">
+                        {payment.payment_athletes.map((paymentAthlete) => {
+                          const sessionKey = `${payment.id}-${paymentAthlete.id}`
+                          const isExpanded = expandedSessions[sessionKey] || false
+                          
+                          // Use sessions array if available, otherwise fall back to legacy session_date
+                          const displaySessions = paymentAthlete.product?.product_sessions && paymentAthlete.product.product_sessions.length > 0
+                            ? paymentAthlete.product.product_sessions.sort((a, b) => {
+                                const dateA = new Date(`${a.session_date}T${a.session_time}`)
+                                const dateB = new Date(`${b.session_date}T${b.session_time}`)
+                                return dateA.getTime() - dateB.getTime()
+                              })
+                            : paymentAthlete.product?.session_date
+                              ? [{ session_date: paymentAthlete.product.session_date, session_time: '00:00:00', location: null }]
+                              : []
+                          
+                          return (
+                            <div key={paymentAthlete.id} className="space-y-2">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <div className="font-medium mb-1">
+                                    {paymentAthlete.product?.name || 'Product not found'}
+                                  </div>
+                                  <div className="text-sm text-muted-foreground mb-2">
+                                    {paymentAthlete.athlete?.name || 'Athlete not found'}
+                                    {paymentAthlete.athlete?.age && ` (Age ${paymentAthlete.athlete.age})`}
+                                    {paymentAthlete.athlete?.school && ` - ${paymentAthlete.athlete.school}`}
+                                  </div>
+                                  
+                                  {/* Badges for gender, skill level, and grade range */}
+                                  {(paymentAthlete.product?.gender || paymentAthlete.product?.skill_level || paymentAthlete.product?.min_grade || paymentAthlete.product?.max_grade) && (
+                                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                                      {paymentAthlete.product.gender && (
+                                        <Badge variant="outline" className="text-xs font-medium px-2 py-0.5">
+                                          {paymentAthlete.product.gender === 'co-ed' ? 'Co-ed' : paymentAthlete.product.gender.charAt(0).toUpperCase() + paymentAthlete.product.gender.slice(1)}
+                                        </Badge>
+                                      )}
+                                      {paymentAthlete.product.skill_level && (
+                                        <Badge variant="outline" className="text-xs font-medium px-2 py-0.5">
+                                          {paymentAthlete.product.skill_level.charAt(0).toUpperCase() + paymentAthlete.product.skill_level.slice(1)}
+                                        </Badge>
+                                      )}
+                                      {paymentAthlete.product.min_grade && paymentAthlete.product.max_grade && (
+                                        <Badge variant="outline" className="text-xs font-medium px-2 py-0.5">
+                                          Grades {paymentAthlete.product.min_grade}-{paymentAthlete.product.max_grade}
+                                        </Badge>
+                                      )}
+                                      {paymentAthlete.product.min_grade && !paymentAthlete.product.max_grade && (
+                                        <Badge variant="outline" className="text-xs font-medium px-2 py-0.5">
+                                          Grade {paymentAthlete.product.min_grade}+
+                                        </Badge>
+                                      )}
+                                      {!paymentAthlete.product.min_grade && paymentAthlete.product.max_grade && (
+                                        <Badge variant="outline" className="text-xs font-medium px-2 py-0.5">
+                                          Up to Grade {paymentAthlete.product.max_grade}
+                                        </Badge>
+                                      )}
+                                    </div>
+                                  )}
+                                  
+                                  {/* Session Times Display - Collapsible */}
+                                  {displaySessions.length > 0 && (
+                                    <div className="space-y-2">
+                                      <button
+                                        onClick={() => setExpandedSessions(prev => ({ ...prev, [sessionKey]: !isExpanded }))}
+                                        className="flex items-center gap-2 text-sm font-medium hover:text-primary hover:shadow-none transition-colors"
+                                      >
+                                        <Calendar className="h-4 w-4" />
+                                        <span>
+                                          {displaySessions.length} {displaySessions.length === 1 ? 'Session' : 'Sessions'}
+                                        </span>
+                                        {isExpanded ? (
+                                          <ChevronUp className="h-4 w-4 ml-auto" />
+                                        ) : (
+                                          <ChevronDown className="h-4 w-4 ml-auto" />
+                                        )}
+                                      </button>
+                                      
+                                      {isExpanded && (
+                                        <div className="space-y-3 pl-6 border-l-2">
+                                          {displaySessions.map((session, idx) => {
+                                            const formattedDate = formatDateOnly(session.session_date, 'en-US', {
+                                              weekday: 'short',
+                                              month: 'short',
+                                              day: 'numeric',
+                                              year: 'numeric'
+                                            })
+                                            const formattedTime = formatTime(session.session_time)
+                                            const displayLocation = session.location || DEFAULT_SESSION_LOCATION
+                                            
+                                            return (
+                                              <div key={idx} className="space-y-1">
+                                                <div className="flex items-center gap-2 text-sm">
+                                                  <span className="font-medium text-muted-foreground">Session {idx + 1}:</span>
+                                                  <span>
+                                                    {formattedDate}
+                                                    {formattedTime && ` at ${formattedTime}`}
+                                                  </span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-xs text-muted-foreground pl-8">
+                                                  <MapPin className="h-3 w-3" />
+                                                  <a
+                                                    href={getGoogleMapsLink(displayLocation)}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="hover:underline"
+                                                  >
+                                                    {displayLocation}
+                                                  </a>
+                                                </div>
+                                              </div>
+                                            )
+                                          })}
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
                                 </div>
-                              )}
-                            </div>
-                            <div className="text-right">
-                              <div className="font-medium">
-                                ${(paymentAthlete.unit_price_cents * paymentAthlete.quantity / 100).toFixed(2)}
-                              </div>
-                              {paymentAthlete.quantity > 1 && (
-                                <div className="text-xs text-muted-foreground">
-                                  {paymentAthlete.quantity} × ${(paymentAthlete.unit_price_cents / 100).toFixed(2)}
+                                <div className="text-right ml-4">
+                                  <div className="font-medium">
+                                    ${(paymentAthlete.unit_price_cents * paymentAthlete.quantity / 100).toFixed(2)}
+                                  </div>
+                                  {paymentAthlete.quantity > 1 && (
+                                    <div className="text-xs text-muted-foreground">
+                                      {paymentAthlete.quantity} × ${(paymentAthlete.unit_price_cents / 100).toFixed(2)}
+                                    </div>
+                                  )}
                                 </div>
-                              )}
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          )
+                        })}
                       </div>
                     ) : (
                       /* Fallback for payments without detailed data */

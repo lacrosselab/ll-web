@@ -143,21 +143,21 @@ async function sendWithRetry(
 }
 
 /**
- * Get the Resend audience/segment ID
- * Returns the audience ID (UUID)
+ * Get the Resend segment ID
+ * Returns the segment ID (UUID)
  * 
- * First checks RESEND_AUDIENCE_ID environment variable.
+ * First checks RESEND_SEGMENT_ID environment variable.
  * If not set, tries to list segments and uses the first/only one.
  */
 async function getDefaultSegment(context?: { traceId?: string }): Promise<string> {
-  // First, check if audience ID is set in environment variable
-  const envAudienceId = process.env.RESEND_AUDIENCE_ID
-  if (envAudienceId) {
-    logger.debug('audience.from_env', {
-      audienceId: envAudienceId,
+  // First, check if segment ID is set in environment variable
+  const envSegmentId = process.env.RESEND_SEGMENT_ID
+  if (envSegmentId) {
+    logger.debug('segment.from_env', {
+      segmentId: envSegmentId,
       traceId: context?.traceId,
     })
-    return envAudienceId
+    return envSegmentId
   }
   
   const resend = getResend()
@@ -181,8 +181,8 @@ async function getDefaultSegment(context?: { traceId?: string }): Promise<string
       
       if (!listResponse.data || listResponse.data.length === 0) {
         throw new Error(
-          'No segments found in Resend and RESEND_AUDIENCE_ID is not set. ' +
-          'Please set RESEND_AUDIENCE_ID environment variable to your Resend audience/segment UUID. ' +
+          'No segments found in Resend and RESEND_SEGMENT_ID is not set. ' +
+          'Please set RESEND_SEGMENT_ID environment variable to your Resend segment UUID. ' +
           'You can find this in your Resend dashboard.'
         )
       }
@@ -210,12 +210,12 @@ async function getDefaultSegment(context?: { traceId?: string }): Promise<string
     
     // If SDK doesn't support segments API, throw helpful error
     throw new Error(
-      'RESEND_AUDIENCE_ID environment variable is required. ' +
-      'Please set it to your Resend audience/segment UUID (e.g., RESEND_AUDIENCE_ID=43a6084d-7071-46dd-8eae-357f96ed66f0). ' +
+      'RESEND_SEGMENT_ID environment variable is required. ' +
+      'Please set it to your Resend segment UUID (e.g., RESEND_SEGMENT_ID=43a6084d-7071-46dd-8eae-357f96ed66f0). ' +
       'You can find this in your Resend dashboard.'
     )
   } catch (error) {
-    logger.error('audience.get_failed', {
+    logger.error('segment.get_failed', {
       error: error instanceof Error ? error.message : 'Unknown error',
       traceId: context?.traceId,
     })
@@ -224,7 +224,8 @@ async function getDefaultSegment(context?: { traceId?: string }): Promise<string
 }
 
 /**
- * Add or update a contact in Resend
+ * Add contact to Resend segment
+ * Uses resend.contacts.segments.add() which can add by email or contactId
  */
 export async function addContactToResend(
   email: string,
@@ -233,19 +234,199 @@ export async function addContactToResend(
   try {
     const resend = getResend()
     const segmentId = await getDefaultSegment(context)
+    const resendAny = resend as any
     
-    await resend.contacts.create({
-      email,
-      audienceId: segmentId,
-    })
-    logger.debug('contact.added', {
-      to: maskEmail(email),
-      traceId: context?.traceId,
-    })
+    // Step 1: Create the contact first (or get it if it already exists)
+    let contactId: string | undefined
+    let contactCreationSucceeded = false
+    
+    try {
+      const createResponse = await resend.contacts.create({
+        email,
+        unsubscribed: false,
+      }) as { data: { id: string } | null; error: any }
+      
+      if (createResponse.error) {
+        const errorMessage = createResponse.error.message || createResponse.error.toString()
+        
+        // If contact already exists, that's fine - we can use email for segment addition
+        if (errorMessage.includes('already exists') || errorMessage.includes('already_exist')) {
+          logger.debug('contact.already_exists', {
+            to: maskEmail(email),
+            traceId: context?.traceId,
+          })
+          // Contact exists, we'll use email to add to segment
+          // Try to get contact by email if API supports it
+          if (typeof resendAny.contacts?.get === 'function') {
+            try {
+              const getResponse = await resendAny.contacts.get({ email }) as { data: { id: string } | null; error: any }
+              if (getResponse.data?.id) {
+                contactId = getResponse.data.id
+                logger.debug('contact.retrieved_by_email', {
+                  to: maskEmail(email),
+                  contactId,
+                  traceId: context?.traceId,
+                })
+              }
+            } catch (getError) {
+              // Getting by email failed, that's ok - we'll use email for segment
+              logger.debug('contact.get_by_email_failed', {
+                to: maskEmail(email),
+                error: getError instanceof Error ? getError.message : 'Unknown error',
+                traceId: context?.traceId,
+              })
+            }
+          }
+        } else {
+          // Non-recoverable error - log and don't proceed to segment
+          logger.error('contact.create_failed', {
+            to: maskEmail(email),
+            error: errorMessage,
+            traceId: context?.traceId,
+          })
+          // Don't throw - email failures shouldn't block signup or purchase
+          return
+        }
+      } else if (createResponse.data?.id) {
+        contactId = createResponse.data.id
+        contactCreationSucceeded = true
+        logger.debug('contact.created', {
+          to: maskEmail(email),
+          contactId,
+          traceId: context?.traceId,
+        })
+      } else {
+        // No error but no data either - unexpected response
+        logger.warn('contact.create_unexpected_response', {
+          to: maskEmail(email),
+          responseData: createResponse.data,
+          traceId: context?.traceId,
+        })
+        // Continue to try adding to segment with email
+      }
+    } catch (createError) {
+      // If creation fails for other reasons, log but continue to try adding to segment with email
+      const errorMessage = createError instanceof Error ? createError.message : 'Unknown error'
+      logger.debug('contact.create_error', {
+        to: maskEmail(email),
+        error: errorMessage,
+        traceId: context?.traceId,
+      })
+      // Continue to try adding to segment with email
+    }
+    
+    // Step 2: Add contact to segment using segments.add API
+    // According to Resend docs: resend.contacts.segments.add({ email, segmentId }) or { contactId, segmentId }
+    
+    // Check if segments API exists
+    if (!resendAny.contacts?.segments) {
+      logger.error('contact.segments_api_not_available', {
+        to: maskEmail(email),
+        segmentId,
+        traceId: context?.traceId,
+        hasContacts: !!resendAny.contacts,
+        contactsKeys: resendAny.contacts ? Object.keys(resendAny.contacts) : [],
+        sdkVersion: '4.0.0',
+      })
+      throw new Error('Resend contacts.segments.add API not available. Please check Resend SDK version.')
+    }
+    
+    // Add to segment - use contactId if available, otherwise use email
+    const addToSegmentParams = contactId 
+      ? { contactId, segmentId }
+      : { email, segmentId }
+    
+    try {
+      const segmentResponse = await resendAny.contacts.segments.add(addToSegmentParams) as { data: any; error: any }
+      
+      if (segmentResponse.error) {
+        const errorMessage = segmentResponse.error.message || segmentResponse.error.toString()
+        
+        // If contact is already in segment, that's fine
+        if (errorMessage.includes('already') || errorMessage.includes('exists')) {
+          logger.debug('contact.already_in_segment', {
+            to: maskEmail(email),
+            segmentId,
+            contactId,
+            traceId: context?.traceId,
+          })
+          return
+        }
+        
+        // If error mentions UUID, it might be because contactId is invalid
+        if (errorMessage.includes('UUID') && contactId) {
+          logger.warn('contact.segment_add_uuid_error', {
+            to: maskEmail(email),
+            segmentId,
+            contactId,
+            error: errorMessage,
+            traceId: context?.traceId,
+          })
+          // Retry with email instead of contactId
+          if (contactId) {
+            try {
+              const retryResponse = await resendAny.contacts.segments.add({
+                email,
+                segmentId,
+              }) as { data: any; error: any }
+              
+              if (retryResponse.error) {
+                const retryErrorMessage = retryResponse.error.message || retryResponse.error.toString()
+                if (retryErrorMessage.includes('already') || retryErrorMessage.includes('exists')) {
+                  logger.debug('contact.already_in_segment_retry', {
+                    to: maskEmail(email),
+                    segmentId,
+                    traceId: context?.traceId,
+                  })
+                  return
+                }
+                throw new Error(retryErrorMessage)
+              }
+              
+              logger.debug('contact.added_to_segment_retry', {
+                to: maskEmail(email),
+                segmentId,
+                traceId: context?.traceId,
+              })
+              return
+            } catch (retryError) {
+              throw retryError
+            }
+          }
+        }
+        
+        throw new Error(errorMessage)
+      }
+      
+      logger.debug('contact.added_to_segment', {
+        to: maskEmail(email),
+        segmentId,
+        contactId,
+        traceId: context?.traceId,
+      })
+    } catch (segmentsError) {
+      // If the error is about segments not existing, log detailed info
+      if (segmentsError instanceof Error && segmentsError.message.includes('Cannot read properties of undefined')) {
+        const contactsKeys = resendAny.contacts ? Object.keys(resendAny.contacts) : []
+        const segmentsKeys = resendAny.segments ? Object.keys(resendAny.segments) : []
+        logger.error('contact.segments_api_error', {
+          to: maskEmail(email),
+          segmentId,
+          traceId: context?.traceId,
+          hasContacts: !!resendAny.contacts,
+          hasSegments: !!resendAny.segments,
+          contactsKeys,
+          segmentsKeys,
+          error: segmentsError.message,
+        })
+        throw new Error('Resend contacts.segments.add API not available. Please check Resend SDK version.')
+      }
+      throw segmentsError
+    }
   } catch (error) {
-    // If contact already exists, that's fine - Resend will update it
-    if (error instanceof Error && error.message.includes('already exists')) {
-      logger.debug('contact.exists', {
+    // If contact is already in segment, that's fine
+    if (error instanceof Error && (error.message.includes('already') || error.message.includes('exists'))) {
+      logger.debug('contact.segment_exists', {
         to: maskEmail(email),
         traceId: context?.traceId,
       })
@@ -256,7 +437,7 @@ export async function addContactToResend(
       error: error instanceof Error ? error.message : 'Unknown error',
       traceId: context?.traceId,
     })
-    // Don't throw - email failures shouldn't block signup
+    // Don't throw - email failures shouldn't block signup or purchase
   }
 }
 
@@ -403,7 +584,7 @@ export async function sendPurchaseConfirmation(data: {
 }
 
 /**
- * Send a broadcast email to Resend audience using Broadcasts API
+ * Send a broadcast email to Resend segment using Broadcasts API
  */
 export async function sendBroadcastToAudience(data: {
   audienceId: string
@@ -441,7 +622,7 @@ export async function sendBroadcastToAudience(data: {
   try {
     const resend = getResend()
     
-    // Get the default segment if audienceId is 'default'
+    // Get the default segment if audienceId is 'default' (legacy parameter name, actually a segment ID)
     let segmentId = data.audienceId
     if (segmentId === 'default') {
       segmentId = await getDefaultSegment(context)

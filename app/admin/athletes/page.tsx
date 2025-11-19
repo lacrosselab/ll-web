@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { Search, User, Calendar, DollarSign, Eye } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/toast'
-import { formatDateOnly } from '@/lib/utils'
+import { formatDateOnly, logger } from '@/lib/utils'
 
 interface Athlete {
   id: string
@@ -120,7 +120,7 @@ export default function AdminAthletesPage() {
 
       setAthletes(transformedAthletes)
     } catch (err) {
-      console.error('Error loading athletes:', err)
+      logger.error('Error loading athletes', { error: err })
       setError('Failed to load athletes')
     } finally {
       setLoading(false)

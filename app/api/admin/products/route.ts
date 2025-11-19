@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { getSupabaseServer } from '@/lib/supabase/server'
+import { logger } from '@/lib/utils'
 
 /**
  * Normalize location string by capitalizing properly
@@ -111,12 +112,12 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (dbError) {
-      console.error('Database insert error:', dbError)
+      logger.error('Database insert error', { error: dbError })
       // Try to clean up Stripe products if database insert fails
       try {
         await stripe.products.update(product.id, { active: false })
       } catch (cleanupError) {
-        console.error('Failed to cleanup Stripe product:', cleanupError)
+        logger.error('Failed to cleanup Stripe product', { error: cleanupError })
       }
       throw dbError
     }
@@ -135,7 +136,7 @@ export async function POST(request: NextRequest) {
         .insert(sessionRecords)
 
       if (sessionsError) {
-        console.error('Error creating product sessions:', sessionsError)
+        logger.error('Error creating product sessions', { error: sessionsError })
         // Don't fail the whole request, but log the error
       }
     } else if (session_date) {
@@ -149,7 +150,7 @@ export async function POST(request: NextRequest) {
         })
 
       if (sessionsError) {
-        console.error('Error creating default product session:', sessionsError)
+        logger.error('Error creating default product session', { error: sessionsError })
       }
     }
 
@@ -160,7 +161,7 @@ export async function POST(request: NextRequest) {
       stripePriceId: price.id,
     })
   } catch (error) {
-    console.error('Error creating product:', error)
+    logger.error('Error creating product', { error })
     return NextResponse.json(
       { error: 'Failed to create product' },
       { status: 500 }
@@ -235,7 +236,7 @@ export async function PUT(request: NextRequest) {
         await stripe.prices.update(priceId, { active: false })
       } catch (archiveError) {
         // If we can't archive it (because it's the default), that's okay
-        console.log('Could not archive old price (likely default price):', archiveError)
+        logger.debug('Could not archive old price (likely default price)', { error: archiveError })
       }
 
       newPriceId = newPrice.id
@@ -255,7 +256,7 @@ export async function PUT(request: NextRequest) {
         .eq('stripe_product_id', productId)
 
       if (updateError) {
-        console.error('Error updating product fields:', updateError)
+        logger.error('Error updating product fields', { error: updateError })
       }
     }
 
@@ -269,7 +270,7 @@ export async function PUT(request: NextRequest) {
         .single()
 
       if (productDataError) {
-        console.error('Error fetching product data for session update:', productDataError)
+        logger.error('Error fetching product data for session update', { error: productDataError })
         return NextResponse.json(
           { error: 'Failed to fetch product data for session update' },
           { status: 500 }
@@ -284,7 +285,7 @@ export async function PUT(request: NextRequest) {
           .eq('product_id', productData.id)
 
         if (deleteError) {
-          console.error('Error deleting product sessions:', deleteError)
+          logger.error('Error deleting product sessions', { error: deleteError })
           return NextResponse.json(
             { error: 'Failed to delete existing product sessions' },
             { status: 500 }
@@ -305,7 +306,7 @@ export async function PUT(request: NextRequest) {
             .insert(sessionRecords)
 
           if (sessionsError) {
-            console.error('Error inserting product sessions:', sessionsError)
+            logger.error('Error inserting product sessions', { error: sessionsError })
             return NextResponse.json(
               { error: 'Failed to insert product sessions', details: sessionsError.message },
               { status: 500 }
@@ -313,7 +314,7 @@ export async function PUT(request: NextRequest) {
           }
         }
       } else {
-        console.error('Product data not found for session update')
+        logger.error('Product data not found for session update')
         return NextResponse.json(
           { error: 'Product not found for session update' },
           { status: 404 }
@@ -326,7 +327,7 @@ export async function PUT(request: NextRequest) {
       priceId: newPriceId,
     })
   } catch (error) {
-    console.error('Error updating Stripe product:', error)
+    logger.error('Error updating Stripe product', { error })
     return NextResponse.json(
       { error: 'Failed to update Stripe product' },
       { status: 500 }
@@ -360,7 +361,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error deleting Stripe product:', error)
+    logger.error('Error deleting Stripe product', { error })
     return NextResponse.json(
       { error: 'Failed to delete Stripe product' },
       { status: 500 }

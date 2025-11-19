@@ -18,7 +18,8 @@ import {
   formatTime, 
   formatDate, 
   formatCurrency,
-  emailStyles 
+  emailStyles,
+  DEFAULT_SESSION_LOCATION
 } from './shared'
 
 interface Session {
@@ -195,9 +196,8 @@ export const PurchaseConfirmationEmail = ({
                       {displaySessions.map((session, sessionIdx) => {
                         const formattedDate = formatDate(session.session_date)
                         const formattedTime = formatTime(session.session_time)
-                        // Use session location if available, otherwise fall back to item location, then default
-                        const defaultLocation = '3006 Impala Place, Unit B, Henrico, VA 23228'
-                        const sessionLocation = session.location || item.location || defaultLocation
+                        // Use session location if available, otherwise use default
+                        const sessionLocation = session.location || DEFAULT_SESSION_LOCATION
                         
                         return (
                           <React.Fragment key={sessionIdx}>

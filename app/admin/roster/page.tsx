@@ -178,7 +178,7 @@ export default function AdminRosterPage() {
 
       setSessions(sortedSessions)
     } catch (err) {
-      console.error('Error loading sessions:', err)
+      logger.error('Error loading sessions', { error: err })
       setError('Failed to load sessions')
     } finally {
       setLoading(false)
@@ -232,7 +232,7 @@ export default function AdminRosterPage() {
 
       setRegisteredAthletes(transformedAthletes)
     } catch (err) {
-      console.error('Error loading athletes for session:', err)
+      logger.error('Error loading athletes for session', { error: err })
       showToast('Failed to load registered athletes', 'error')
     } finally {
       setLoadingAthletes(false)

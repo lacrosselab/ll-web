@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation'
 import { ProductCard } from '@/components/product-card'
 import { useToast } from '@/components/ui/toast'
 import { stripe } from '@/lib/stripe'
-import { formatDateOnly } from '@/lib/utils'
+import { formatDateOnly, logger } from '@/lib/utils'
 
 interface ProductSession {
   id?: string
@@ -75,7 +75,7 @@ export default function AdminProductsPage() {
       if (error) throw error
       setProducts(data || [])
     } catch (error) {
-      console.error('Error loading products:', error)
+      logger.error('Error loading products', { error })
       showToast('Failed to load sessions', 'error')
     } finally {
       setLoading(false)
@@ -114,7 +114,7 @@ export default function AdminProductsPage() {
 
         if (!response.ok) {
           const errorData = await response.json()
-          console.error('Stripe update failed:', errorData)
+          logger.error('Stripe update failed', { errorData })
           // Revert database change if Stripe update fails
           // @ts-ignore - Supabase TypeScript types not properly generated
           await supabase
@@ -125,7 +125,7 @@ export default function AdminProductsPage() {
           throw new Error('Failed to sync with Stripe')
         }
       } catch (stripeError) {
-        console.error('Error updating Stripe product:', stripeError)
+        logger.error('Error updating Stripe product', { error: stripeError })
         // Revert database change if Stripe update fails
         // @ts-ignore - Supabase TypeScript types not properly generated
         await supabase
@@ -139,7 +139,7 @@ export default function AdminProductsPage() {
       await loadProducts()
       showToast(`Session ${newActiveStatus ? 'activated' : 'deactivated'} successfully`, 'success')
     } catch (err) {
-      console.error('Error updating product status:', err)
+      logger.error('Error updating product status', { error: err })
       showToast(err instanceof Error ? err.message : 'Failed to update session status', 'error')
     }
   }
@@ -171,16 +171,16 @@ export default function AdminProductsPage() {
         })
 
         if (!response.ok) {
-          console.error('Stripe deletion failed, but database deletion succeeded')
+          logger.error('Stripe deletion failed, but database deletion succeeded')
         }
       } catch (stripeError) {
-        console.error('Error deleting from Stripe:', stripeError)
+        logger.error('Error deleting from Stripe', { error: stripeError })
       }
 
       await loadProducts()
       showToast('Session deleted successfully', 'success')
     } catch (err) {
-      console.error('Error deleting product:', err)
+      logger.error('Error deleting product', { error: err })
       showToast(err instanceof Error ? err.message : 'Failed to delete session', 'error')
     }
   }
@@ -472,7 +472,7 @@ function SessionForm({
 
           if (!response.ok) {
             const errorData = await response.json()
-            console.error('Stripe update failed:', errorData)
+            logger.error('Stripe update failed', { errorData })
             showToast('Session updated in database, but Stripe sync failed', 'error')
           } else {
             const stripeData = await response.json()
@@ -485,7 +485,7 @@ function SessionForm({
             showToast('Session updated successfully', 'success')
           }
         } catch (stripeError) {
-          console.error('Error updating Stripe product:', stripeError)
+          logger.error('Error updating Stripe product', { error: stripeError })
           showToast('Session updated in database, but Stripe sync failed', 'error')
         }
       } else {
@@ -511,7 +511,7 @@ function SessionForm({
 
       onSuccess()
     } catch (error) {
-      console.error('Error saving product:', error)
+      logger.error('Error saving product', { error })
       showToast(error instanceof Error ? error.message : 'Failed to save session', 'error')
     } finally {
       setLoading(false)

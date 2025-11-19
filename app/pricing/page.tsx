@@ -3,7 +3,7 @@
 import { PricingCard, PricingCardSkeleton } from "@/components/pricing-card"
 import { createCheckoutSession } from "@/lib/checkout"
 import { useEffect, useState, useMemo } from "react"
-import { formatDateOnly, formatDateRange, parseDateOnlyUTC } from "@/lib/utils"
+import { formatDateOnly, formatDateRange, parseDateOnlyUTC, logger } from "@/lib/utils"
 
 // Types for our database product data
 interface ProductPrice {
@@ -120,7 +120,7 @@ async function fetchProducts(now?: Date): Promise<Product[]> {
     })
     
     if (!response.ok) {
-      console.error('Failed to fetch products:', response.status, response.statusText)
+      logger.error('Failed to fetch products', { status: response.status, statusText: response.statusText })
       return []
     }
     
@@ -134,7 +134,7 @@ async function fetchProducts(now?: Date): Promise<Product[]> {
     
     return activeProducts
   } catch (error) {
-    console.error('Error fetching products:', error)
+    logger.error('Error fetching products', { error })
     return []
   }
 }
@@ -198,7 +198,7 @@ export default function PricingPage() {
         const fetchedProducts = await fetchProducts(now)
         setProducts(fetchedProducts)
       } catch (err) {
-        console.error('Error loading products:', err)
+        logger.error('Error loading products', { error: err })
         setError('Failed to load products. Please try again later.')
       } finally {
         setLoading(false)

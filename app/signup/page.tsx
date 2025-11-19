@@ -11,6 +11,7 @@ import { getSupabaseClient } from "@/lib/supabase/client"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { logger } from "@/lib/utils"
 
 export default function SignupPage() {
   const [email, setEmail] = useState("")
@@ -51,9 +52,8 @@ export default function SignupPage() {
           })
         } catch (err) {
           // Silently fail - email addition shouldn't block signup
-          // Note: logger is not available in client components, so we keep console.error here
           // The API route will handle proper logging
-          console.error('Failed to add contact to Resend:', err)
+          logger.error('Failed to add contact to Resend', { error: err })
         }
 
         // Redirect to dashboard instead of showing confirmation

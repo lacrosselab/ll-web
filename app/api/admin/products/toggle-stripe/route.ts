@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { getSupabaseServer } from '@/lib/supabase/server'
+import { logger } from '@/lib/utils'
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error updating Stripe product status:', error)
+    logger.error('Error updating Stripe product status', { error })
     return NextResponse.json(
       { 
         error: 'Failed to update Stripe product status',

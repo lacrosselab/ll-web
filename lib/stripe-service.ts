@@ -1,4 +1,5 @@
 import { stripe } from './stripe'
+import { logger } from './utils'
 
 export interface CreateProductData {
   name: string
@@ -33,7 +34,7 @@ export async function createStripeProduct(data: CreateProductData): Promise<Stri
       priceId: price.id,
     }
   } catch (error) {
-    console.error('Error creating Stripe product:', error)
+    logger.error('Error creating Stripe product', { error })
     throw new Error('Failed to create Stripe product')
   }
 }
@@ -67,7 +68,7 @@ export async function updateStripeProduct(
       priceId: newPrice.id,
     }
   } catch (error) {
-    console.error('Error updating Stripe product:', error)
+    logger.error('Error updating Stripe product', { error })
     throw new Error('Failed to update Stripe product')
   }
 }
@@ -77,7 +78,7 @@ export async function deleteStripeProduct(productId: string): Promise<void> {
     // Archive the product in Stripe (don't delete to preserve history)
     await stripe.products.update(productId, { active: false })
   } catch (error) {
-    console.error('Error deleting Stripe product:', error)
+    logger.error('Error deleting Stripe product', { error })
     throw new Error('Failed to delete Stripe product')
   }
 }

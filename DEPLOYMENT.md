@@ -114,6 +114,7 @@ If issues occur after deployment:
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`: Production Stripe publishable key (pk_live_...)
 - `STRIPE_WEBHOOK_SECRET`: Production Stripe webhook secret
 - `RESEND_API_KEY`: Resend API key for sending emails
+- `RESEND_SEGMENT_ID`: Resend segment UUID for adding contacts to the segment. Can be found in your Resend dashboard under Audiences/Segments. Required for adding customers to the segment on signup and purchase. This is the segment ID used with `resend.contacts.segments.add()`.
 - `NEXT_PUBLIC_SITE_URL`: Production site URL
 - `NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL`: Production auth callback URL
 
@@ -129,6 +130,7 @@ If issues occur after deployment:
 
 ### Required Environment Variables
 - `RESEND_API_KEY`: Resend API key for sending emails
+- `RESEND_SEGMENT_ID`: Resend segment UUID for adding contacts to the segment. This is used when customers sign up or make a purchase to automatically add them to your Resend segment using `resend.contacts.segments.add()`. Can be found in your Resend dashboard under Audiences/Segments.
 - `RESEND_FROM_EMAIL`: (Optional) Email address to send from. Defaults to `noreply@thelacrosselab.com` if not set.
 
 ### Logging Configuration

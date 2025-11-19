@@ -1,6 +1,7 @@
 "use client"
 
 import type { PriceInterval } from "./stripe"
+import { logger } from "./utils"
 
 export async function createCheckoutSession(priceInterval: PriceInterval) {
   try {
@@ -26,7 +27,7 @@ export async function createCheckoutSession(priceInterval: PriceInterval) {
       await stripeInstance.redirectToCheckout({ sessionId })
     }
   } catch (error) {
-    console.error("Error creating checkout session:", error)
+    logger.error("Error creating checkout session", { error })
     throw error
   }
 }

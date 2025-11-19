@@ -70,7 +70,7 @@ export default function AdminBroadcastPage() {
       setPreviewHtml(html)
       setShowPreview(true)
     } catch (error) {
-      console.error('Error generating preview:', error)
+      logger.error('Error generating preview', { error })
       showToast('Error generating preview', 'error')
     }
   }
@@ -119,7 +119,7 @@ export default function AdminBroadcastPage() {
       setShowPreview(false)
       setPreviewHtml(null)
     } catch (error) {
-      console.error('Error sending broadcast:', error)
+      logger.error('Error sending broadcast', { error })
       showToast(
         error instanceof Error ? error.message : 'Failed to send broadcast email',
         'error'

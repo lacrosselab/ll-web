@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import {
-  createMockSupabaseClient,
   createMockNextRequest,
   createMockStripeEvent,
   mockPaymentAthletes,
@@ -30,7 +29,13 @@ const mocks = vi.hoisted(() => {
         },
       },
     },
-    mockSupabaseClient: createMockSupabaseClient(),
+    mockSupabaseClient: {
+      from: vi.fn(),
+      rpc: vi.fn(),
+      auth: {
+        getUser: vi.fn(),
+      },
+    },
     mockSendPurchaseConfirmation: vi.fn().mockResolvedValue(undefined),
     logger: {
       debug: vi.fn(),
@@ -114,9 +119,7 @@ describe('POST /api/webhooks/stripe', () => {
     } as any)
 
     // Configure Supabase mocks
-    const tableQueries = new Map()
-    
-    tableQueries.set('webhook_events', {
+    const webhookEventsQuery = {
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
       single: vi.fn().mockResolvedValue({
@@ -125,18 +128,23 @@ describe('POST /api/webhooks/stripe', () => {
       }),
       upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
       update: vi.fn().mockReturnThis(),
+    }
+
+    // Make update().eq() chainable
+    webhookEventsQuery.update.mockReturnValue({
+      eq: vi.fn().mockResolvedValue({ data: null, error: null }),
     })
 
-    tableQueries.set('products', {
+    const productsQuery = {
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
       single: vi.fn().mockResolvedValue({
         data: mockProduct,
         error: null,
       }),
-    })
+    }
 
-    tableQueries.set('payments', {
+    const paymentsQuery = {
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
       single: vi.fn().mockResolvedValue({
@@ -144,38 +152,55 @@ describe('POST /api/webhooks/stripe', () => {
         error: null,
       }),
       update: vi.fn().mockReturnThis(),
+    }
+
+    // Make payments update().eq() chainable
+    paymentsQuery.update.mockReturnValue({
+      eq: vi.fn().mockResolvedValue({ data: null, error: null }),
     })
 
-    tableQueries.set('users', {
+    const usersQuery = {
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
       single: vi.fn().mockResolvedValue({
         data: mockUser,
         error: null,
       }),
-    })
+    }
 
-    tableQueries.set('payment_athletes', {
+    const paymentAthletesQuery = {
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockResolvedValue({
         data: mockPaymentAthletes,
         error: null,
       }),
-    })
-
-    // Mock RPC
-    const rpcQuery = {
-      rpc: vi.fn().mockResolvedValue({
-        data: 'payment-id-123',
-        error: null,
-      }),
     }
 
     mockSupabaseClient.from.mockImplementation((table: string) => {
-      if (table === 'rpc') {
-        return rpcQuery as any
+      switch (table) {
+        case 'webhook_events':
+          return webhookEventsQuery as any
+        case 'products':
+          return productsQuery as any
+        case 'payments':
+          return paymentsQuery as any
+        case 'users':
+          return usersQuery as any
+        case 'payment_athletes':
+          return paymentAthletesQuery as any
+        default:
+          return {
+            select: vi.fn().mockReturnThis(),
+            eq: vi.fn().mockReturnThis(),
+            single: vi.fn().mockResolvedValue({ data: null, error: null }),
+          } as any
       }
-      return tableQueries.get(table) || {}
+    })
+
+    // Mock RPC method directly on the client
+    mockSupabaseClient.rpc = vi.fn().mockResolvedValue({
+      data: 'payment-id-123',
+      error: null,
     })
 
     const request = createWebhookRequest(mockEvent)
@@ -186,7 +211,7 @@ describe('POST /api/webhooks/stripe', () => {
     expect(json).toEqual({ received: true })
 
     // Verify RPC was called with correct parameters
-    expect(rpcQuery.rpc).toHaveBeenCalledWith(
+    expect(mockSupabaseClient.rpc).toHaveBeenCalledWith(
       'process_payment_webhook',
       expect.objectContaining({
         p_stripe_payment_intent_id: 'pi_123',

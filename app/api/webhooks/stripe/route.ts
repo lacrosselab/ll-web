@@ -3,7 +3,7 @@ import { stripe } from "@/lib/stripe"
 import { getSupabaseService } from "@/lib/supabase/service"
 import type Stripe from "stripe"
 import { logger } from '@/lib/utils'
-import { sendPurchaseConfirmation } from '@/lib/email/service'
+import { sendPurchaseConfirmation, addContactToResend } from '@/lib/email/service'
 import { randomUUID } from 'crypto'
 
 export async function POST(request: NextRequest) {
@@ -262,9 +262,6 @@ export async function POST(request: NextRequest) {
                   logger.error('webhook.payment_details_fetch_failed', { error: paymentAthletesError.message, traceId })
                 } else if (paymentAthletes && paymentAthletes.length > 0) {
                   // Format items for email
-                  // Default location - can be overridden via environment variable or stored in DB
-                  const defaultLocation = process.env.SESSION_LOCATION || '3006 Impala Place, Unit B, Henrico, VA 23228'
-                  
                   const emailItems = paymentAthletes.map((pa: any) => {
                     // Use product_sessions if available, otherwise fall back to legacy fields
                     const sessions = pa.product.product_sessions && pa.product.product_sessions.length > 0
@@ -277,11 +274,6 @@ export async function POST(request: NextRequest) {
                         ? [{ session_date: pa.product.session_date, session_time: pa.product.session_time || '00:00:00' }]
                         : []
 
-                    // Get location from first session if available, otherwise use default
-                    const sessionLocation = sessions.length > 0 && sessions[0].location 
-                      ? sessions[0].location 
-                      : defaultLocation
-
                     return {
                       productName: pa.product.name,
                       athleteName: pa.athlete.name,
@@ -292,7 +284,6 @@ export async function POST(request: NextRequest) {
                       minGrade: pa.product.min_grade,
                       maxGrade: pa.product.max_grade,
                       skillLevel: pa.product.skill_level,
-                      location: sessionLocation,
                     }
                   })
 
@@ -330,6 +321,25 @@ export async function POST(request: NextRequest) {
               }
             } else if (payment?.email_sent_at) {
               logger.debug('webhook.email_already_sent', { traceId })
+            }
+
+            // Add customer to Resend audience (even if email was already sent)
+            // This ensures customers are in the audience regardless of email sending status
+            try {
+              const customerEmail = customer.email
+              if (customerEmail) {
+                logger.debug('webhook.adding_to_resend_audience', { traceId })
+                await addContactToResend(customerEmail, { traceId })
+                logger.debug('webhook.resend_audience_added', { traceId })
+              } else {
+                logger.warn('webhook.no_email_for_resend', { traceId })
+              }
+            } catch (resendError) {
+              logger.error('webhook.resend_audience_error', {
+                error: resendError instanceof Error ? resendError.message : 'Unknown error',
+                traceId,
+              })
+              // Don't throw - Resend failures shouldn't block payment processing
             }
           } catch (emailError) {
             logger.error('webhook.email_error', { error: emailError instanceof Error ? emailError.message : 'Unknown error', traceId })

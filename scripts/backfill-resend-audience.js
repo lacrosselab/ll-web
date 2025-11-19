@@ -1,11 +1,12 @@
-// Backfill script to add existing users to Resend audience
+// Backfill script to add existing users to Resend segment
 // Run this with: node scripts/backfill-resend-audience.js
 //
 // This script is idempotent - safe to run multiple times.
-// It will skip users that already exist in Resend.
+// It will skip users that are already in the segment.
 
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
+import { logger, maskEmail } from '@/lib/utils'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SECRET_KEY
@@ -13,42 +14,55 @@ const resendApiKey = process.env.RESEND_API_KEY
 const fromEmail = process.env.RESEND_FROM_EMAIL || 'noreply@thelacrosselab.com'
 
 if (!supabaseUrl || !supabaseServiceKey) {
-  console.error('❌ Missing environment variables:')
-  console.error('- NEXT_PUBLIC_SUPABASE_URL:', !!process.env.NEXT_PUBLIC_SUPABASE_URL)
-  console.error('- SUPABASE_SECRET_KEY:', !!process.env.SUPABASE_SECRET_KEY)
+  logger.error('backfill.missing_env_vars', {
+    hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+    hasSupabaseSecretKey: !!process.env.SUPABASE_SECRET_KEY,
+  })
   process.exit(1)
 }
 
 if (!resendApiKey) {
-  console.error('❌ Missing environment variable: RESEND_API_KEY')
+  logger.error('backfill.missing_resend_api_key')
+  process.exit(1)
+}
+
+const segmentId = process.env.RESEND_SEGMENT_ID
+
+if (!segmentId) {
+  logger.error('backfill.missing_segment_id', {
+    message: 'Please set RESEND_SEGMENT_ID environment variable to your Resend segment UUID. You can find this in your Resend dashboard under Audiences/Segments.',
+    example: 'RESEND_SEGMENT_ID=43a6084d-7071-46dd-8eae-357f96ed66f0',
+  })
   process.exit(1)
 }
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
 const resend = new Resend(resendApiKey)
-
-// Get audience ID from environment variable or use 'default' (which will need to be resolved)
-const AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID || 'default'
-
-if (AUDIENCE_ID === 'default') {
-  console.warn('⚠️  RESEND_AUDIENCE_ID not set. Using "default" which may not work.')
-  console.warn('   Please set RESEND_AUDIENCE_ID environment variable to your Resend audience UUID.')
-  console.warn('   You can find this in your Resend dashboard under Audiences.\n')
-}
+const SEGMENT_ID = segmentId
 
 /**
- * Add a contact to Resend audience
+ * Add a contact to Resend segment
  */
 async function addContactToResend(email) {
   try {
-    await resend.contacts.create({
+    const segmentResponse = await resend.contacts.segments.add({
       email,
-      audienceId: AUDIENCE_ID,
+      segmentId: SEGMENT_ID,
     })
+    
+    if (segmentResponse.error) {
+      // If contact is already in segment, that's fine
+      const errorMessage = segmentResponse.error.message || segmentResponse.error.toString()
+      if (errorMessage.includes('already') || errorMessage.includes('exists')) {
+        return { success: true, error: null, skipped: true }
+      }
+      return { success: false, error: errorMessage }
+    }
+    
     return { success: true, error: null }
   } catch (error) {
-    // If contact already exists, that's fine
-    if (error.message && error.message.includes('already exists')) {
+    // If contact is already in segment, that's fine
+    if (error.message && (error.message.includes('already') || error.message.includes('exists'))) {
       return { success: true, error: null, skipped: true }
     }
     return { success: false, error: error.message || 'Unknown error' }
@@ -57,26 +71,30 @@ async function addContactToResend(email) {
 
 async function backfillResendAudience() {
   try {
-    console.log('🚀 Starting Resend audience backfill...\n')
+    logger.info('backfill.start')
     
     // Get all users from database
-    console.log('📡 Fetching users from database...')
+    logger.info('backfill.fetching_users')
     const { data: users, error: usersError } = await supabase
       .from('users')
       .select('id, email, created_at')
       .order('created_at', { ascending: true })
 
     if (usersError) {
-      console.error('❌ Error fetching users:', usersError.message)
+      logger.error('backfill.fetch_users_failed', {
+        error: usersError.message,
+      })
       process.exit(1)
     }
 
     if (!users || users.length === 0) {
-      console.log('ℹ️  No users found in database')
+      logger.info('backfill.no_users')
       return
     }
 
-    console.log(`📊 Found ${users.length} users in database\n`)
+    logger.info('backfill.users_found', {
+      count: users.length,
+    })
 
     let added = 0
     let skipped = 0
@@ -92,11 +110,17 @@ async function backfillResendAudience() {
       const batchNum = Math.floor(i / BATCH_SIZE) + 1
       const totalBatches = Math.ceil(users.length / BATCH_SIZE)
 
-      console.log(`📦 Processing batch ${batchNum}/${totalBatches} (${batch.length} users)...`)
+      logger.info('backfill.batch_start', {
+        batchNum,
+        totalBatches,
+        batchSize: batch.length,
+      })
 
       const batchPromises = batch.map(async (user) => {
         if (!user.email) {
-          console.log(`  ⚠️  Skipping user ${user.id} - no email`)
+          logger.warn('backfill.skip_no_email', {
+            userId: user.id,
+          })
           skipped++
           return
         }
@@ -106,16 +130,23 @@ async function backfillResendAudience() {
         if (result.success) {
           if (result.skipped) {
             skipped++
-            console.log(`  ✓ ${user.email} (already exists)`)
+            logger.debug('backfill.already_in_segment', {
+              email: maskEmail(user.email),
+            })
           } else {
             added++
-            console.log(`  ✓ ${user.email} (added)`)
+            logger.debug('backfill.added_to_segment', {
+              email: maskEmail(user.email),
+            })
           }
         } else {
           failed++
-          const errorMsg = `Failed to add ${user.email}: ${result.error}`
+          const errorMsg = `Failed to add ${maskEmail(user.email)}: ${result.error}`
           errors.push(errorMsg)
-          console.log(`  ✗ ${errorMsg}`)
+          logger.error('backfill.add_failed', {
+            email: maskEmail(user.email),
+            error: result.error,
+          })
         }
       })
 
@@ -127,26 +158,40 @@ async function backfillResendAudience() {
       }
     }
 
-    console.log('\n📊 Summary:')
-    console.log(`  ✅ Added: ${added}`)
-    console.log(`  ⏭️  Skipped (already exists): ${skipped}`)
-    console.log(`  ❌ Failed: ${failed}`)
-    console.log(`  📧 Total processed: ${users.length}`)
+    logger.info('backfill.summary', {
+      added,
+      skipped,
+      failed,
+      total: users.length,
+    })
 
     if (errors.length > 0) {
-      console.log('\n⚠️  Errors encountered:')
-      errors.forEach(error => console.log(`  - ${error}`))
+      logger.warn('backfill.errors_encountered', {
+        errorCount: errors.length,
+        errors: errors.slice(0, 10), // Limit to first 10 errors to avoid huge logs
+      })
     }
 
     if (failed === 0) {
-      console.log('\n✅ Backfill completed successfully!')
+      logger.info('backfill.completed_successfully', {
+        added,
+        skipped,
+        total: users.length,
+      })
     } else {
-      console.log(`\n⚠️  Backfill completed with ${failed} errors`)
+      logger.error('backfill.completed_with_errors', {
+        added,
+        skipped,
+        failed,
+        total: users.length,
+      })
       process.exit(1)
     }
   } catch (error) {
-    console.error('❌ Fatal error:', error.message)
-    console.error('Stack:', error.stack)
+    logger.error('backfill.fatal_error', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+    })
     process.exit(1)
   }
 }
