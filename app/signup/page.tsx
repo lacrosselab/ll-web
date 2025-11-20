@@ -43,13 +43,20 @@ export default function SignupPage() {
       if (error) {
         setError(error.message)
       } else {
-        // Add contact to Resend (non-blocking)
+        // Add contact to Resend (non-blocking) - only if feature is enabled
         try {
-          await fetch('/api/resend/add-contact', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, name: fullName }),
-          })
+          // Check if feature is enabled before making the API call
+          const flagResponse = await fetch('/api/feature-flags?flag=ENABLE_RESEND_CONTACT_ADDITION')
+          if (flagResponse.ok) {
+            const flagData = await flagResponse.json()
+            if (flagData.enabled) {
+              await fetch('/api/resend/add-contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, name: fullName }),
+              })
+            }
+          }
         } catch (err) {
           // Silently fail - email addition shouldn't block signup
           // The API route will handle proper logging

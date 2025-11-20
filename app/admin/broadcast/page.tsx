@@ -20,13 +20,28 @@ export default function AdminBroadcastPage() {
   const [previewHtml, setPreviewHtml] = useState<string | null>(null)
   const [showPreview, setShowPreview] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [featureEnabled, setFeatureEnabled] = useState<boolean | null>(null)
   const router = useRouter()
   const { showToast } = useToast()
 
   useEffect(() => {
     setMounted(true)
     checkAdminAccess()
+    checkFeatureEnabled()
   }, [])
+
+  const checkFeatureEnabled = async () => {
+    try {
+      const response = await fetch('/api/feature-flags?flag=ENABLE_BROADCAST_FEATURE')
+      if (response.ok) {
+        const data = await response.json()
+        setFeatureEnabled(data.enabled)
+      }
+    } catch (error) {
+      // On error, assume feature might be enabled (let actual send handle it)
+      logger.error('Error checking feature flag', { error })
+    }
+  }
 
   const checkAdminAccess = async () => {
     const supabase = getSupabaseClient()
@@ -105,6 +120,10 @@ export default function AdminBroadcastPage() {
       const data = await response.json()
 
       if (!response.ok) {
+        // If 503, feature is disabled
+        if (response.status === 503) {
+          setFeatureEnabled(false)
+        }
         throw new Error(data.error || 'Failed to send broadcast email')
       }
 
@@ -137,6 +156,19 @@ export default function AdminBroadcastPage() {
           Send emails to all users in your Resend audience
         </p>
       </div>
+
+      {featureEnabled === false && (
+        <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
+          <h3 className="font-semibold text-yellow-900 dark:text-yellow-100 mb-2">
+            Broadcast Feature Disabled
+          </h3>
+          <p className="text-sm text-yellow-800 dark:text-yellow-200">
+            The broadcast email feature is currently disabled. To enable it, set the{' '}
+            <code className="bg-yellow-100 dark:bg-yellow-900 px-1 rounded">ENABLE_BROADCAST_FEATURE=true</code>{' '}
+            environment variable.
+          </p>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Main Form */}
@@ -196,7 +228,7 @@ export default function AdminBroadcastPage() {
               </Button>
               <Button
                 onClick={handleSend}
-                disabled={sending || !subject || !bodyText}
+                disabled={sending || !subject || !bodyText || featureEnabled === false}
                 className="flex-1"
               >
                 <Send className="h-4 w-4 mr-2" />

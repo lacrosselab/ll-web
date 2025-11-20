@@ -11,7 +11,7 @@ import { logger, maskEmail } from '@/lib/utils'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SECRET_KEY
 const resendApiKey = process.env.RESEND_API_KEY
-const fromEmail = process.env.RESEND_FROM_EMAIL || 'noreply@thelacrosselab.com'
+const fromEmail = process.env.RESEND_FROM_EMAIL || 'hello@thelacrosselab.com'
 
 if (!supabaseUrl || !supabaseServiceKey) {
   logger.error('backfill.missing_env_vars', {

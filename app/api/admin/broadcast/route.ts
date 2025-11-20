@@ -13,6 +13,15 @@ export async function POST(request: NextRequest) {
   const traceId = randomUUID()
   logger.info('broadcast.init', { traceId })
   
+  // Check feature flag early
+  if (process.env.ENABLE_BROADCAST_FEATURE !== 'true') {
+    logger.warn('broadcast.feature_disabled', { traceId })
+    return NextResponse.json(
+      { error: 'Broadcast feature is disabled. Set ENABLE_BROADCAST_FEATURE=true to enable.' },
+      { status: 503 }
+    )
+  }
+  
   try {
     const supabase = await getSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()

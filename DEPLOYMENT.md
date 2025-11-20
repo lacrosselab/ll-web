@@ -125,13 +125,19 @@ If issues occur after deployment:
 - `RESEND_FROM_EMAIL`: Email address to send from (defaults to `noreply@thelacrosselab.com`)
 - `ENABLE_DEBUG_LOGS`: Set to `"true"` to enable debug logging in production (defaults to development only)
 - `ENABLE_PII_LOGS`: Set to `"true"` to include full email addresses in logs (defaults to masked emails for privacy)
+- `ENABLE_RESEND_CONTACT_ADDITION`: Set to `"true"` to enable adding contacts to Resend audience on signup and purchase. Defaults to disabled (`false`). When disabled, contacts are not added to Resend but purchase confirmation emails still work.
+- `ENABLE_BROADCAST_FEATURE`: Set to `"true"` to enable the broadcast email feature for admins. Defaults to disabled (`false`). When disabled, the `/admin/broadcast` page will show a disabled state.
 
 ## Email Service Configuration
 
 ### Required Environment Variables
 - `RESEND_API_KEY`: Resend API key for sending emails
-- `RESEND_SEGMENT_ID`: Resend segment UUID for adding contacts to the segment. This is used when customers sign up or make a purchase to automatically add them to your Resend segment using `resend.contacts.segments.add()`. Can be found in your Resend dashboard under Audiences/Segments.
+- `RESEND_SEGMENT_ID`: Resend segment UUID for adding contacts to the segment. This is used when customers sign up or make a purchase to automatically add them to your Resend segment using `resend.contacts.segments.add()`. Can be found in your Resend dashboard under Audiences/Segments. Only required if `ENABLE_RESEND_CONTACT_ADDITION=true`.
 - `RESEND_FROM_EMAIL`: (Optional) Email address to send from. Defaults to `noreply@thelacrosselab.com` if not set.
+
+### Feature Flags
+- `ENABLE_RESEND_CONTACT_ADDITION`: Set to `"true"` to enable adding contacts to Resend audience on signup and purchase. When disabled (`false`), contacts are not added to Resend but purchase confirmation emails still work. Defaults to `false` for initial deployment.
+- `ENABLE_BROADCAST_FEATURE`: Set to `"true"` to enable the broadcast email feature for admins at `/admin/broadcast`. When disabled (`false`), the broadcast UI shows a disabled state and API returns 503. Defaults to `false` for initial deployment.
 
 ### Logging Configuration
 - `ENABLE_DEBUG_LOGS`: Set to `"true"` to enable debug-level logging in production. By default, debug logs are only enabled in development mode.

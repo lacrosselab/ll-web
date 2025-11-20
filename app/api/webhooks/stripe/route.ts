@@ -325,21 +325,26 @@ export async function POST(request: NextRequest) {
 
             // Add customer to Resend audience (even if email was already sent)
             // This ensures customers are in the audience regardless of email sending status
-            try {
-              const customerEmail = customer.email
-              if (customerEmail) {
-                logger.debug('webhook.adding_to_resend_audience', { traceId })
-                await addContactToResend(customerEmail, { traceId })
-                logger.debug('webhook.resend_audience_added', { traceId })
-              } else {
-                logger.warn('webhook.no_email_for_resend', { traceId })
+            // Only if feature flag is enabled
+            if (process.env.ENABLE_RESEND_CONTACT_ADDITION === 'true') {
+              try {
+                const customerEmail = customer.email
+                if (customerEmail) {
+                  logger.debug('webhook.adding_to_resend_audience', { traceId })
+                  await addContactToResend(customerEmail, { traceId })
+                  logger.debug('webhook.resend_audience_added', { traceId })
+                } else {
+                  logger.warn('webhook.no_email_for_resend', { traceId })
+                }
+              } catch (resendError) {
+                logger.error('webhook.resend_audience_error', {
+                  error: resendError instanceof Error ? resendError.message : 'Unknown error',
+                  traceId,
+                })
+                // Don't throw - Resend failures shouldn't block payment processing
               }
-            } catch (resendError) {
-              logger.error('webhook.resend_audience_error', {
-                error: resendError instanceof Error ? resendError.message : 'Unknown error',
-                traceId,
-              })
-              // Don't throw - Resend failures shouldn't block payment processing
+            } else {
+              logger.debug('webhook.resend_contact_addition_disabled', { traceId })
             }
           } catch (emailError) {
             logger.error('webhook.email_error', { error: emailError instanceof Error ? emailError.message : 'Unknown error', traceId })
