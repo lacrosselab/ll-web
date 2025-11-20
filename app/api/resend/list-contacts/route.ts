@@ -29,7 +29,6 @@ export async function GET(request: NextRequest) {
       traceId,
       hasData: !!response.data,
       hasError: !!response.error,
-      dataLength: response.data?.length ?? 0,
     })
 
     return NextResponse.json({
