@@ -221,7 +221,6 @@ async function getDefaultSegment(context?: { traceId?: string }): Promise<string
       logger.debug('segment.list_response', {
         traceId: context?.traceId,
         hasData: !!listResponse.data,
-        dataLength: listResponse.data?.length ?? 0,
         hasError: !!listResponse.error,
         error: listResponse.error ? {
           message: listResponse.error.message || String(listResponse.error),
