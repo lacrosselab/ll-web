@@ -116,11 +116,7 @@ export async function POST(request: NextRequest) {
       )
     }
   } catch (error) {
-<<<<<<< HEAD
     logger.error('[API] Error in toggle-stripe endpoint:', error)
-=======
-    logger.error('Error updating Stripe product status', { error })
->>>>>>> email-feature-251104
     return NextResponse.json(
       { 
         error: 'Failed to update product status',

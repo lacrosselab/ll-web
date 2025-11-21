@@ -98,28 +98,10 @@ export default function AdminProductsPage() {
         }),
       })
 
-        if (!response.ok) {
-          const errorData = await response.json()
-          console.error('Stripe update failed:', errorData)
-          // Revert database change if Stripe update fails
-          // @ts-ignore - Supabase TypeScript types not properly generated
-          await supabase
-            .from('products')
-            // @ts-ignore - Supabase TypeScript types not properly generated
-            .update({ is_active: product.is_active })
-            .eq('id', product.id)
-          throw new Error('Failed to sync with Stripe')
-        }
-      } catch (stripeError) {
-        console.error('Error updating Stripe product:', stripeError)
-        // Revert database change if Stripe update fails
-        // @ts-ignore - Supabase TypeScript types not properly generated
-        await supabase
-          .from('products')
-          // @ts-ignore - Supabase TypeScript types not properly generated
-          .update({ is_active: product.is_active })
-          .eq('id', product.id)
-        throw new Error('Failed to sync with Stripe')
+      if (!response.ok) {
+        const errorData = await response.json()
+        logger.error('Stripe update failed', { errorData })
+        throw new Error(errorData.error || 'Failed to sync with Stripe')
       }
 
       await loadProducts()

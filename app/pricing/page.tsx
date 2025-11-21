@@ -133,7 +133,7 @@ async function fetchProducts(now?: Date): Promise<Product[]> {
       isProductActive(product, now) && isProductInStock(product)
     )
     
-    return displayProducts
+    return activeProducts
   } catch (error) {
     logger.error('Error fetching products', { error })
     return []

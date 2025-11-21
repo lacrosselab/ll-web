@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { getSupabaseServer } from "@/lib/supabase/server"
 import { logger } from "@/lib/utils"
+import { stripe } from "@/lib/stripe"
 
 export async function GET() {
   try {
@@ -46,21 +47,20 @@ export async function GET() {
         }
         
         verifiedProducts.push(product)
+        
+        // Log included product with transformation details
+        const eligibilityWindow = product.end_date 
+          ? `${product.session_date} to ${product.end_date}`
+          : product.session_date
+        logger.info(`[API] Product included: id=${product.id}, name="${product.name}", is_active=${product.is_active}, session_date=${product.session_date}, end_date=${product.end_date || 'null'}, eligibility_window=${eligibilityWindow}`)
       } catch (stripeError) {
         logger.error(`Error verifying Stripe product`, { error: stripeError instanceof Error ? stripeError.message : 'Unknown error' })
         // If we can't verify with Stripe, skip this product to be safe
         continue
       }
-      
-      // Log included product with transformation details
-      const eligibilityWindow = product.end_date 
-        ? `${product.session_date} to ${product.end_date}`
-        : product.session_date
-      logger.info(`[API] Product included: id=${product.id}, name="${product.name}", is_active_raw=${product.is_active} (${typeof product.is_active}), is_active_transformed=${isActive}, session_date=${product.session_date}, end_date=${product.end_date || 'null'}, eligibility_window=${eligibilityWindow}`)
-      eligibleProducts.push(product)
     }
 
-    logger.info(`[API] Filtering summary: total_fetched=${products?.length || 0}, included=${eligibleProducts.length}, skipped_inactive=${skipReasons.inactive}, skipped_date_passed=${skipReasons.date_passed}, skipped_out_of_stock=${skipReasons.out_of_stock}`)
+    logger.info(`[API] Filtering summary: total_fetched=${products?.length || 0}, included=${verifiedProducts.length}`)
 
     // Transform database products to match the expected format
     const transformedProducts = verifiedProducts.map(product => {
@@ -118,13 +118,13 @@ export async function GET() {
 
   } catch (error) {
     logger.error("Error fetching products:", { error: error instanceof Error ? error.message : 'Unknown error' })
-    return NextResponse.json(
+    const errorResponse = NextResponse.json(
       { error: "Failed to fetch products", details: error instanceof Error ? error.message : 'Unknown error' }, 
       { status: 500 }
     )
-    response.headers.set('Cache-Control', 'no-store')
-    response.headers.set('Pragma', 'no-cache')
-    return response
+    errorResponse.headers.set('Cache-Control', 'no-store')
+    errorResponse.headers.set('Pragma', 'no-cache')
+    return errorResponse
   }
 }
 
