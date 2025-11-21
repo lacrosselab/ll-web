@@ -10,6 +10,7 @@ import { getSupabaseClient } from "@/lib/supabase/client"
 import { useEffect, useState } from "react"
 import type { User } from "@supabase/supabase-js"
 import { UserIcon, Shield } from "lucide-react"
+import { logger } from "@/lib/utils"
 
 interface UserProfile {
   id: string
@@ -68,7 +69,7 @@ export default function MemberSettings() {
       // @ts-ignore - Supabase TypeScript types not properly generated
       setFullName(data?.full_name || "")
     } catch (error) {
-      console.error('Error fetching user profile:', error)
+      logger.error('Error fetching user profile', { error })
     }
   }
 
@@ -118,7 +119,7 @@ export default function MemberSettings() {
       await fetchUserProfile(user.id)
       setSuccess("Profile updated successfully!")
     } catch (err) {
-      console.error('Error updating profile:', err)
+      logger.error('Error updating profile', { error: err })
       setError("An unexpected error occurred")
     } finally {
       setLoading(false)

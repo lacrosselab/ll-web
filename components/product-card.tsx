@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Check, Clock, Users, DollarSign, Calendar, Package, Edit, Trash2, Plus, ChevronDown, ChevronUp } from "lucide-react"
+import { Check, Clock, Users, DollarSign, Calendar, Package, Edit, Trash2, Plus, ChevronDown, ChevronUp, MapPin } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { getSupabaseClient } from "@/lib/supabase/client"
@@ -31,7 +31,6 @@ interface AdminProduct {
   price_cents: number
   currency: string
   session_date: string
-  end_date?: string
   stock_quantity: number
   is_active: boolean
   stripe_product_id: string
@@ -40,16 +39,21 @@ interface AdminProduct {
   updated_at: string
 }
 
+interface ProductSession {
+  id?: string
+  session_date: string
+  session_time: string
+  location?: string | null
+}
+
 // Base props that all cards need
 interface BaseProductCardProps {
   title: string
   description: string | null
   price: string
   sessionDate: string
-  endDate?: string
   stockQuantity: number
   image?: string
-  isHighSchool?: boolean | null
 }
 
 // User-facing card props (pricing page)
@@ -62,6 +66,11 @@ interface UserProductCardProps extends BaseProductCardProps {
   popular?: boolean
   allPrices: ProductPrice[]
   endDateUrgency?: 'normal' | 'ending-soon' | 'ending-very-soon'
+  gender?: string | null
+  minGrade?: string | null
+  maxGrade?: string | null
+  skillLevel?: string | null
+  sessions?: ProductSession[]
 }
 
 // Admin card props
@@ -81,6 +90,7 @@ export function ProductCard(props: ProductCardProps) {
   const [showAthleteSelection, setShowAthleteSelection] = useState(false)
   const [showAthleteForm, setShowAthleteForm] = useState(false)
   const [athletes, setAthletes] = useState<any[]>([])
+  const [sessionsExpanded, setSessionsExpanded] = useState(false)
   const [newAthlete, setNewAthlete] = useState({
     name: '',
     age: '',
@@ -90,10 +100,34 @@ export function ProductCard(props: ProductCardProps) {
   })
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
   const [showExpandButton, setShowExpandButton] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const [sessionDateColor, setSessionDateColor] = useState<string>('text-gray-500')
+  const [adminFormattedDate, setAdminFormattedDate] = useState<string>('')
   const descriptionRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const { addToCart } = useCart()
   const { showToast } = useToast()
+
+  // Track when component has mounted (client-side only)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Compute session date color only after mount to avoid hydration errors
+  useEffect(() => {
+    if (mounted && props.mode === 'user') {
+      const color = getSessionDateColor(props.sessionDate)
+      setSessionDateColor(color)
+    }
+  }, [mounted, props.sessionDate, props.mode])
+
+  // Format dates only after mount to avoid hydration errors
+  useEffect(() => {
+    if (mounted && props.mode === 'admin') {
+      const adminDate = formatDate(props.sessionDate)
+      setAdminFormattedDate(adminDate)
+    }
+  }, [mounted, props.sessionDate, props.mode])
 
   // Check if description text overflows the 4-line limit
   useEffect(() => {
@@ -118,40 +152,6 @@ export function ProductCard(props: ProductCardProps) {
     return `/${interval}`
   }
 
-  // Format session date display - just the actual date, no relative text
-  const formatSessionDate = (sessionDateString: string, endDateString?: string): { startDate: string, endDate?: string } => {
-    try {
-      // Parse date string to avoid timezone issues by treating as UTC
-      const parseDate = (dateString: string) => {
-        const [year, month, day] = dateString.split('-').map(Number)
-        return new Date(Date.UTC(year, month - 1, day)) // Use UTC to avoid timezone shifts
-      }
-      
-      const sessionDate = parseDate(sessionDateString)
-      const startFormatted = sessionDate.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        timeZone: 'UTC' // Force UTC display
-      })
-      
-      if (endDateString) {
-        const endDate = parseDate(endDateString)
-        const endFormatted = endDate.toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-          timeZone: 'UTC' // Force UTC display
-        })
-        return { startDate: startFormatted, endDate: endFormatted }
-      }
-      
-      return { startDate: startFormatted }
-    } catch (error) {
-      logger.debug('formatSessionDate error:', error)
-      return { startDate: '' }
-    }
-  }
 
   // Get color coding for session date based on timing
   const getSessionDateColor = (sessionDateString: string): string => {
@@ -402,77 +402,18 @@ export function ProductCard(props: ProductCardProps) {
           </Badge>
         )}
 
-        <CardHeader>
-          <CardTitle className={`${props.mode === 'user' ? 'text-2xl' : 'text-lg'} truncate`} title={props.title}>
+        <CardHeader className="space-y-2">
+          {/* Title */}
+          <CardTitle className={`${props.mode === 'user' ? 'text-xl' : 'text-lg'} truncate`} title={props.title}>
             {props.title}
           </CardTitle>
-          
-          {/* School Level Badge - Prominent */}
-          {props.mode === 'user' && props.isHighSchool !== null && (
-            <div className="flex items-center gap-2 mb-2">
-              <Badge 
-                variant={props.isHighSchool ? 'default' : 'secondary'}
-                className="text-sm font-medium px-3 py-1"
-              >
-                {props.isHighSchool ? 'High School' : 'Middle School'}
-              </Badge>
-            </div>
-          )}
-          
-          {/* Session Date Display - More Prominent */}
-          <div className="flex items-center gap-2 text-base font-medium py-2 rounded-lg">
-            <Calendar className="h-5 w-5" />
-            <div className="flex flex-col">
-              {(() => {
-                const formattedDates = props.mode === 'user' 
-                  ? formatSessionDate(props.sessionDate, props.endDate)
-                  : { startDate: formatDate(props.sessionDate) }
-                
-                
-                return (
-                  <>
-                    {props.mode === 'user' && formattedDates.endDate ? (
-                      <>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-muted-foreground">Start:</span>
-                          <span className={getSessionDateColor(props.sessionDate)}>
-                            {formattedDates.startDate}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-muted-foreground">End:</span>
-                          <span className="text-base font-medium text-muted-foreground">
-                            {formattedDates.endDate}
-                          </span>
-                        </div>
-                      </>
-                    ) : (
-                      <span className={props.mode === 'user' ? getSessionDateColor(props.sessionDate) : 'text-primary'}>
-                        {formattedDates.startDate}
-                      </span>
-                    )}
-                  </>
-                )
-              })()}
-            </div>
-          </div>
-          
-          {/* Price Display */}
-          <div className="flex items-baseline gap-1">
-            <span className={`${props.mode === 'user' ? 'text-3xl' : 'text-lg'} font-bold`}>{props.price}</span>
-            {props.mode === 'user' && (
-              <span className="text-muted-foreground">
-                {getIntervalText(props.interval, props.intervalCount)}
-              </span>
-            )}
-          </div>
 
           {/* Description with Expand/Collapse */}
           {props.description && (
             <div className="space-y-2">
               <CardDescription 
                 ref={descriptionRef}
-                className={`${isDescriptionExpanded ? '' : 'line-clamp-4'}`}
+                className={`text-base ${isDescriptionExpanded ? '' : 'line-clamp-4'}`}
               >
                 {props.description}
               </CardDescription>
@@ -481,7 +422,7 @@ export function ProductCard(props: ProductCardProps) {
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                  className="h-auto text-primary hover:text-cream"
+                  className="h-auto text-sm text-primary hover:text-cream"
                 >
                   {isDescriptionExpanded ? (
                     <>
@@ -497,14 +438,172 @@ export function ProductCard(props: ProductCardProps) {
             </div>
           )}
 
+          {/* Badges for structured information */}
+          {props.mode === 'user' && (
+            <div className="flex flex-wrap items-center gap-2">
+              {props.gender && (
+                <Badge variant="outline" className="text-sm font-medium px-3 py-1">
+                  {props.gender === 'co-ed' ? 'Co-ed' : props.gender.charAt(0).toUpperCase() + props.gender.slice(1)}
+                </Badge>
+              )}
+              {props.skillLevel && (
+                <Badge variant="outline" className="text-sm font-medium px-3 py-1">
+                  {props.skillLevel.charAt(0).toUpperCase() + props.skillLevel.slice(1)}
+                </Badge>
+              )}
+              {props.minGrade && props.maxGrade && (
+                <Badge variant="outline" className="text-sm font-medium px-3 py-1">
+                  Grades {props.minGrade}-{props.maxGrade}
+                </Badge>
+              )}
+              {props.minGrade && !props.maxGrade && (
+                <Badge variant="outline" className="text-sm font-medium px-3 py-1">
+                  Grade {props.minGrade}+
+                </Badge>
+              )}
+              {!props.minGrade && props.maxGrade && (
+                <Badge variant="outline" className="text-sm font-medium px-3 py-1">
+                  Up to Grade {props.maxGrade}
+                </Badge>
+              )}
+            </div>
+          )}
+          
+          {/* Session Times Display - Collapsible with labels */}
+          {props.mode === 'user' && (
+            <div className="space-y-2">
+              {mounted ? (
+                (() => {
+                  // Use sessions if available, otherwise fall back to legacy sessionDate
+                  const displaySessions = props.sessions && props.sessions.length > 0
+                    ? props.sessions.sort((a, b) => {
+                        const dateA = new Date(`${a.session_date}T${a.session_time}`)
+                        const dateB = new Date(`${b.session_date}T${b.session_time}`)
+                        return dateA.getTime() - dateB.getTime()
+                      })
+                    : props.sessionDate
+                      ? [{ session_date: props.sessionDate, session_time: '00:00:00' }]
+                      : []
+
+                  if (displaySessions.length === 0) {
+                    return <span className="text-base text-gray-500">No sessions scheduled</span>
+                  }
+
+                  const getGoogleMapsLink = (location: string) => {
+                    const encodedLocation = encodeURIComponent(location)
+                    return `https://www.google.com/maps/search/?api=1&query=${encodedLocation}`
+                  }
+
+                  // Default location - matches the default in emails/shared.tsx and webhook route
+                  const defaultLocation = '3006 Impala Place, Unit B, Henrico, VA 23228'
+
+                  return (
+                    <div className="space-y-2">
+                      <button
+                        onClick={() => setSessionsExpanded(!sessionsExpanded)}
+                        className="flex items-center gap-2 text-base font-medium hover:text-primary transition-colors hover:shadow-none "
+                      >
+                        <Calendar className="h-4 w-4" />
+                        <span>
+                          {displaySessions.length} {displaySessions.length === 1 ? 'Session' : 'Sessions'}
+                        </span>
+                        {sessionsExpanded ? (
+                          <ChevronUp className="h-4 w-4 ml-auto" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 ml-auto" />
+                        )}
+                      </button>
+                      
+                      {sessionsExpanded && (
+                        <div className="space-y-3 pl-6 border-l-2">
+                          {displaySessions.map((session, idx) => {
+                            const parseDate = (dateString: string) => {
+                              const [year, month, day] = dateString.split('-').map(Number)
+                              return new Date(Date.UTC(year, month - 1, day))
+                            }
+                            
+                            const sessionDate = parseDate(session.session_date)
+                            const formattedDate = sessionDate.toLocaleDateString('en-US', {
+                              weekday: 'short',
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                              timeZone: 'UTC'
+                            })
+                            
+                            const formatTime = (time: string) => {
+                              if (!time || time === '00:00:00') return null
+                              const [hours, minutes] = time.split(':')
+                              const hour = parseInt(hours, 10)
+                              const ampm = hour >= 12 ? 'PM' : 'AM'
+                              const displayHour = hour % 12 || 12
+                              return `${displayHour}:${minutes} ${ampm}`
+                            }
+                            
+                            const formattedTime = formatTime(session.session_time)
+                            const displayLocation = session.location || defaultLocation
+
+                            return (
+                              <div key={idx} className="space-y-1">
+                                <div className="flex items-center gap-2 text-base">
+                                  <span className="font-medium text-muted-foreground">Session {idx + 1}:</span>
+                                  <span>
+                                    {formattedDate}
+                                    {formattedTime && ` at ${formattedTime}`}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground pl-8">
+                                  <MapPin className="h-3 w-3" />
+                                  <a
+                                    href={getGoogleMapsLink(displayLocation)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="hover:underline"
+                                  >
+                                    {displayLocation}
+                                  </a>
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })()
+              ) : (
+                <span className="text-base text-gray-500">Loading sessions...</span>
+              )}
+            </div>
+          )}
+          
+          {/* Admin mode session date display */}
+          {props.mode === 'admin' && (
+            <div className="flex items-center gap-2 text-base font-medium">
+              <Calendar className="h-4 w-4" />
+              <span className="text-primary">
+                {mounted ? adminFormattedDate : 'Loading date...'}
+              </span>
+            </div>
+          )}
+
           {/* Enhanced Stock Display */}
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-2 text-md">
             <Users className={`h-4 w-4 ${stockStatus.iconClass}`} />
             <span className={stockStatus.textClass}>
               {stockStatus.text}
             </span>
           </div>
 
+          {/* Price Display */}
+          <div className="flex items-baseline gap-1">
+            <span className={`${props.mode === 'user' ? 'text-2xl' : 'text-lg'} font-bold`}>{props.price}</span>
+            {props.mode === 'user' && (
+              <span className="text-sm text-muted-foreground">
+                {getIntervalText(props.interval, props.intervalCount)}
+              </span>
+            )}
+          </div>
 
           {/* Multiple Price Options (user mode only) */}
           {props.mode === 'user' && props.allPrices.length > 1 && (

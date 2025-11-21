@@ -42,7 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const { data: { session }, error } = await supabase.auth.getSession()
         
         if (error) {
-          console.error('Error getting session:', error)
+          logger.error('Error getting session', { error })
           if (mounted) {
             setState(prev => ({ ...prev, error: error.message, loading: false }))
           }
@@ -54,7 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const { data: { user }, error: userError } = await supabase.auth.getUser()
           
           if (userError) {
-            console.error('Error validating user:', userError)
+            logger.error('Error validating user', { error: userError })
             // Don't sign out immediately, let the auth state change handle it
           }
         }
@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           })
         }
       } catch (error) {
-        console.error('Unexpected error initializing auth:', error)
+        logger.error('Unexpected error initializing auth', { error })
         if (mounted) {
           setState(prev => ({ 
             ...prev, 
@@ -156,7 +156,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await supabase.auth.signOut()
       setState(prev => ({ ...prev, loading: false, error: null }))
     } catch (error) {
-      console.error('Error signing out:', error)
+      logger.error('Error signing out', { error })
       setState(prev => ({ 
         ...prev, 
         loading: false, 
@@ -169,11 +169,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const { error } = await supabase.auth.refreshSession()
       if (error) {
-        console.error('Error refreshing session:', error)
+        logger.error('Error refreshing session', { error })
         setState(prev => ({ ...prev, error: error.message }))
       }
     } catch (error) {
-      console.error('Unexpected error refreshing session:', error)
+      logger.error('Unexpected error refreshing session', { error })
       setState(prev => ({ ...prev, error: 'Failed to refresh session' }))
     }
   }

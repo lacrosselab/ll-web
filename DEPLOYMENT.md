@@ -113,6 +113,8 @@ If issues occur after deployment:
 - `STRIPE_SECRET_KEY`: Production Stripe secret key (sk_live_...)
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`: Production Stripe publishable key (pk_live_...)
 - `STRIPE_WEBHOOK_SECRET`: Production Stripe webhook secret
+- `RESEND_API_KEY`: Resend API key for sending emails
+- `RESEND_SEGMENT_ID`: Resend segment UUID for adding contacts to the segment. Can be found in your Resend dashboard under Audiences/Segments. Required for adding customers to the segment on signup and purchase. This is the segment ID used with `resend.contacts.segments.add()`.
 - `NEXT_PUBLIC_SITE_URL`: Production site URL
 - `NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL`: Production auth callback URL
 
@@ -120,6 +122,32 @@ If issues occur after deployment:
 - `GOOGLE_SITE_VERIFICATION`: Google Search Console verification
 - `SENTRY_DSN`: Error monitoring service DSN
 - `NODE_ENV`: Set to "production"
+- `RESEND_FROM_EMAIL`: Email address to send from (defaults to `noreply@thelacrosselab.com`)
+- `ENABLE_DEBUG_LOGS`: Set to `"true"` to enable debug logging in production (defaults to development only)
+- `ENABLE_PII_LOGS`: Set to `"true"` to include full email addresses in logs (defaults to masked emails for privacy)
+- `ENABLE_RESEND_CONTACT_ADDITION`: Set to `"true"` to enable adding contacts to Resend audience on signup and purchase. Defaults to disabled (`false`). When disabled, contacts are not added to Resend but purchase confirmation emails still work.
+- `ENABLE_BROADCAST_FEATURE`: Set to `"true"` to enable the broadcast email feature for admins. Defaults to disabled (`false`). When disabled, the `/admin/broadcast` page will show a disabled state.
+
+## Email Service Configuration
+
+### Required Environment Variables
+- `RESEND_API_KEY`: Resend API key for sending emails
+- `RESEND_SEGMENT_ID`: Resend segment UUID for adding contacts to the segment. This is used when customers sign up or make a purchase to automatically add them to your Resend segment using `resend.contacts.segments.add()`. Can be found in your Resend dashboard under Audiences/Segments. Only required if `ENABLE_RESEND_CONTACT_ADDITION=true`.
+- `RESEND_FROM_EMAIL`: (Optional) Email address to send from. Defaults to `noreply@thelacrosselab.com` if not set.
+
+### Feature Flags
+- `ENABLE_RESEND_CONTACT_ADDITION`: Set to `"true"` to enable adding contacts to Resend audience on signup and purchase. When disabled (`false`), contacts are not added to Resend but purchase confirmation emails still work. Defaults to `false` for initial deployment.
+- `ENABLE_BROADCAST_FEATURE`: Set to `"true"` to enable the broadcast email feature for admins at `/admin/broadcast`. When disabled (`false`), the broadcast UI shows a disabled state and API returns 503. Defaults to `false` for initial deployment.
+
+### Logging Configuration
+- `ENABLE_DEBUG_LOGS`: Set to `"true"` to enable debug-level logging in production. By default, debug logs are only enabled in development mode.
+- `ENABLE_PII_LOGS`: Set to `"true"` to include full email addresses in logs. By default, email addresses are masked (e.g., `t**t@example.com`) to protect privacy. Only enable this for debugging purposes.
+
+### Operational Notes
+- **Retry Behavior**: Email sends use exponential backoff retry with 3 attempts, 300ms base delay, and 8 second timeout per request.
+- **Rate Limiting**: Broadcast emails are sent in batches of 10 with 1 second delay between batches to respect Resend rate limits.
+- **Error Handling**: Email failures are logged but do not block payment processing or user signup flows.
+- **Structured Logging**: All email operations use structured logging with trace IDs for observability. Logs include masked email addresses, batch information, and error details.
 
 ## Security Notes
 
@@ -127,3 +155,4 @@ If issues occur after deployment:
 - Security headers are configured in `next.config.mjs`
 - Environment variables are properly secured
 - No dangerous build settings are enabled
+- Email addresses in logs are masked by default to protect user privacy

@@ -9,6 +9,7 @@ import Image from "next/image"
 import { Menu, X } from "lucide-react"
 import { CartIcon } from "@/components/cart-icon"
 import { useState } from "react"
+import { logger } from "@/lib/utils"
 
 export function Navigation() {
   const pathname = usePathname()
@@ -20,7 +21,7 @@ export function Navigation() {
       await signOut()
       setIsMobileMenuOpen(false)
     } catch (error) {
-      console.error("Sign out failed:", error)
+      logger.error("Sign out failed", { error })
       setIsMobileMenuOpen(false)
     }
   }

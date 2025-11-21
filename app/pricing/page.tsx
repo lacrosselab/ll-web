@@ -1,9 +1,9 @@
 "use client"
 
-import { PricingCard } from "@/components/pricing-card"
+import { PricingCard, PricingCardSkeleton } from "@/components/pricing-card"
 import { createCheckoutSession } from "@/lib/checkout"
-import { useEffect, useState } from "react"
-import { formatDateOnly, formatDateRange, logger, parseDateOnlyUTC } from "@/lib/utils"
+import { useEffect, useState, useMemo } from "react"
+import { formatDateOnly, formatDateRange, parseDateOnlyUTC, logger } from "@/lib/utils"
 
 // Types for our database product data
 interface ProductPrice {
@@ -16,6 +16,13 @@ interface ProductPrice {
   metadata: Record<string, string>
 }
 
+interface ProductSession {
+  id?: string
+  session_date: string
+  session_time: string
+  location?: string | null
+}
+
 interface Product {
   id: string
   stripe_product_id: string,
@@ -26,10 +33,13 @@ interface Product {
   prices: ProductPrice[]
   // New fields from our database
   session_date: string
-  end_date?: string
   stock_quantity: number
   is_active: boolean
-  is_high_school?: boolean | null
+  gender?: string | null
+  min_grade?: string | null
+  max_grade?: string | null
+  skill_level?: string | null
+  sessions?: ProductSession[]
 }
 
 interface ProductsResponse {
@@ -38,42 +48,49 @@ interface ProductsResponse {
 }
 
 // Date utility functions - simplified for database-first approach
+// These functions use new Date() and should only be called client-side after mount
+function isProductActive(product: Product, now?: Date): boolean {
+  // Check if product is active in database
+  if (!product.is_active) return false
+  
+  // If no date provided (SSR), return true to avoid filtering out products
+  if (!now) return true
+  
+  // Check if session date has passed using UTC to avoid timezone issues
+  const parseDate = (dateString: string) => {
+    const [year, month, day] = dateString.split('-').map(Number)
+    return new Date(Date.UTC(year, month - 1, day))
+  }
+  
+  const sessionDate = parseDate(product.session_date)
+  
+  // Compare dates at start of day to include the full session day
+  const sessionStartOfDay = new Date(Date.UTC(sessionDate.getUTCFullYear(), sessionDate.getUTCMonth(), sessionDate.getUTCDate()))
+  const nowStartOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+  
+  return nowStartOfDay <= sessionStartOfDay
+}
 
-function getDaysUntilSession(sessionDate: string): number {
+function isProductInStock(product: Product): boolean {
+  return product.stock_quantity > 0
+}
+
+function getDaysUntilSession(sessionDate: string, now?: Date): number {
+  if (!now) return 0 // Default during SSR
+  
   const session = parseDateOnlyUTC(sessionDate)
-  const now = new Date()
   const sessionStartOfDay = new Date(Date.UTC(session.getUTCFullYear(), session.getUTCMonth(), session.getUTCDate()))
   const nowStartOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
   const diffTime = sessionStartOfDay.getTime() - nowStartOfDay.getTime()
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 }
 
-function formatSessionDate(sessionDate: string, endDate?: string): string {
+function formatSessionDate(sessionDate: string, now?: Date): string {
+  if (!now) return 'Session date' // Default during SSR
+  
   const session = parseDateOnlyUTC(sessionDate)
-  const daysUntilSession = getDaysUntilSession(sessionDate)
+  const daysUntilSession = getDaysUntilSession(sessionDate, now)
   
-  // If we have an end date, show the date range
-  if (endDate) {
-    const end = parseDateOnlyUTC(endDate)
-    const startFormatted = session.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      timeZone: 'UTC'
-    })
-    const endFormatted = end.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      timeZone: 'UTC'
-    })
-    
-    if (daysUntilSession <= 0) return `Session ${startFormatted} - ${endFormatted} (has passed)`
-    if (daysUntilSession === 1) return `Session ${startFormatted} - ${endFormatted} (soon)`
-    if (daysUntilSession <= 7) return `Session ${startFormatted} - ${endFormatted} (in ${daysUntilSession} days)`
-    
-    return `Session ${startFormatted} - ${endFormatted}`
-  }
-  
-  // Original single date logic
   if (daysUntilSession <= 0) return 'Session has passed'
   if (daysUntilSession === 1) return 'Session soon'
   if (daysUntilSession <= 7) return `Session in ${daysUntilSession} days`
@@ -86,8 +103,10 @@ function formatSessionDate(sessionDate: string, endDate?: string): string {
   })}`
 }
 
-function getSessionUrgency(sessionDate: string): 'normal' | 'ending-soon' | 'ending-very-soon' {
-  const daysUntilSession = getDaysUntilSession(sessionDate)
+function getSessionUrgency(sessionDate: string, now?: Date): 'normal' | 'ending-soon' | 'ending-very-soon' {
+  if (!now) return 'normal' // Default during SSR
+  
+  const daysUntilSession = getDaysUntilSession(sessionDate, now)
   
   if (daysUntilSession <= 2) return 'ending-very-soon'
   if (daysUntilSession <= 7) return 'ending-soon'
@@ -95,33 +114,28 @@ function getSessionUrgency(sessionDate: string): 'normal' | 'ending-soon' | 'end
 }
 
 // Client-side function to fetch products
-async function fetchProducts(): Promise<Product[]> {
+async function fetchProducts(now?: Date): Promise<Product[]> {
   try {
     const response = await fetch('/api/products', {
       cache: 'no-store' // Ensure fresh data on each request
     })
     
     if (!response.ok) {
-      logger.error(`[PAGE] Failed to fetch products: ${response.status} ${response.statusText}`)
+      logger.error('Failed to fetch products', { status: response.status, statusText: response.statusText })
       return []
     }
     
     const data: ProductsResponse = await response.json()
-    logger.info(
-      `[PAGE] Received ${data.products.length} products from API (IDs: ${data.products.map(
-        (p) => p.id
-      ).join(', ')}, Active statuses: ${data.products.map((p) => `${p.id}:${(p.is_active ? 'true' : 'false')}`).join(', ')})`
+    
+    // Filter products based on new logic
+    // Only filter by date if we have a date (client-side)
+    const activeProducts = data.products.filter(product => 
+      isProductActive(product, now) && isProductInStock(product)
     )
-    
-    // Server already filters products, so we trust the response
-    // Set displayProducts directly without re-filtering
-    const displayProducts = data.products
-    
-    logger.info(`[PAGE] Display products set: ${displayProducts.length} products will be displayed`)
     
     return displayProducts
   } catch (error) {
-    logger.error(`[PAGE] Error fetching products:`, error)
+    logger.error('Error fetching products', { error })
     return []
   }
 }
@@ -169,17 +183,23 @@ export default function PricingPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
 
+  // Track when component has mounted (client-side only)
   useEffect(() => {
+    setMounted(true)
+    
+    // Fetch products only after mount to avoid hydration issues
     const loadProducts = async () => {
       try {
         setLoading(true)
         setError(null)
-        const fetchedProducts = await fetchProducts()
-        logger.info(`[PAGE] Setting ${fetchedProducts.length} products for display`)
+        // Use current date for filtering (client-side only)
+        const now = new Date()
+        const fetchedProducts = await fetchProducts(now)
         setProducts(fetchedProducts)
       } catch (err) {
-        logger.error(`[PAGE] Error loading products:`, err)
+        logger.error('Error loading products', { error: err })
         setError('Failed to load products. Please try again later.')
       } finally {
         setLoading(false)
@@ -188,6 +208,11 @@ export default function PricingPage() {
 
     loadProducts()
   }, [])
+  
+  // Get current date only after mount (client-side) for date-dependent calculations
+  const now = useMemo(() => {
+    return mounted ? new Date() : undefined
+  }, [mounted])
   
   return (
     <div className="min-h-screen bg-background">
@@ -202,9 +227,10 @@ export default function PricingPage() {
           </div>
 
           {loading ? (
-            <div className="text-center py-12">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent mx-auto mb-4" />
-              <p className="text-muted-foreground">Loading available sessions...</p>
+            <div className="grid gap-8 max-w-7xl mx-auto">
+              <PricingCardSkeleton />
+              <PricingCardSkeleton />
+              <PricingCardSkeleton />
             </div>
           ) : error ? (
             <div className="text-center py-12">
@@ -224,7 +250,8 @@ export default function PricingPage() {
                 
                 if (!displayPrice) return null
                 
-                const sessionUrgency = getSessionUrgency(product.session_date)
+                // Only compute date-dependent values after mount
+                const sessionUrgency = mounted ? getSessionUrgency(product.session_date, now) : 'normal'
                 
                 return (
                   <PricingCard
@@ -239,14 +266,15 @@ export default function PricingPage() {
                     popular={isPopular(product)}
                     image={product.images[0]}
                     allPrices={product.prices}
-                    // Use session date for display
-                    endsOn={formatSessionDate(product.session_date, product.end_date)}
                     endDateUrgency={sessionUrgency}
                     // Add new props for stock and session info
                     stockQuantity={product.stock_quantity}
                     sessionDate={product.session_date}
-                    endDate={product.end_date}
-                    isHighSchool={product.is_high_school}
+                    gender={product.gender}
+                    minGrade={product.min_grade}
+                    maxGrade={product.max_grade}
+                    skillLevel={product.skill_level}
+                    sessions={product.sessions}
                   />
                 )
               })}

@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
         .single()
 
       if (profileError && profileError.code !== 'PGRST116') {
-        logger.error('Error fetching user profile', profileError)
+        logger.error('Error fetching user profile', { error: profileError.message || 'Unknown error' })
         throw profileError
       }
 
@@ -57,14 +57,14 @@ export async function POST(request: NextRequest) {
           })
 
         if (updateError) {
-          logger.error('Error saving Stripe customer ID', updateError)
+          logger.error('Error saving Stripe customer ID', { error: updateError.message || 'Unknown error' })
           // Don't throw here - we can still proceed with the checkout
         } else {
           logger.debug('Saved Stripe customer ID to user profile')
         }
       }
     } catch (customerError) {
-      logger.error('Error handling Stripe customer', customerError)
+      logger.error('Error handling Stripe customer', { error: customerError instanceof Error ? customerError.message : 'Unknown error' })
       // Fallback to using email (creates guest customer)
       logger.debug('Falling back to customer_email approach')
       stripeCustomerId = ''
@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
             }, { status: 400 })
           }
         } catch (verifyError) {
-          logger.error('Error verifying product', verifyError)
+          logger.error('Error verifying product', { error: verifyError instanceof Error ? verifyError.message : 'Unknown error' })
           return NextResponse.json({ 
             error: 'Unable to verify product availability',
             details: 'Please refresh and try again'
@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ sessionId: session.id })
   } catch (error) {
-    logger.error('Error creating checkout session', error)
+    logger.error('Error creating checkout session', { error: error instanceof Error ? error.message : 'Unknown error' })
     return NextResponse.json(
       { 
         error: 'Failed to create checkout session',

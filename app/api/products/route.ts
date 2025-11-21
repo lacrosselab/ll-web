@@ -6,14 +6,22 @@ export async function GET() {
   try {
     const supabase = await getSupabaseServer()
     
-    // Fetch all products from database (we'll filter on server)
+    // Fetch active products from database with product_sessions
     const { data: products, error } = await supabase
       .from('products')
-      .select('*')
-      .order('session_date', { ascending: true })
+      .select(`
+        *,
+        product_sessions (
+          id,
+          session_date,
+          session_time,
+          location
+        )
+      `)
+      .eq('is_active', true)
 
     if (error) {
-      logger.error("[API] Error fetching products from database:", error)
+      logger.error("Error fetching products from database:", { error: error.message || 'Unknown error' })
       const response = NextResponse.json(
         { error: "Failed to fetch products", details: error.message }, 
         { status: 500 }
@@ -23,50 +31,24 @@ export async function GET() {
       return response
     }
 
-    // Consolidate active/inactive filtering on server
-    const now = new Date()
-    const nowStartOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
-    
-    const eligibleProducts = []
-    const skipReasons: Record<string, number> = {
-      inactive: 0,
-      date_passed: 0,
-      out_of_stock: 0
-    }
-    
-    for (const product of products || []) {
-      // Treat is_active as strict boolean
-      const isActive = !!product.is_active
-      
-      // Check if product is active in database
-      if (!isActive) {
-        logger.info(`[API] Product skipped: id=${product.id}, name="${product.name}", is_active=${product.is_active} (${typeof product.is_active}), session_date=${product.session_date}, end_date=${product.end_date || 'null'}, stock_quantity=${product.stock_quantity}, reason=inactive`)
-        skipReasons.inactive++
-        continue
-      }
-      
-      // Parse session_date and optional end_date for eligibility check
-      const [sessionYear, sessionMonth, sessionDay] = product.session_date.split('-').map(Number)
-      const sessionDate = new Date(Date.UTC(sessionYear, sessionMonth - 1, sessionDay))
-      
-      // Compute eligibilityEnd = end_date ?? session_date
-      const eligibilityDate = product.end_date || product.session_date
-      const [eligibilityYear, eligibilityMonth, eligibilityDay] = eligibilityDate.split('-').map(Number)
-      const eligibilityEndDate = new Date(Date.UTC(eligibilityYear, eligibilityMonth - 1, eligibilityDay))
-      const eligibilityEndStartOfDay = new Date(Date.UTC(eligibilityEndDate.getUTCFullYear(), eligibilityEndDate.getUTCMonth(), eligibilityEndDate.getUTCDate()))
-      
-      // Compare nowStartOfDay against eligibilityEndStartOfDay
-      if (nowStartOfDay > eligibilityEndStartOfDay) {
-        const cutoffUsed = product.end_date ? 'end_date' : 'session_date'
-        logger.info(`[API] Product skipped: id=${product.id}, name="${product.name}", is_active=${product.is_active} (${typeof product.is_active}), session_date=${product.session_date}, end_date=${product.end_date || 'null'}, stock_quantity=${product.stock_quantity}, reason=date_passed, cutoff_used=${cutoffUsed}`)
-        skipReasons.date_passed++
-        continue
-      }
-      
-      // Check stock
-      if (product.stock_quantity <= 0) {
-        logger.info(`[API] Product skipped: id=${product.id}, name="${product.name}", is_active=${product.is_active} (${typeof product.is_active}), session_date=${product.session_date}, end_date=${product.end_date || 'null'}, stock_quantity=${product.stock_quantity}, reason=out_of_stock`)
-        skipReasons.out_of_stock++
+    logger.info("Products fetched from database:", { products: products })
+    // Verify Stripe sync for each product
+    const verifiedProducts = []
+    for (const product of products) {
+      try {
+        // Check if Stripe product is also active
+        const stripeProduct = await stripe.products.retrieve(product.stripe_product_id)
+        
+        // If database says active but Stripe says inactive, skip this product
+        if (!stripeProduct.active) {
+          logger.warn(`Product is active in DB but inactive in Stripe - skipping`)
+          continue
+        }
+        
+        verifiedProducts.push(product)
+      } catch (stripeError) {
+        logger.error(`Error verifying Stripe product`, { error: stripeError instanceof Error ? stripeError.message : 'Unknown error' })
+        // If we can't verify with Stripe, skip this product to be safe
         continue
       }
       
@@ -81,19 +63,25 @@ export async function GET() {
     logger.info(`[API] Filtering summary: total_fetched=${products?.length || 0}, included=${eligibleProducts.length}, skipped_inactive=${skipReasons.inactive}, skipped_date_passed=${skipReasons.date_passed}, skipped_out_of_stock=${skipReasons.out_of_stock}`)
 
     // Transform database products to match the expected format
-    const transformedProducts = eligibleProducts.map((product) => {
-      // Treat is_active as strict boolean
-      const isActive = !!product.is_active
-      
+    const transformedProducts = verifiedProducts.map(product => {
+      // Sort sessions by date and time
+      const sessions = (product.product_sessions || []).sort((a: any, b: any) => {
+        const dateA = new Date(`${a.session_date}T${a.session_time}`)
+        const dateB = new Date(`${b.session_date}T${b.session_time}`)
+        return dateA.getTime() - dateB.getTime()
+      })
+
+      // Use first session date for metadata compatibility (if sessions exist)
+      const firstSessionDate = sessions.length > 0 ? sessions[0].session_date : product.session_date
+
       return {
         id: product.id,
-        stripe_product_id: product.stripe_product_id,
         name: product.name,
         description: product.description,
         images: [], // We can add images later if needed
         metadata: {
           // Use database fields instead of Stripe metadata
-          'ends-on': formatDateForMetadata(product.session_date),
+          'ends-on': formatDateForMetadata(firstSessionDate),
           'features': product.description || '', // Use description as features for now
         },
         prices: [{
@@ -105,12 +93,15 @@ export async function GET() {
           type: 'one_time',
           metadata: {}
         }],
-        // Add our new fields 
-        session_date: product.session_date,
-        end_date: product.end_date,
+        // Add our new fields
+        session_date: product.session_date, // Keep for backward compatibility
         stock_quantity: product.stock_quantity,
-        is_active: isActive, // Strict boolean
-        is_high_school: product.is_high_school
+        is_active: product.is_active,
+        gender: product.gender,
+        min_grade: product.min_grade,
+        max_grade: product.max_grade,
+        skill_level: product.skill_level,
+        sessions: sessions // Array of all session times
       }
     })
 
@@ -126,8 +117,8 @@ export async function GET() {
     return response
 
   } catch (error) {
-    logger.error("[API] Error fetching products:", error)
-    const response = NextResponse.json(
+    logger.error("Error fetching products:", { error: error instanceof Error ? error.message : 'Unknown error' })
+    return NextResponse.json(
       { error: "Failed to fetch products", details: error instanceof Error ? error.message : 'Unknown error' }, 
       { status: 500 }
     )

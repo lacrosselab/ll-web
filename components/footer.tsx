@@ -11,7 +11,11 @@ import { Menu, X } from "lucide-react"
 import { RichmondClock } from "@/components/richmond-clock"
 
 export function Footer() {
-  const currentYear = new Date().getFullYear()
+  const [currentYear, setCurrentYear] = useState<number>(2024) // Default fallback
+  
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear())
+  }, [])
 
   return (
         <footer className="flex-shrink-0 border-t border-navy/10 py-6">

@@ -11,6 +11,7 @@ import { getSupabaseClient } from "@/lib/supabase/client"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { logger } from "@/lib/utils"
 
 export default function SignupPage() {
   const [email, setEmail] = useState("")
@@ -42,6 +43,26 @@ export default function SignupPage() {
       if (error) {
         setError(error.message)
       } else {
+        // Add contact to Resend (non-blocking) - only if feature is enabled
+        try {
+          // Check if feature is enabled before making the API call
+          const flagResponse = await fetch('/api/feature-flags?flag=ENABLE_RESEND_CONTACT_ADDITION')
+          if (flagResponse.ok) {
+            const flagData = await flagResponse.json()
+            if (flagData.enabled) {
+              await fetch('/api/resend/add-contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, name: fullName }),
+              })
+            }
+          }
+        } catch (err) {
+          // Silently fail - email addition shouldn't block signup
+          // The API route will handle proper logging
+          logger.error('Failed to add contact to Resend', { error: err })
+        }
+
         // Redirect to dashboard instead of showing confirmation
         router.push('/member/dashboard')
       }

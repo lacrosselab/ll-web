@@ -3,6 +3,7 @@
 import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { logger } from '@/lib/utils'
 
 interface ErrorBoundaryState {
   hasError: boolean
@@ -25,7 +26,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo)
+    logger.error('ErrorBoundary caught an error', { error, errorInfo })
     
     // In production, you might want to send this to an error reporting service
     if (process.env.NODE_ENV === 'production') {
@@ -86,7 +87,7 @@ function DefaultErrorFallback({ error, resetError }: { error?: Error; resetError
 // Hook for functional components
 export function useErrorHandler() {
   return (error: Error, errorInfo?: { componentStack?: string }) => {
-    console.error('Error caught by useErrorHandler:', error, errorInfo)
+    logger.error('Error caught by useErrorHandler', { error, errorInfo })
     
     // In production, you might want to send this to an error reporting service
     if (process.env.NODE_ENV === 'production') {

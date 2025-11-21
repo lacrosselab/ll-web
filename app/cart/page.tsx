@@ -13,7 +13,7 @@ import { useToast } from '@/components/ui/toast'
 import { getSupabaseClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Minus, Plus, Trash2, ShoppingCart, User, Calendar, DollarSign } from 'lucide-react'
-import { formatDateOnly, formatDateRange } from '@/lib/utils'
+import { formatDateOnly, formatDateRange, logger } from '@/lib/utils'
 
 interface Athlete {
   id: string
@@ -63,7 +63,7 @@ export default function CartPage() {
       if (error) throw error
       setAthletes(data || [])
     } catch (error) {
-      console.error('Error loading athletes:', error)
+      logger.error('Error loading athletes', { error })
     }
   }
 
@@ -95,7 +95,7 @@ export default function CartPage() {
       setNewAthlete({ name: '', age: '', school: '', position: '', grade: '' })
       setShowAthleteForm(false)
     } catch (error) {
-      console.error('Error creating athlete:', error)
+      logger.error('Error creating athlete', { error })
       showToast('Failed to create athlete', 'error')
     } finally {
       setLoading(false)
@@ -109,9 +109,8 @@ export default function CartPage() {
     }).format(cents / 100)
   }
 
-  const formatSessionDate = (sessionDate: string, endDate?: string): string => {
-    const range = formatDateRange(sessionDate, endDate, 'en-US', { month: 'short', day: 'numeric' })
-    return range.end ? `${range.start} - ${range.end}` : formatDateOnly(sessionDate)
+  const formatSessionDate = (sessionDate: string): string => {
+    return formatDateOnly(sessionDate)
   }
 
   const handleCheckout = async () => {
@@ -147,7 +146,7 @@ export default function CartPage() {
 
       if (!response.ok) {
         const errorData = await response.json()
-        console.error('Checkout API Error:', {
+        logger.error('Checkout API Error', {
           status: response.status,
           statusText: response.statusText,
           errorData
@@ -164,7 +163,7 @@ export default function CartPage() {
         await stripeInstance.redirectToCheckout({ sessionId })
       }
     } catch (error) {
-      console.error('Error during checkout:', error)
+      logger.error('Error during checkout', { error })
       const errorMessage = error instanceof Error ? error.message : 'Failed to start checkout. Please try again.'
       showToast(errorMessage, 'error')
     } finally {
@@ -232,7 +231,7 @@ export default function CartPage() {
                 {/* Session Date */}
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="h-4 w-4" />
-                  <span>Session: {formatSessionDate(item.product.session_date, item.product.end_date)}</span>
+                  <span>Session: {formatSessionDate(item.product.session_date)}</span>
                 </div>
 
                 {/* Athlete Display */}
