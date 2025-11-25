@@ -5,21 +5,12 @@ import { getSupabaseClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { logger } from '@/lib/utils'
+import { logger, formatDateOnly } from '@/lib/utils'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Search, Calendar, Users, Eye } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/toast'
-import { formatDateOnly } from '@/lib/utils'
-
-interface ProductSession {
-  id: string
-  session_date: string
-  session_time: string
-  location?: string | null
-}
 
 interface Product {
   id: string
@@ -27,7 +18,10 @@ interface Product {
   session_date: string
   is_active: boolean
   created_at: string
-  product_sessions?: ProductSession[]
+  gender?: string | null
+  min_grade?: string | null
+  max_grade?: string | null
+  skill_level?: string | null
 }
 
 interface RegisteredAthlete {
@@ -43,33 +37,34 @@ interface RegisteredAthlete {
   } | null
 }
 
-interface SessionWithCount {
+interface ProductWithCount {
   id: string
-  product_id: string
-  product_name: string
+  name: string
   session_date: string
-  session_time: string
   is_active: boolean
   registered_count: number
-  location?: string | null
+  gender?: string | null
+  min_grade?: string | null
+  max_grade?: string | null
+  skill_level?: string | null
 }
 
 export default function AdminRosterPage() {
-  const [sessions, setSessions] = useState<SessionWithCount[]>([])
+  const [products, setProducts] = useState<ProductWithCount[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedSession, setSelectedSession] = useState<SessionWithCount | null>(null)
+  const [selectedProduct, setSelectedProduct] = useState<ProductWithCount | null>(null)
   const [registeredAthletes, setRegisteredAthletes] = useState<RegisteredAthlete[]>([])
   const [loadingAthletes, setLoadingAthletes] = useState(false)
   const router = useRouter()
   const { showToast } = useToast()
 
   useEffect(() => {
-    loadSessions()
+    loadProducts()
   }, [])
 
-  const loadSessions = async () => {
+  const loadProducts = async () => {
     try {
       setLoading(true)
       const supabase = getSupabaseClient()
@@ -86,8 +81,8 @@ export default function AdminRosterPage() {
         return
       }
 
-      // Query all active products with their product_sessions
-      const { data: products, error: productsError } = await supabase
+      // Query all active products with their metadata
+      const { data: productsData, error: productsError } = await supabase
         .from('products')
         .select(`
           id,
@@ -95,12 +90,10 @@ export default function AdminRosterPage() {
           session_date,
           is_active,
           created_at,
-          product_sessions (
-            id,
-            session_date,
-            session_time,
-            location
-          )
+          gender,
+          min_grade,
+          max_grade,
+          skill_level
         `)
         .eq('is_active', true)
         .order('session_date', { ascending: true })
@@ -129,63 +122,45 @@ export default function AdminRosterPage() {
         return successfulPayments.length
       }
 
-      // Expand products into individual sessions (one row per product_session)
-      const allSessions: SessionWithCount[] = []
-      
-      for (const product of (products || []) as Product[]) {
-        // If product has product_sessions, use those
-        if (product.product_sessions && product.product_sessions.length > 0) {
-          const registered_count = await getRegisteredCountForProduct(supabase, product.id)
-          
-          for (const session of product.product_sessions) {
-            allSessions.push({
-              id: session.id,
-              product_id: product.id,
-              product_name: product.name,
-              session_date: session.session_date,
-              session_time: session.session_time,
-              is_active: product.is_active,
-              registered_count,
-              location: session.location || null,
-            })
-          }
-        } else {
-          // Fallback to legacy session_date if no product_sessions exist
-          const registered_count = await getRegisteredCountForProduct(supabase, product.id)
-          allSessions.push({
-            id: `${product.id}-legacy`,
-            product_id: product.id,
-            product_name: product.name,
-            session_date: product.session_date,
-            session_time: '00:00:00',
-            is_active: product.is_active,
-            registered_count,
-          })
-        }
+      const productsWithCounts: ProductWithCount[] = []
+
+      for (const product of (productsData || []) as Product[]) {
+        const registered_count = await getRegisteredCountForProduct(supabase, product.id)
+        productsWithCounts.push({
+          id: product.id,
+          name: product.name,
+          session_date: product.session_date,
+          is_active: product.is_active,
+          registered_count,
+          gender: product.gender,
+          min_grade: product.min_grade,
+          max_grade: product.max_grade,
+          skill_level: product.skill_level,
+        })
       }
 
-      // Sort by session date and time (closest first)
+      // Sort by session date (closest first)
       const today = new Date()
       today.setHours(0, 0, 0, 0)
       
-      const sortedSessions = allSessions.sort((a, b) => {
-        const dateTimeA = new Date(`${a.session_date}T${a.session_time}`)
-        const dateTimeB = new Date(`${b.session_date}T${b.session_time}`)
-        const diffA = Math.abs(dateTimeA.getTime() - today.getTime())
-        const diffB = Math.abs(dateTimeB.getTime() - today.getTime())
-        return diffA - diffB // Closest date/time first
+      const sortedProducts = productsWithCounts.sort((a, b) => {
+        const dateA = new Date(a.session_date)
+        const dateB = new Date(b.session_date)
+        const diffA = Math.abs(dateA.getTime() - today.getTime())
+        const diffB = Math.abs(dateB.getTime() - today.getTime())
+        return diffA - diffB // Closest date first
       })
 
-      setSessions(sortedSessions)
+      setProducts(sortedProducts)
     } catch (err) {
-      logger.error('Error loading sessions', { error: err })
-      setError('Failed to load sessions')
+      logger.error('Error loading products', { error: err })
+      setError('Failed to load products')
     } finally {
       setLoading(false)
     }
   }
 
-  const loadAthletesForSession = async (productId: string) => {
+  const loadAthletesForProduct = async (productId: string) => {
     try {
       setLoadingAthletes(true)
       const supabase = getSupabaseClient()
@@ -232,35 +207,45 @@ export default function AdminRosterPage() {
 
       setRegisteredAthletes(transformedAthletes)
     } catch (err) {
-      logger.error('Error loading athletes for session', { error: err })
+      logger.error('Error loading athletes for product', { error: err })
       showToast('Failed to load registered athletes', 'error')
     } finally {
       setLoadingAthletes(false)
     }
   }
 
-  const handleViewAthletes = (session: SessionWithCount) => {
-    setSelectedSession(session)
-    loadAthletesForSession(session.product_id)
+  const handleViewAthletes = (product: ProductWithCount) => {
+    setSelectedProduct(product)
+    loadAthletesForProduct(product.id)
   }
 
   const formatDate = (dateString: string): string => {
     return formatDateOnly(dateString)
   }
 
-  const formatTime = (timeString: string): string => {
-    if (!timeString || timeString === '00:00:00') return ''
-    const [hours, minutes] = timeString.split(':')
-    const hour = parseInt(hours, 10)
-    const ampm = hour >= 12 ? 'PM' : 'AM'
-    const displayHour = hour % 12 || 12
-    return `${displayHour}:${minutes} ${ampm}`
+  const getGradeRangeLabel = (minGrade?: string | null, maxGrade?: string | null) => {
+    if (minGrade && maxGrade) return `Grades ${minGrade}-${maxGrade}`
+    if (minGrade) return `Grade ${minGrade}+`
+    if (maxGrade) return `Up to Grade ${maxGrade}`
+    return ''
   }
 
-  const filteredSessions = sessions.filter(session =>
-    session.product_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    formatDate(session.session_date).toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredProducts = products.filter((product) => {
+    const search = searchTerm.toLowerCase()
+    const metadata = [
+      product.gender || '',
+      product.skill_level || '',
+      getGradeRangeLabel(product.min_grade, product.max_grade),
+      formatDate(product.session_date)
+    ]
+      .join(' ')
+      .toLowerCase()
+
+    return (
+      product.name.toLowerCase().includes(search) ||
+      metadata.includes(search)
+    )
+  })
 
   if (loading) {
     return (
@@ -283,7 +268,7 @@ export default function AdminRosterPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
           <p className="text-muted-foreground mb-4">{error}</p>
-          <Button onClick={loadSessions}>Try Again</Button>
+          <Button onClick={loadProducts}>Try Again</Button>
         </div>
       </div>
     )
@@ -303,7 +288,7 @@ export default function AdminRosterPage() {
         <div className="relative max-w-sm">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
-            placeholder="Search sessions by name or date..."
+            placeholder="Search products by name, date, or tags..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10"
@@ -316,10 +301,10 @@ export default function AdminRosterPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
-            Sessions ({filteredSessions.length})
+            Products ({filteredProducts.length})
           </CardTitle>
           <CardDescription>
-            All sessions with registered athlete counts
+            All active products with registered athlete counts
             <span className="block sm:hidden text-xs mt-1 text-blue-600">
               ← Scroll horizontally to see all columns
             </span>
@@ -331,51 +316,68 @@ export default function AdminRosterPage() {
               <Table className="min-w-full">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="min-w-[200px]">Roster</TableHead>
-                    <TableHead className="min-w-[200px]">Session Name</TableHead>
-                    <TableHead className="min-w-[120px]">Date</TableHead>
-                    <TableHead className="min-w-[100px]">Time</TableHead>
+                    <TableHead className="min-w-[160px]">Roster</TableHead>
+                    <TableHead className="min-w-[220px]">Product</TableHead>
+                    <TableHead className="min-w-[220px]">Tags</TableHead>
                     <TableHead className="min-w-[120px]">Status</TableHead>
                     <TableHead className="min-w-[120px]">Total</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredSessions.length === 0 ? (
+                  {filteredProducts.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center text-muted-foreground">
-                        No sessions found
+                      <TableCell colSpan={5} className="text-center text-muted-foreground">
+                        No products found
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredSessions.map((session) => (
-                      <TableRow key={session.id}>
+                    filteredProducts.map((product) => (
+                      <TableRow key={product.id}>
                         <TableCell className="whitespace-nowrap">
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleViewAthletes(session)}
+                            onClick={() => handleViewAthletes(product)}
                           >
                             <Eye className="h-4 w-4 mr-1" />
                             View Athletes
                           </Button>
                         </TableCell>
                         <TableCell className="whitespace-nowrap">
-                          <div className="font-medium">{session.product_name}</div>
+                          <div className="font-medium">{product.name}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {formatDate(product.session_date)}
+                          </div>
                         </TableCell>
                         <TableCell className="whitespace-nowrap">
-                          {formatDate(session.session_date)}
+                          <div className="flex flex-wrap gap-2">
+                            {product.gender && (
+                              <Badge variant="outline">
+                                {product.gender === 'co-ed'
+                                  ? 'Co-ed'
+                                  : product.gender.charAt(0).toUpperCase() + product.gender.slice(1)}
+                              </Badge>
+                            )}
+                            {product.skill_level && (
+                              <Badge variant="outline">
+                                {product.skill_level.charAt(0).toUpperCase() + product.skill_level.slice(1)}
+                              </Badge>
+                            )}
+                            {getGradeRangeLabel(product.min_grade, product.max_grade) && (
+                              <Badge variant="outline">
+                                {getGradeRangeLabel(product.min_grade, product.max_grade)}
+                              </Badge>
+                            )}
+                          </div>
                         </TableCell>
                         <TableCell className="whitespace-nowrap">
-                          {formatTime(session.session_time) || '-'}
-                        </TableCell>
-                        <TableCell className="whitespace-nowrap">
-                          <Badge variant={session.is_active ? 'default' : 'secondary'}>
-                            {session.is_active ? 'Active' : 'Inactive'}
+                          <Badge variant={product.is_active ? 'default' : 'secondary'}>
+                            {product.is_active ? 'Active' : 'Inactive'}
                           </Badge>
                         </TableCell>
                         <TableCell className="whitespace-nowrap">
                           <Badge variant="secondary">
-                            {session.registered_count} {session.registered_count === 1 ? 'athlete' : 'athletes'}
+                            {product.registered_count} {product.registered_count === 1 ? 'athlete' : 'athletes'}
                           </Badge>
                         </TableCell>
                       </TableRow>
@@ -389,32 +391,37 @@ export default function AdminRosterPage() {
       </Card>
 
       {/* Athletes Modal */}
-      {selectedSession && (
+      {selectedProduct && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                {selectedSession.product_name} - Registered Athletes
+                {selectedProduct.name} - Registered Athletes
               </CardTitle>
               <CardDescription>
-                <div>
-                  Session: {formatDate(selectedSession.session_date)}
-                  {formatTime(selectedSession.session_time) && ` at ${formatTime(selectedSession.session_time)}`}
+                <div className="flex flex-wrap gap-2">
+                  {selectedProduct.gender && (
+                    <Badge variant="outline">
+                      {selectedProduct.gender === 'co-ed'
+                        ? 'Co-ed'
+                        : selectedProduct.gender.charAt(0).toUpperCase() + selectedProduct.gender.slice(1)}
+                    </Badge>
+                  )}
+                  {selectedProduct.skill_level && (
+                    <Badge variant="outline">
+                      {selectedProduct.skill_level.charAt(0).toUpperCase() + selectedProduct.skill_level.slice(1)}
+                    </Badge>
+                  )}
+                  {getGradeRangeLabel(selectedProduct.min_grade, selectedProduct.max_grade) && (
+                    <Badge variant="outline">
+                      {getGradeRangeLabel(selectedProduct.min_grade, selectedProduct.max_grade)}
+                    </Badge>
+                  )}
                 </div>
-                {selectedSession.location && (
-                  <div className="mt-2">
-                    <span className="font-medium">Location: </span>
-                    <a
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedSession.location)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline"
-                    >
-                      {selectedSession.location}
-                    </a>
-                  </div>
-                )}
+                <div className="mt-2 text-sm text-muted-foreground">
+                  Session date: {formatDate(selectedProduct.session_date)}
+                </div>
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -463,7 +470,7 @@ export default function AdminRosterPage() {
                 <Button 
                   variant="outline" 
                   onClick={() => {
-                    setSelectedSession(null)
+                    setSelectedProduct(null)
                     setRegisteredAthletes([])
                   }}
                 >
