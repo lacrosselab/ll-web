@@ -1,4 +1,4 @@
-# Lacrosse Lab - Production Deployment Guide
+# Experiment Lacrosse - Production Deployment Guide
 
 ## Pre-Deployment Checklist
 
@@ -28,7 +28,7 @@
 - [ ] Verify tax codes are set (`txcd_20030000` for services)
 
 ### 4. Security Verification
-- [ ] Admin email check is working (`@thelacrosselab.com` only)
+- [ ] Admin email check is working (`@thelacrosselab.com` or `@experimentlacrosse.com`)
 - [ ] Security headers are configured
 - [ ] No dangerous Next.js config settings
 - [ ] Environment variables are secure
@@ -122,7 +122,7 @@ If issues occur after deployment:
 - `GOOGLE_SITE_VERIFICATION`: Google Search Console verification
 - `SENTRY_DSN`: Error monitoring service DSN
 - `NODE_ENV`: Set to "production"
-- `RESEND_FROM_EMAIL`: Email address to send from (defaults to `noreply@thelacrosselab.com`)
+- `RESEND_FROM_EMAIL`: Email address to send from (defaults to `hello@experimentlacrosse.com`)
 - `ENABLE_DEBUG_LOGS`: Set to `"true"` to enable debug logging in production (defaults to development only)
 - `ENABLE_PII_LOGS`: Set to `"true"` to include full email addresses in logs (defaults to masked emails for privacy)
 - `ENABLE_RESEND_CONTACT_ADDITION`: Set to `"true"` to enable adding contacts to Resend audience on signup and purchase. Defaults to disabled (`false`). When disabled, contacts are not added to Resend but purchase confirmation emails still work.
@@ -133,7 +133,7 @@ If issues occur after deployment:
 ### Required Environment Variables
 - `RESEND_API_KEY`: Resend API key for sending emails
 - `RESEND_SEGMENT_ID`: Resend segment UUID for adding contacts to the segment. This is used when customers sign up or make a purchase to automatically add them to your Resend segment using `resend.contacts.segments.add()`. Can be found in your Resend dashboard under Audiences/Segments. Only required if `ENABLE_RESEND_CONTACT_ADDITION=true`.
-- `RESEND_FROM_EMAIL`: (Optional) Email address to send from. Defaults to `noreply@thelacrosselab.com` if not set.
+- `RESEND_FROM_EMAIL`: (Optional) Email address to send from. Defaults to `hello@experimentlacrosse.com` if not set.
 
 ### Feature Flags
 - `ENABLE_RESEND_CONTACT_ADDITION`: Set to `"true"` to enable adding contacts to Resend audience on signup and purchase. When disabled (`false`), contacts are not added to Resend but purchase confirmation emails still work. Defaults to `false` for initial deployment.
@@ -151,7 +151,7 @@ If issues occur after deployment:
 
 ## Security Notes
 
-- All admin routes require `@thelacrosselab.com` email addresses
+- All admin routes require `@thelacrosselab.com` or `@experimentlacrosse.com` email addresses
 - Security headers are configured in `next.config.mjs`
 - Environment variables are properly secured
 - No dangerous build settings are enabled

@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    if (!user.email?.endsWith('@thelacrosselab.com')) {
+    if (!user.email?.endsWith('@thelacrosselab.com') && !user.email?.endsWith('@experimentlacrosse.com')) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 

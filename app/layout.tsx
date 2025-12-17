@@ -16,8 +16,8 @@ import { ToastProvider } from '@/components/ui/toast'
 
 export const metadata: Metadata = {
   title: {
-    default: "The Lacrosse Lab | Richmond Youth Lacrosse Training",
-    template: "%s | The Lacrosse Lab"
+    default: "Experiment Lacrosse | Richmond Youth Lacrosse Training",
+    template: "%s | Experiment Lacrosse"
   },
   description: "Richmond & central Virginia's premier lacrosse training program. Offseason training for players of all ages. Skill development, stick work, shooting, and game strategy.",
   keywords: [
@@ -38,37 +38,37 @@ export const metadata: Metadata = {
     "douglas freeman lacrosse",
     "richmond lacrosse clubs"
   ],
-  authors: [{ name: "The Lacrosse Lab" }],
-  creator: "The Lacrosse Lab",
-  publisher: "The Lacrosse Lab",
+  authors: [{ name: "Experiment Lacrosse" }],
+  creator: "Experiment Lacrosse",
+  publisher: "Experiment Lacrosse",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://lacrosselab.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://experimentlacrosse.com'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://lacrosselab.com',
-    title: "The Lacrosse Lab | Richmond Youth Lacrosse Training",
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://experimentlacrosse.com',
+    title: "Experiment Lacrosse | Richmond Youth Lacrosse Training",
     description: "Richmond & central Virginia's premier girls lacrosse training program. Offseason training for middle and high school players. Skill development, stick work, shooting, and game strategy.",
-    siteName: "The Lacrosse Lab",
+    siteName: "Experiment Lacrosse",
     images: [
       {
         url: '/web-bg.png',
         width: 1200,
         height: 630,
-        alt: 'The Lacrosse Lab - Richmond VA Lacrosse Training',
+        alt: 'Experiment Lacrosse - Richmond VA Lacrosse Training',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: "The Lacrosse Lab | Richmond Youth Lacrosse Training",
+    title: "Experiment Lacrosse | Richmond Youth Lacrosse Training",
     description: "Richmond & central Virginia's premier girls lacrosse training program. Offseason training for middle and high school players. Skill development, stick work, shooting, and game strategy.",
     images: ['/web-bg.png'],
   },
@@ -116,7 +116,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "SportsActivityLocation",
-              "name": "The Lacrosse Lab",
+              "name": "Experiment Lacrosse",
               "description": "Richmond & central Virginia's premier girls lacrosse training program. Offseason training for middle and high school players. Skill development, stick work, shooting, and game strategy.",
               "address": {
                 "@type": "PostalAddress",
@@ -131,7 +131,7 @@ export default function RootLayout({
                 "description": "female-first lacrosse training sessions",
                 "category": "Sports Training"
               },
-              "url": process.env.NEXT_PUBLIC_SITE_URL || 'https://lacrosselab.com'
+              "url": process.env.NEXT_PUBLIC_SITE_URL || 'https://experimentlacrosse.com'
             })
           }}
         />

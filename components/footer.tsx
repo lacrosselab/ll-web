@@ -23,12 +23,12 @@ export function Footer() {
         {/* Top row: Copyright and Contact */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-1 mb-2">
             <div className="text-navy/60 text-sm">
-            &copy; {currentYear} Lacrosse Lab
+            &copy; {currentYear} Experiment Lacrosse
             </div>
             <RichmondClock />
             <div className="flex items-center gap-4 text-sm">
             <a 
-                href="mailto:hello@thelacrosselab.com" 
+                href="mailto:hello@experimentlacrosse.com" 
                 className="text-navy/60 hover:text-navy transition-colors"
             >
                 Contact

@@ -230,8 +230,8 @@ export const PurchaseConfirmationEmail = ({
 
           <Text style={emailStyles.footer}>
             If you have any questions, please reach out to: {' '}
-            <Link href="mailto:carter@thelacrosselab.com" style={emailStyles.linkStyle}>
-              carter@thelacrosselab.com
+            <Link href="mailto:carter@experimentlacrosse.com" style={emailStyles.linkStyle}>
+              carter@experimentlacrosse.com
             </Link>
             .
           </Text>

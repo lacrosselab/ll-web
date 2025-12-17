@@ -12,7 +12,7 @@ export default function HomePage() {
         <div className="container mx-auto text-center max-w-4xl">
           <AnimatedSection animation="fadeIn" delay={0.2}>
             <div className="mb-2 flex justify-center">
-              <Image src="/logo.svg" alt="Word Lab" width={400} height={52} className="h-12 sm:h-16 w-auto" priority />
+              <Image src="/logo.svg" alt="Experiment Lacrosse" width={400} height={52} className="h-12 sm:h-16 w-auto" priority />
             </div>
           </AnimatedSection>
           
@@ -41,7 +41,7 @@ export default function HomePage() {
           <AnimatedSection animation="fadeIn" delay={0.2} scrollTrigger>
             <div className="text-center mb-12">
               <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-foreground">
-                About The Lab
+                About Experiment Lacrosse
               </h2>
               <div className="w-24 h-1 bg-primary mx-auto mb-8"></div>
             </div>
@@ -50,7 +50,7 @@ export default function HomePage() {
           <AnimatedSection animation="slideIn" direction="up" delay={0.4} scrollTrigger>
             <div className="prose prose-lg max-w-none text-center">
               <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                The Lacrosse Lab is Central Virginia's first dedicated women's lacrosse training program—a space built for players who bring energy, positivity, and a love of hard work.
+                Experiment Lacrosse is Central Virginia's first dedicated women's lacrosse training program—a space built for players who bring energy, positivity, and a love of hard work.
               </p>
               
               <p className="text-lg text-muted-foreground leading-relaxed mb-6">
@@ -80,30 +80,7 @@ export default function HomePage() {
           </AnimatedSection>
 
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-            {/* Coach Reif */}
-            <AnimatedSection animation="slideIn" direction="left" delay={0.4} scrollTrigger>
-              <Card className="overflow-hidden">
-                <CardHeader className="text-center pb-4">
-                  <div className="mx-auto mb-4 w-300 h-300 rounded-full overflow-hidden bg-muted">
-                    <Image 
-                      src="/CoachReif.png" 
-                      alt="Coach Reif" 
-                      width={300} 
-                      height={300}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <CardTitle className="text-2xl">Coach Reif</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                  Coach Reif brings over 30 years of coaching experience across youth and high-school sports, including his current role with the Collegiate School women's lacrosse program. Known for his creativity, energy, and infectious enthusiasm, he's the "drill king" who makes every session challenging and fun.
-                  Reif's approach blends strong fundamentals with imaginative, fast-paced training designed to keep players engaged and improving. His commitment to community, joy, and player development is at the heart of The Lacrosse Lab experience.
-                  </p>
-                </CardContent>
-              </Card>
-            </AnimatedSection>
-
+          
             {/* Coach Carter */}
             <AnimatedSection animation="slideIn" direction="right" delay={0.6} scrollTrigger>
               <Card className="overflow-hidden">
@@ -124,6 +101,29 @@ export default function HomePage() {
                   Coach Carter played Division I Lacrosse at James Madison University and has been deeply involved in the game ever since. With over a decade of coaching experience, she's helped hundreds of athletes grow through skill development, discipline, and teamwork.
                   She has spent four years as an assistant coach at Douglas Freeman High School, coached in six straight All-American games, earned three Coach of the Year honors, and serves as the Head of Women's Lacrosse at The Collegiate School.
                   Carter is also a certified lacrosse official.
+                  </p>
+                </CardContent>
+              </Card>
+            </AnimatedSection>
+            {/* Coach Reif */}
+            <AnimatedSection animation="slideIn" direction="left" delay={0.4} scrollTrigger>
+              <Card className="overflow-hidden">
+                <CardHeader className="text-center pb-4">
+                  <div className="mx-auto mb-4 w-300 h-300 rounded-full overflow-hidden bg-muted">
+                    <Image 
+                      src="/CoachReif.png" 
+                      alt="Coach Reif" 
+                      width={300} 
+                      height={300}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <CardTitle className="text-2xl">Coach Reif</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                  Coach Reif brings over 30 years of coaching experience across youth and high-school sports, including his current role with the Collegiate School women's lacrosse program. Known for his creativity, energy, and infectious enthusiasm, he's the "drill king" who makes every session challenging and fun.
+                  Reif's approach blends strong fundamentals with imaginative, fast-paced training designed to keep players engaged and improving. His commitment to community, joy, and player development is at the heart of the Experiment Lacrosse experience.
                   </p>
                 </CardContent>
               </Card>

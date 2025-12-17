@@ -27,7 +27,7 @@ export function Navigation() {
   }
 
   // Check if user is admin
-  const isAdmin = user?.email?.endsWith('@thelacrosselab.com')
+  const isAdmin = user?.email?.endsWith('@thelacrosselab.com') || user?.email?.endsWith('@experimentlacrosse.com')
 
   // Show loading state while auth is initializing
   if (loading) {
@@ -37,7 +37,7 @@ export function Navigation() {
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center">
               <Link href="/" className="flex items-center">
-                <Image src="/logo.svg" alt="Lacrosse Lab" width={120} height={16} className="h-6 w-auto" />
+                <Image src="/logo.svg" alt="Experiment Lacrosse" width={120} height={16} className="h-6 w-auto" />
               </Link>
             </div>
             <div className="text-sm text-muted-foreground">Loading...</div>
@@ -54,7 +54,7 @@ export function Navigation() {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <Image src="/logo.svg" alt="Lacrosse Lab" width={120} height={16} className="h-6 w-auto" />
+              <Image src="/logo.svg" alt="Experiment Lacrosse" width={120} height={16} className="h-6 w-auto" />
             </Link>
           </div>
           
@@ -133,7 +133,7 @@ export function Navigation() {
               {/* Header with logo and close button */}
               <div className="flex items-center justify-between mb-12">
                 <Link href="/" className="flex items-center" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Image src="/logo.svg" alt="Lacrosse Lab" width={120} height={16} className="h-6 w-auto" />
+                  <Image src="/logo.svg" alt="Experiment Lacrosse" width={120} height={16} className="h-6 w-auto" />
                 </Link>
                 <button
                   className="p-2 rounded-md transition-all duration-200 hover:bg-red-600 hover:text-white"

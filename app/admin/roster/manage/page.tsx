@@ -75,7 +75,7 @@ export default function AdminRosterManagePage() {
       }
 
       // Check if user is admin
-      if (!user.email?.endsWith('@thelacrosselab.com')) {
+      if (!user.email?.endsWith('@thelacrosselab.com') && !user.email?.endsWith('@experimentlacrosse.com')) {
         router.push('/')
         return
       }

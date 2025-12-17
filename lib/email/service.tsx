@@ -7,7 +7,7 @@ import { PurchaseConfirmationEmail } from '@/emails/purchase-confirmation'
 import { BroadcastEmail } from '@/emails/broadcast-template'
 import { logger, maskEmail } from '@/lib/utils'
 
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'hello@thelacrosselab.com'
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'hello@experimentlacrosse.com'
 
 // Audience ID for adding contacts to audience when creating them
 // TODO: Move to environment variable

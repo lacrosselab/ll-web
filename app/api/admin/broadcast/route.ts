@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user is admin
-    if (!user.email?.endsWith('@thelacrosselab.com')) {
+    if (!user.email?.endsWith('@thelacrosselab.com') && !user.email?.endsWith('@experimentlacrosse.com')) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 

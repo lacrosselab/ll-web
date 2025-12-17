@@ -33,7 +33,7 @@ export default function AdminDebugResendPage() {
       return
     }
 
-    if (!user.email?.endsWith('@thelacrosselab.com')) {
+    if (!user.email?.endsWith('@thelacrosselab.com') && !user.email?.endsWith('@experimentlacrosse.com')) {
       router.push('/')
       return
     }
