@@ -72,13 +72,13 @@ describe('POST /api/create-checkout-session', () => {
       error: null,
     })
 
-    // Mock user profile lookup (no existing Stripe customer)
+    // Mock user profile lookup (waiver signed, no existing Stripe customer)
     const usersQuery = {
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
       single: vi.fn().mockResolvedValue({
-        data: null,
-        error: { code: 'PGRST116' },
+        data: { waiver_signed: true, stripe_customer_id: null },
+        error: null,
       }),
       upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
     }
@@ -167,6 +167,16 @@ describe('POST /api/create-checkout-session', () => {
       error: null,
     })
 
+    // Mock user profile lookup (waiver signed)
+    const usersQuery = {
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({
+        data: { waiver_signed: true, stripe_customer_id: null },
+        error: null,
+      }),
+    }
+
     // Mock product lookup - inactive product
     const productsQuery = {
       select: vi.fn().mockReturnThis(),
@@ -178,6 +188,7 @@ describe('POST /api/create-checkout-session', () => {
     }
 
     mockSupabaseClient.from.mockImplementation((table: string) => {
+      if (table === 'users') return usersQuery as any
       if (table === 'products') return productsQuery as any
       return {} as any
     })
