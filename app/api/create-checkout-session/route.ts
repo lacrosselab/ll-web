@@ -16,25 +16,32 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    // Check waiver status (server-side validation)
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('waiver_signed, stripe_customer_id')
+      .eq('id', user.id)
+      .single()
+
+    if (userError && userError.code !== 'PGRST116') {
+      logger.error('Error fetching user profile for waiver check', { error: userError.message || 'Unknown error' })
+    }
+
+    if (!userData?.waiver_signed) {
+      return NextResponse.json(
+        { error: 'Waiver must be signed before checkout' },
+        { status: 403 }
+      )
+    }
+
     // Get or create Stripe customer for this user
     let stripeCustomerId: string
-    
+
     try {
-      // Check if user already has a Stripe customer ID in their profile
-      const { data: userProfile, error: profileError } = await supabase
-        .from('users')
-        .select('stripe_customer_id')
-        .eq('id', user.id)
-        .single()
-
-      if (profileError && profileError.code !== 'PGRST116') {
-        logger.error('Error fetching user profile', { error: profileError.message || 'Unknown error' })
-        throw profileError
-      }
-
-      if (userProfile?.stripe_customer_id) {
+      // Use stripe_customer_id from the waiver check query above
+      if (userData?.stripe_customer_id) {
         // User already has a Stripe customer ID
-        stripeCustomerId = userProfile.stripe_customer_id
+        stripeCustomerId = userData.stripe_customer_id
         logger.debug('Using existing Stripe customer')
       } else {
         // Create new Stripe customer

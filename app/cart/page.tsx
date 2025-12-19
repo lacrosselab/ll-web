@@ -14,6 +14,14 @@ import { getSupabaseClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Minus, Plus, Trash2, ShoppingCart, User, Calendar, DollarSign } from 'lucide-react'
 import { formatDateOnly, formatDateRange, logger } from '@/lib/utils'
+import { WaiverModal } from '@/components/waiver-modal'
+
+interface WaiverStatus {
+  waiverSigned: boolean
+  waiverSignedAt: string | null
+  hasMinors: boolean
+  minorAthleteNames: string[]
+}
 
 interface Athlete {
   id: string
@@ -38,6 +46,8 @@ export default function CartPage() {
     position: '',
     grade: ''
   })
+  const [showWaiverModal, setShowWaiverModal] = useState(false)
+  const [waiverStatus, setWaiverStatus] = useState<WaiverStatus | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -113,10 +123,83 @@ export default function CartPage() {
     return formatDateOnly(sessionDate)
   }
 
+  const checkWaiverStatus = async (): Promise<WaiverStatus | null> => {
+    try {
+      const response = await fetch('/api/waiver/status')
+      if (!response.ok) throw new Error('Failed to fetch waiver status')
+      const data = await response.json()
+      setWaiverStatus(data)
+      return data
+    } catch (error) {
+      logger.error('Error checking waiver status', { error })
+      return null
+    }
+  }
+
+  const proceedToCheckout = async () => {
+    // Create checkout session with cart items
+    const lineItems = state.items.map(item => ({
+      price: item.product.stripe_price_id,
+      quantity: item.quantity,
+      // Add athlete info as metadata for session-level metadata
+      metadata: {
+        athlete_id: item.athleteId,
+        athlete_name: item.athlete.name,
+        product_id: item.productId
+      }
+    }))
+
+    const response = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ lineItems }),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      logger.error('Checkout API Error', {
+        status: response.status,
+        statusText: response.statusText,
+        errorData
+      })
+      throw new Error(errorData.error || 'Failed to create checkout session')
+    }
+
+    const { sessionId } = await response.json()
+
+    // Redirect to Stripe Checkout
+    const stripe = (await import('@stripe/stripe-js')).loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+    const stripeInstance = await stripe
+    if (stripeInstance) {
+      await stripeInstance.redirectToCheckout({ sessionId })
+    }
+  }
+
+  const handleWaiverSigned = async () => {
+    setShowWaiverModal(false)
+    // Refetch status to confirm
+    const status = await checkWaiverStatus()
+    if (status?.waiverSigned) {
+      // Proceed to checkout
+      try {
+        setCheckoutLoading(true)
+        await proceedToCheckout()
+      } catch (error) {
+        logger.error('Error during checkout after waiver', { error })
+        const errorMessage = error instanceof Error ? error.message : 'Failed to start checkout. Please try again.'
+        showToast(errorMessage, 'error')
+      } finally {
+        setCheckoutLoading(false)
+      }
+    }
+  }
+
   const handleCheckout = async () => {
     try {
       setCheckoutLoading(true)
-      
+
       // Check if all cart items have athletes
       const itemsWithoutAthletes = state.items.filter(item => !item.athleteId)
       if (itemsWithoutAthletes.length > 0) {
@@ -124,44 +207,21 @@ export default function CartPage() {
         return
       }
 
-      // Create checkout session with cart items
-      const lineItems = state.items.map(item => ({
-        price: item.product.stripe_price_id,
-        quantity: item.quantity,
-        // Add athlete info as metadata for session-level metadata
-        metadata: {
-          athlete_id: item.athleteId,
-          athlete_name: item.athlete.name,
-          product_id: item.productId
-        }
-      }))
-
-      const response = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ lineItems }),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        logger.error('Checkout API Error', {
-          status: response.status,
-          statusText: response.statusText,
-          errorData
-        })
-        throw new Error(errorData.error || 'Failed to create checkout session')
+      // Check waiver status before proceeding
+      const status = await checkWaiverStatus()
+      if (!status) {
+        showToast('Unable to verify waiver status. Please try again.', 'error')
+        return
       }
 
-      const { sessionId } = await response.json()
-
-      // Redirect to Stripe Checkout
-      const stripe = (await import('@stripe/stripe-js')).loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
-      const stripeInstance = await stripe
-      if (stripeInstance) {
-        await stripeInstance.redirectToCheckout({ sessionId })
+      if (!status.waiverSigned) {
+        // Show waiver modal instead of proceeding
+        setShowWaiverModal(true)
+        return
       }
+
+      // Waiver signed, proceed to checkout
+      await proceedToCheckout()
     } catch (error) {
       logger.error('Error during checkout', { error })
       const errorMessage = error instanceof Error ? error.message : 'Failed to start checkout. Please try again.'
@@ -419,6 +479,15 @@ export default function CartPage() {
           </Card>
         </div>
       )}
+
+      {/* Waiver Modal */}
+      <WaiverModal
+        isOpen={showWaiverModal}
+        onClose={() => setShowWaiverModal(false)}
+        onWaiverSigned={handleWaiverSigned}
+        hasMinors={waiverStatus?.hasMinors ?? false}
+        minorAthleteNames={waiverStatus?.minorAthleteNames ?? []}
+      />
     </div>
   )
 }
