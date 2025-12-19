@@ -80,29 +80,6 @@ export default function HomePage() {
           </AnimatedSection>
 
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-            {/* Coach Reif */}
-            <AnimatedSection animation="slideIn" direction="left" delay={0.4} scrollTrigger>
-              <Card className="overflow-hidden">
-                <CardHeader className="text-center pb-4">
-                  <div className="mx-auto mb-4 w-300 h-300 rounded-full overflow-hidden bg-muted">
-                    <Image 
-                      src="/CoachReif.png" 
-                      alt="Coach Reif" 
-                      width={300} 
-                      height={300}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <CardTitle className="text-2xl">Coach Reif</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                  Coach Reif brings over 30 years of coaching experience across youth and high-school sports, including his current role with the Collegiate School women's lacrosse program. Known for his creativity, energy, and infectious enthusiasm, he's the "drill king" who makes every session challenging and fun.
-                  Reif's approach blends strong fundamentals with imaginative, fast-paced training designed to keep players engaged and improving. His commitment to community, joy, and player development is at the heart of The Lacrosse Lab experience.
-                  </p>
-                </CardContent>
-              </Card>
-            </AnimatedSection>
 
             {/* Coach Carter */}
             <AnimatedSection animation="slideIn" direction="right" delay={0.6} scrollTrigger>
@@ -128,6 +105,32 @@ export default function HomePage() {
                 </CardContent>
               </Card>
             </AnimatedSection>
+
+            {/* Coach Reif */}
+            <AnimatedSection animation="slideIn" direction="left" delay={0.4} scrollTrigger>
+              <Card className="overflow-hidden">
+                <CardHeader className="text-center pb-4">
+                  <div className="mx-auto mb-4 w-300 h-300 rounded-full overflow-hidden bg-muted">
+                    <Image 
+                      src="/CoachReif.png" 
+                      alt="Coach Reif" 
+                      width={300} 
+                      height={300}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <CardTitle className="text-2xl">Coach Reif</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                  Coach Reif brings over 30 years of coaching experience across youth and high-school sports, including his current role with the Collegiate School women's lacrosse program. Known for his creativity, energy, and infectious enthusiasm, he's the "drill king" who makes every session challenging and fun.
+                  Reif's approach blends strong fundamentals with imaginative, fast-paced training designed to keep players engaged and improving. His commitment to community, joy, and player development is at the heart of The Lacrosse Lab experience.
+                  </p>
+                </CardContent>
+              </Card>
+            </AnimatedSection>
+
+            
           </div>
 
           <AnimatedSection animation="fadeIn" delay={0.8} scrollTrigger>
