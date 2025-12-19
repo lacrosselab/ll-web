@@ -78,7 +78,7 @@ export function WaiverModal({
         </CardHeader>
         <CardContent className="space-y-4 overflow-y-auto flex-1">
           {/* Waiver Content Section */}
-          <div className="prose prose-sm max-w-none bg-muted p-4 rounded-lg max-h-64 overflow-y-auto text-sm">
+          <div className="prose prose-sm max-w-none bg-muted p-4 rounded-lg max-h-96 overflow-y-auto text-sm">
             <h4 className="font-semibold text-base mt-0">PARTICIPANT WAIVER AND RELEASE OF LIABILITY</h4>
 
             {hasMinors && minorAthleteNames.length > 0 && (
@@ -122,6 +122,29 @@ export function WaiverModal({
                 failure to comply may result in removal from the program without refund.
               </li>
             </ol>
+
+            {/* RBA West Section */}
+            <div className="mt-6 border-t pt-4">
+              <h4 className="font-semibold text-base">RBA WEST</h4>
+              <p className="mt-2">
+                In signing this release, I attest and verify that my child has full knowledge of the risks involved
+                with the sport associated with the activity he/she is attending. My child is physically fit and
+                sufficiently trained to participate in the activity. To the best of my knowledge, my child does not
+                have any diseases or injuries that would medically prohibit him/her from participating in the
+                activity. I do hereby release and forever discharge RBA West, its agents, officers, instructors and
+                employees from any responsibility or liability for recurrence of any pre-existing, any undisclosed
+                injury or illness, or any personal injury or property damage sustained by my child during or
+                because of participation. I also give permission for any emergency procedures that are deemed
+                necessary for my child during the activity.
+              </p>
+              <ul className="list-disc pl-5 mt-1">
+                <li>Private Lessons</li>
+                <li>Camps</li>
+                <li>Team Workouts/Practices</li>
+                <li>Cage/Facility Rental</li>
+                <li>Total Pitching Development</li>
+              </ul>
+            </div>
 
             {hasMinors ? (
               <p className="font-medium mt-4 border-t pt-4">
