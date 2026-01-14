@@ -222,7 +222,7 @@ export default function PricingPage() {
             <h1 className="text-4xl sm:text-5xl font-bold mb-4">Available Sessions</h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Our available sessions are listed below. If you don't see a session that works for you, please contact us
-              at <a href="mailto:hello@thelacrosselab.com" className="text-primary hover:underline">hello@thelacrosselab.com</a>.
+              at <a href="mailto:carter@thelacrosselab.com" className="text-primary hover:underline">carter@thelacrosselab.com</a>.
             </p>
           </div>
 

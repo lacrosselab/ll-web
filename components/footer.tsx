@@ -28,7 +28,7 @@ export function Footer() {
             <RichmondClock />
             <div className="flex items-center gap-4 text-sm">
             <a 
-                href="mailto:hello@thelacrosselab.com" 
+                href="mailto:carter@thelacrosselab.com" 
                 className="text-navy/60 hover:text-navy transition-colors"
             >
                 Contact
